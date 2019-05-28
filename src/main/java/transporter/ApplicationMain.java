@@ -1,5 +1,6 @@
 package transporter;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
@@ -8,10 +9,12 @@ import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 public class ApplicationMain {
 
     public static void main(String[] args) {
+
         try (AnnotationConfigApplicationContext context =
                      new AnnotationConfigApplicationContext(Configuration.class)) {
 
@@ -37,6 +40,8 @@ public class ApplicationMain {
                     Booking.LocationHungary.BAKERY_BUREK, Booking.LocationSerbia.NEW_CITY_HALL);
             booking2.setPassenger(passengerDAO.findPassengerByName("John Doe"));
             bookingDAO.saveBooking(booking2);
+
+            bookingDAO.cancelBooking(2L);
         }
     }
 }

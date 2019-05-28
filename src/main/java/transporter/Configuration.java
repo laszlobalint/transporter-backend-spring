@@ -45,9 +45,9 @@ public class Configuration {
     @Bean
     public Properties hibernateProperties(){
         final Properties properties = new Properties();
-        properties.put( "hibernate.dialect", "org.hibernate.dialect.MariaDB10Dialect" );
-        properties.put( "hibernate.connection.driver_class", "org.mariadb.jdbc.Driver" );
-        properties.put( "hibernate.hbm2ddl.auto", "update" );
+        properties.put( "hibernate.dialect", environment.getProperty("hibernate.dialect") );
+        properties.put( "hibernate.connection.driver_class", environment.getProperty("hibernate.driver") );
+        properties.put( "hibernate.hbm2ddl.auto", environment.getProperty("hibernate.strategy") );
 
         return properties;
     }
@@ -80,8 +80,8 @@ public class Configuration {
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactoryBean.setJpaProperties(hibernateProperties);
         entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("transporter.entities");
-        entityManagerFactoryBean.setPersistenceUnitName("transporter");
+        entityManagerFactoryBean.setPackagesToScan(environment.getProperty("packagesToScan"));
+        entityManagerFactoryBean.setPersistenceUnitName(environment.getProperty("persistenceUnitName"));
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean;

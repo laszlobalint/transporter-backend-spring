@@ -24,6 +24,15 @@ public class BookingDAO {
         entityManager.flush();
     }
 
+    @Transactional
+    public void cancelBooking(Long id) {
+        Booking booking = findBookingById(id);
+        Transport transport = findTransportByDepartureTime(booking.getDepartureTime());
+        transport.setFreeSeats(transport.getFreeSeats() + 1);
+        entityManager.remove(booking);
+
+    }
+
     public String findPassengerNameByBookingId(Long id) {
         return entityManager.createQuery("SELECT p.name FROM Booking b JOIN b.passenger p WHERE b.id = :id", String.class)
                 .setParameter("id", id)
