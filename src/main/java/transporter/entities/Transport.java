@@ -2,6 +2,7 @@ package transporter.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name = "transport")
 public class Transport {
-    Map<String, String> driverInfo = Map.of(
+
+    public static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",
             "Gépjűrmű színe", "fehér",
