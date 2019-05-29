@@ -15,10 +15,7 @@ public class BookingDAO {
     private EntityManager entityManager;
 
     @Transactional
-    public void saveBooking(Booking booking) {
-        Transport transport = findTransportByDepartureTime(booking.getDepartureTime());
-        booking.setTransport(transport);
-        transport.setFreeSeats(transport.getFreeSeats() - 1);
+    public void saveBooking(Booking booking, Transport transport) {
         entityManager.merge(booking);
         entityManager.merge(transport);
         entityManager.flush();
@@ -46,6 +43,7 @@ public class BookingDAO {
     public Transport findTransportByDepartureTime(LocalDateTime time) {
         return entityManager.createQuery("SELECT t FROM Transport t WHERE t.departureTime = :time", Transport.class)
                 .setParameter("time", time)
+                .setMaxResults(1)
                 .getSingleResult();
     }
 }

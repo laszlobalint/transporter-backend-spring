@@ -5,6 +5,7 @@ import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -19,11 +20,11 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
-@org.springframework.context.annotation.Configuration
-@ComponentScan(basePackageClasses = Configuration.class)
+@Configuration
+@ComponentScan(basePackageClasses = AppConfiguration.class)
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
-public class Configuration {
+public class AppConfiguration {
 
     @Autowired
     private Environment environment;
@@ -36,18 +37,17 @@ public class Configuration {
             dataSource.setUser(environment.getProperty("jdbc.username"));
             dataSource.setPassword(environment.getProperty("jdbc.password"));
             return dataSource;
-        }
-        catch (SQLException se) {
+        } catch (SQLException se) {
             throw new IllegalStateException("Could not create data source!", se);
         }
     }
 
     @Bean
-    public Properties hibernateProperties(){
+    public Properties hibernateProperties() {
         final Properties properties = new Properties();
-        properties.put( "hibernate.dialect", environment.getProperty("hibernate.dialect") );
-        properties.put( "hibernate.connection.driver_class", environment.getProperty("hibernate.driver") );
-        properties.put( "hibernate.hbm2ddl.auto", environment.getProperty("hibernate.strategy") );
+        properties.put("hibernate.dialect", environment.getProperty("hibernate.dialect"));
+        properties.put("hibernate.connection.driver_class", environment.getProperty("hibernate.driver"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.strategy"));
 
         return properties;
     }

@@ -39,7 +39,7 @@ public class PassengerDAO {
 
     public Passenger findPassengerByName(String name) {
         return entityManager.createQuery("SELECT p from Passenger p WHERE p.name = :name", Passenger.class)
-                .setParameter("name", name).getSingleResult();
+                .setParameter("name", name).setMaxResults(1).getSingleResult();
     }
 
     public List<Passenger> listAllPassengers() {
