@@ -13,13 +13,13 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
 import transporter.services.BookingService;
+import transporter.services.PassengerService;
 
 import java.time.LocalDateTime;
 
@@ -40,6 +40,9 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private PassengerService passengerService;
+
     @Bean
     public void init() {
         Transport transport = new Transport(LocalDateTime.of(2019, 5, 16, 20, 0), null);
@@ -50,7 +53,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         Booking booking1 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.GRINGOS_BUS_STOP, Booking.LocationSerbia.MARKET_LIDL);
-        booking1.setPassenger(passengerDAO.findPassengerById(1L));
+        booking1.setPassenger(passengerDAO.listPassenger(1L));
         bookingService.saveBooking(booking1);
 
         Passenger passenger2 = new Passenger("John Doe", "+36-70-22222222", "gmail@gmail.com", null);
@@ -58,7 +61,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         Booking booking2 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.BAKERY_BUREK, Booking.LocationSerbia.NEW_CITY_HALL);
-        booking2.setPassenger(passengerDAO.findPassengerById(2L));
+        booking2.setPassenger(passengerDAO.listPassenger(2L));
         bookingService.saveBooking(booking2);
     }
 

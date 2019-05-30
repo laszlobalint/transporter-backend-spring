@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class PassengerDAO {
@@ -17,29 +16,11 @@ public class PassengerDAO {
     @Transactional
     public void savePassenger(Passenger passenger) {
         entityManager.persist(passenger);
+        entityManager.flush();
     }
 
-    @Transactional
-    public void updatePassenger(Passenger p, Long id) {
-        Passenger passenger = entityManager.getReference(Passenger.class, id);
-        passenger.setName(p.getName());
-        passenger.setEmail(p.getEmail());
-        passenger.setPhoneNumber(p.getPhoneNumber());
-        passenger.setPicture(p.getPicture());
-    }
-
-    @Transactional
-    public void deletePassengerById(Long id) {
-        entityManager.remove(entityManager.getReference(Passenger.class, id));
-    }
-
-    public Passenger findPassengerById(Long id) {
+    public Passenger listPassenger(Long id) {
         return entityManager.find(Passenger.class, id);
-    }
-
-    public Passenger findPassengerByName(String name) {
-        return entityManager.createQuery("SELECT p from Passenger p WHERE p.name = :name", Passenger.class)
-                .setParameter("name", name).setMaxResults(1).getSingleResult();
     }
 
     public List<Passenger> listAllPassengers() {
@@ -47,8 +28,15 @@ public class PassengerDAO {
                 .getResultList();
     }
 
-    public List<String> listPassengerNames() {
-        return entityManager.createQuery("SELECT p from Passenger p ORDER BY p.name", Passenger.class).getResultStream()
-            .map(Passenger::getName).collect(Collectors.toList());
+    @Transactional
+    public void modifyPassenger(Passenger passenger) {
+        entityManager.merge(passenger);
+        entityManager.flush();
+    }
+
+    @Transactional
+    public void removePassenger(Long id) {
+        entityManager.remove(entityManager.getReference(Passenger.class, id));
+        entityManager.flush();
     }
 }

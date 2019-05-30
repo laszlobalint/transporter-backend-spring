@@ -6,7 +6,7 @@ import transporter.entities.Transport;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class BookingDAO {
@@ -21,29 +21,30 @@ public class BookingDAO {
         entityManager.flush();
     }
 
-    @Transactional
-    public void cancelBooking(Long id) {
-        Booking booking = findBookingById(id);
-        Transport transport = findTransportByDepartureTime(booking.getDepartureTime());
-        transport.setFreeSeats(transport.getFreeSeats() + 1);
-        entityManager.remove(booking);
-
-    }
-
-    public String findPassengerNameByBookingId(Long id) {
-        return entityManager.createQuery("SELECT p.name FROM Booking b JOIN b.passenger p WHERE b.id = :id", String.class)
-                .setParameter("id", id)
-                .getSingleResult();
-    }
-
-    public Booking findBookingById(Long id) {
+    public Booking listBooking(Long id) {
         return entityManager.find(Booking.class, id);
     }
 
-    public Transport findTransportByDepartureTime(LocalDateTime time) {
-        return entityManager.createQuery("SELECT t FROM Transport t WHERE t.departureTime = :time", Transport.class)
-                .setParameter("time", time)
-                .setMaxResults(1)
-                .getSingleResult();
+    public List<Booking> listAllBookings() {
+        return entityManager.createQuery("SELECT b FROM Booking b ORDER by b.departure_time", Booking.class)
+                .getResultList();
+    }
+
+    public List<Booking> findBookingsByPassengerId(Long id) {
+        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.passenger p WHERE p.id = :id", Booking.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
+    @Transactional
+    public void modifyBooking(Booking booking) {
+        entityManager.merge(booking);
+        entityManager.flush();
+    }
+
+    @Transactional
+    public void removeBooking(Booking booking) {
+        entityManager.remove(entityManager.contains(booking) ? booking : entityManager.merge(booking));
+        entityManager.flush();
     }
 }
