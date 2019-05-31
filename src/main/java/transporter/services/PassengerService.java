@@ -27,6 +27,14 @@ public class PassengerService {
     @Autowired
     private PassengerService passengerService;
 
+    public void savePassenger(Passenger passenger) {
+        passengerDAO.savePassenger(passenger);
+    }
+
+    public Passenger listPassenger(Long id) {
+        return passengerDAO.listPassenger(id);
+    }
+
     public List<Passenger> listAllPassengers() {
         return new ArrayList<>(passengerDAO.listAllPassengers());
     }

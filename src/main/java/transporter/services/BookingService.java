@@ -3,10 +3,11 @@ package transporter.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import transporter.dao.BookingDAO;
+import transporter.dao.PassengerDAO;
 import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
+import transporter.entities.Passenger;
 import transporter.entities.Transport;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class BookingService {
     }
 
     @Autowired
+    private PassengerDAO passengerDAO;
+
+    @Autowired
     private TransportDAO transportDAO;
 
     public void saveBooking(Booking booking) {
@@ -29,6 +33,9 @@ public class BookingService {
             bookingDAO.saveBooking(booking, t);
             t.setFreeSeats(t.getFreeSeats() - 1);
             transportDAO.saveTransport(t);
+            Passenger p = booking.getPassenger();
+            p.setBookingCount(p.getBookingCount() + 1);
+            passengerDAO.modifyPassenger(p);
         }
     }
 
@@ -53,5 +60,10 @@ public class BookingService {
         bookingDAO.removeBooking(booking);
         t.setFreeSeats(t.getFreeSeats() + 1);
         transportDAO.saveTransport(t);
+        Passenger p = booking.getPassenger();
+        if (p.getBookingCount() > 0) {
+            p.setBookingCount(p.getBookingCount() - 1);
+            passengerDAO.modifyPassenger(p);
+        }
     }
 }

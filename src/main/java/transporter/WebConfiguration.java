@@ -13,14 +13,12 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import transporter.dao.PassengerDAO;
-import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
-
+import transporter.services.TransportService;
 import java.time.LocalDateTime;
 
 @Configuration
@@ -30,39 +28,35 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    @Autowired
-    private TransportDAO transportDAO;
-
-    @Autowired
-    private PassengerDAO passengerDAO;
-
     @Autowired
     private BookingService bookingService;
-
     @Autowired
     private PassengerService passengerService;
+    @Autowired
+    private TransportService transportService;
 
     @Bean
     public void init() {
         Transport transport = new Transport(LocalDateTime.of(2019, 5, 16, 20, 0), null);
-        transportDAO.saveTransport(transport);
+        transportService.saveTransport(transport);
 
         Passenger passenger1 = new Passenger("Test Passenger", "+36-70-11111111", "test@test.com", null);
-        passengerDAO.savePassenger(passenger1);
+        passengerService.savePassenger(passenger1);
 
         Booking booking1 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.GRINGOS_BUS_STOP, Booking.LocationSerbia.MARKET_LIDL);
-        booking1.setPassenger(passengerDAO.listPassenger(1L));
+        booking1.setPassenger(passengerService.listPassenger(1L));
         bookingService.saveBooking(booking1);
 
         Passenger passenger2 = new Passenger("John Doe", "+36-70-22222222", "gmail@gmail.com", null);
-        passengerDAO.savePassenger(passenger2);
+        passengerService.savePassenger(passenger2);
 
         Booking booking2 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.BAKERY_BUREK, Booking.LocationSerbia.NEW_CITY_HALL);
-        booking2.setPassenger(passengerDAO.listPassenger(2L));
+        booking2.setPassenger(passengerService.listPassenger(2L));
         bookingService.saveBooking(booking2);
+
+        bookingService.removeBooking(2L);
     }
 
     @Override

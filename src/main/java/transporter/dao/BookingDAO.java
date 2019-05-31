@@ -36,6 +36,12 @@ public class BookingDAO {
                 .getResultList();
     }
 
+    public List<Booking> findBookingsByTransportId(Long id) {
+        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.transport t WHERE t.id = :id", Booking.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     @Transactional
     public void modifyBooking(Booking booking) {
         entityManager.merge(booking);

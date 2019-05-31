@@ -1,7 +1,13 @@
 package transporter.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import transporter.dao.BookingDAO;
 import transporter.dao.TransportDAO;
+import transporter.entities.Booking;
+import transporter.entities.Transport;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransportService {
@@ -10,5 +16,40 @@ public class TransportService {
 
     public TransportService(TransportDAO transportDAO) {
         this.transportDAO = transportDAO;
+    }
+
+    @Autowired
+    private BookingDAO bookingDAO;
+
+    @Autowired
+    private BookingService bookingService;
+
+    public void saveTransport(Transport transport) {
+        transportDAO.saveTransport(transport);
+    }
+
+    public Transport listTransport(Long id) {
+        return transportDAO.listTransport(id);
+    }
+
+    public List<Transport> listAllTransport() {
+        return new ArrayList<>(transportDAO.listAllTransports());
+    }
+
+    public void modifyTransport(int freeSeats, Long id) {
+        Transport transport = transportDAO.listTransport(id);
+        if (transport.getFreeSeats() != 0) transport.setFreeSeats(freeSeats);
+        transportDAO.modifyTransport(transport);
+    }
+
+    public void removeTransport(Long id) {
+        Transport transport = transportDAO.listTransport(id);
+        List<Booking> removableBookings = bookingDAO.findBookingsByTransportId(id);
+        if (removableBookings.size() > 0) {
+            for (Booking b : removableBookings) {
+                bookingService.removeBooking(b.getId());
+            }
+        }
+        transportDAO.removeTransport(transport);
     }
 }
