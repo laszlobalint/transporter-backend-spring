@@ -1,6 +1,8 @@
 package transporter.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class Transport {
     private Long id;
 
     @Column(name = "departure_time", nullable = false)
+    @NotNull
     private LocalDateTime departureTime;
 
     @Column(name = "free_seats", nullable = false)

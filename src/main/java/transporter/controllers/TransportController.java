@@ -2,9 +2,11 @@ package transporter.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import transporter.entities.Transport;
 import transporter.services.TransportService;
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -20,9 +22,14 @@ public class TransportController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Model saveTransport(@ModelAttribute Transport transport, Model model) {
-        transportService.saveTransport(transport);
-        model.addAttribute("message", "Sikeresen mentetted az utazást!");
+    public Model saveTransport(@Valid Transport transport, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Hibás adatokat adtál meg az utazásnál!");
+        } else {
+            transportService.saveTransport(transport);
+            model.addAttribute("message", "Sikeresen mentetted az utazást!");
+        }
         return model;
     }
 

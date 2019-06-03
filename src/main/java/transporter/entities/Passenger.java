@@ -1,6 +1,8 @@
 package transporter.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Arrays;
 
 @Entity
@@ -11,12 +13,16 @@ public class Passenger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @NotEmpty
     @Column(name = "phone_number", length = 100, nullable = false)
     private String phoneNumber;
 
+    @NotEmpty
+    @Email
     @Column(name = "email", length = 200, nullable = false)
     private String email;
 
