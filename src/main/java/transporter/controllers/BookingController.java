@@ -1,13 +1,15 @@
 package transporter.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import transporter.entities.Booking;
 import transporter.services.BookingService;
+import java.util.List;
 
 @Controller
+@RequestMapping("/booking")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BookingController {
 
     private BookingService bookingService;
@@ -16,33 +18,42 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @RequestMapping(value = "/booking", method = RequestMethod.POST)
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ModelAndView saveBooking() {
-        return new ModelAndView("", "passenger", null);
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public Model saveBooking(@ModelAttribute Booking booking, Model model) {
+        bookingService.saveBooking(booking);
+        model.addAttribute("message", "Sikeresen mentetted a foglalásodat!");
+        return model;
     }
 
-    @RequestMapping(value = "/booking", method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ModelAndView listBooking() {
-        return new ModelAndView("", "passenger", null);
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public Booking listBooking() {
+        Long id = null;
+        return bookingService.listBooking(id);
     }
 
-    @RequestMapping(value = "/booking/all", method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ModelAndView listAllBookings() {
-        return new ModelAndView("index", "passengers", null);
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Booking> listAllBookings() {
+        return bookingService.listAllBookings();
     }
 
-    @RequestMapping(value = "/booking", method = RequestMethod.PUT)
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ModelAndView modifyBooking() {
-        return new ModelAndView("", "passenger", null);
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public Model modifyBooking(@ModelAttribute Booking booking, Model model) {
+        Long id = null;
+        bookingService.modifyBooking(booking.getLocationSerbia(), booking.getLocationHungary(), id);
+        model.addAttribute("message", "Sikeresen módosítottad a foglalásodat!");
+        return model;
     }
 
-    @RequestMapping(value = "/booking", method = RequestMethod.DELETE)
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ModelAndView removeBooking() {
-        return new ModelAndView("", "passenger", null);
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseBody
+    public Model removeBooking(Model model) {
+        Long id = null;
+        bookingService.removeBooking(id);
+        model.addAttribute("message", "Sikeresen törölted a foglalásodat!");
+        return model;
     }
 }

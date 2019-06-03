@@ -39,24 +39,18 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void init() {
         Transport transport = new Transport(LocalDateTime.of(2019, 5, 16, 20, 0), null);
         transportService.saveTransport(transport);
-
         Passenger passenger1 = new Passenger("Test Passenger", "+36-70-11111111", "test@test.com", null);
         passengerService.savePassenger(passenger1);
-
         Booking booking1 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.GRINGOS_BUS_STOP, Booking.LocationSerbia.MARKET_LIDL);
         booking1.setPassenger(passengerService.listPassenger(1L));
         bookingService.saveBooking(booking1);
-
         Passenger passenger2 = new Passenger("John Doe", "+36-70-22222222", "gmail@gmail.com", null);
         passengerService.savePassenger(passenger2);
-
         Booking booking2 = new Booking(LocalDateTime.of(2019, 5, 16, 20, 0),
                 Booking.LocationHungary.BAKERY_BUREK, Booking.LocationSerbia.NEW_CITY_HALL);
         booking2.setPassenger(passengerService.listPassenger(2L));
         bookingService.saveBooking(booking2);
-
-        bookingService.removeBooking(2L);
     }
 
     @Override
