@@ -1,6 +1,7 @@
 package transporter.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import transporter.entities.Transport;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
+@CrossOrigin(origins = "http://localhost:4200")
 public class TransportDAO {
 
     @PersistenceContext
