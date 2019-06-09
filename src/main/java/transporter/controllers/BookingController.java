@@ -1,6 +1,5 @@
 package transporter.controllers;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,7 @@ import transporter.services.BookingService;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/booking")
 @CrossOrigin(origins = "http://localhost:4200")
 public class BookingController {
@@ -20,8 +19,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping
     public Model saveBooking(@Valid Booking booking, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Hibás adatokat adtál meg a foglaláshoz!");
@@ -32,21 +30,18 @@ public class BookingController {
         return model;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping
     public Booking listBooking() {
         Long id = null;
         return bookingService.listBooking(id);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/all")
     public List<Booking> listAllBookings() {
         return bookingService.listAllBookings();
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
+    @PutMapping
     public Model modifyBooking(@ModelAttribute Booking booking, Model model) {
         Long id = null;
         bookingService.modifyBooking(booking.getLocationSerbia(), booking.getLocationHungary(), id);
@@ -54,8 +49,7 @@ public class BookingController {
         return model;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
+    @DeleteMapping
     public Model removeBooking(Model model) {
         Long id = null;
         bookingService.removeBooking(id);

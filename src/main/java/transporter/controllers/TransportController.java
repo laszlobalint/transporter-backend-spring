@@ -9,7 +9,7 @@ import transporter.services.TransportService;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/transport")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TransportController {
@@ -20,8 +20,7 @@ public class TransportController {
         this.transportService = transportService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping
     public Model saveTransport(@Valid Transport transport, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
@@ -33,21 +32,18 @@ public class TransportController {
         return model;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping
     public Transport listTransport() {
         Long id = null;
         return transportService.listTransport(id);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/all")
     public List<Transport> listAllTransports() {
         return transportService.listAllTransport();
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
+    @PutMapping
     public Model modifyTransport(@ModelAttribute Transport transport, Model model) {
         Long id = null;
         transportService.modifyTransport(transport.getFreeSeats(), id);
@@ -55,8 +51,7 @@ public class TransportController {
         return model;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
+    @DeleteMapping
     public Model removeTransport(Model model) {
         Long id = null;
         transportService.removeTransport(id);

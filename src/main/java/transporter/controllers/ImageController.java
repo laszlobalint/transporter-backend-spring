@@ -2,7 +2,6 @@ package transporter.controllers;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import transporter.entities.Image;
@@ -10,24 +9,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
-public class ImagesController {
+@RestController
+@RequestMapping("/images")
+@CrossOrigin(origins = "http://localhost:4200")
+public class ImageController {
 
     private Map<String, Resource> images = new HashMap<>();
 
-    @RequestMapping(value = "/images/{name:.+}", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/{name:.+}")
     public Resource getImage(@PathVariable("name") String name) {
         return images.get(name);
     }
 
-    @RequestMapping(value = "/upload-image", method = RequestMethod.GET)
+    @GetMapping("/upload-image")
     public Model getUploadImageForm(Model model) {
         model.addAttribute("imageForm", new Image());
         return model;
     }
 
-    @RequestMapping(value = "/upload-image", method = RequestMethod.POST)
+    @PostMapping("/upload-image")
     public String uploadImage(@ModelAttribute Image uploadImageForm) {
         try {
             images.put(uploadImageForm.getName(), new ByteArrayResource(uploadImageForm.getFile().getBytes()));
