@@ -1,7 +1,6 @@
 package transporter.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,7 +34,7 @@ public class Transport {
     @Column(name = "free_seats", nullable = false)
     private int freeSeats = 4;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "transport")
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "transport")
     private Set<Booking> bookings;
 
     public Transport() {}

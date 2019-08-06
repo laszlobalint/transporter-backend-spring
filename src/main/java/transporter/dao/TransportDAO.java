@@ -27,7 +27,7 @@ public class TransportDAO {
     }
 
     public List<Transport> listAllTransports() {
-        return entityManager.createQuery("SELECT t FROM Transport t ORDER by t.departure_time", Transport.class)
+        return entityManager.createQuery("SELECT t FROM Transport t ORDER by t.departureTime", Transport.class)
                 .getResultList();
     }
 

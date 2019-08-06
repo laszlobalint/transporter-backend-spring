@@ -28,7 +28,7 @@ public class BookingDAO {
     }
 
     public List<Booking> listAllBookings() {
-        return entityManager.createQuery("SELECT b FROM Booking b ORDER by b.departure_time", Booking.class)
+        return entityManager.createQuery("SELECT b FROM Booking b ORDER by b.departureTime", Booking.class)
                 .getResultList();
     }
 
