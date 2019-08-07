@@ -1,5 +1,7 @@
 package transporter.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -35,6 +37,7 @@ public class Transport {
     private int freeSeats = 4;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "transport")
+    @JsonIgnore
     private Set<Booking> bookings;
 
     public Transport() {}

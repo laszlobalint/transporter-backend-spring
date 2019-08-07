@@ -7,19 +7,19 @@ export enum TransportActionTypes {
     FetchTransportFailure = '[Transport] Fetch Transport Failure',
 }
 export class FetchTransport implements Action {
-    readonly type = TransportActionTypes.FetchTransport;
+    public readonly type = TransportActionTypes.FetchTransport;
 }
 
 export class FetchTransportSuccess implements Action {
-    readonly type = TransportActionTypes.FetchTransport;
+    public readonly type = TransportActionTypes.FetchTransportSuccess;
 
-    constructor(payload: Transport[]) {}
+    constructor(public payload: Transport[]) {}
 }
 
 export class FetchTransportFailure implements Action {
-    readonly type = TransportActionTypes.FetchTransport;
+    public readonly type = TransportActionTypes.FetchTransportFailure;
 
-    constructor(payload: string) {}
+    constructor(public payload: string) {}
 }
 
 export type TransportActions =
