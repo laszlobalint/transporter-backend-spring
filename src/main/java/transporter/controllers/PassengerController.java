@@ -40,7 +40,7 @@ public class PassengerController {
     }
 
     @GetMapping
-    public Passenger listPassenger(Long id) {
+    public Passenger listPassenger(@PathVariable(value = "id") Long id) {
         return passengerService.listPassenger(id);
     }
 

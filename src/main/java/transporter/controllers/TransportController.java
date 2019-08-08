@@ -31,9 +31,8 @@ public class TransportController {
         return model;
     }
 
-    @GetMapping
-    public Transport listTransport() {
-        Long id = null;
+    @GetMapping("/{id}")
+    public Transport listTransport(@PathVariable(value = "id") Long id) {
         return transportService.listTransport(id);
     }
 

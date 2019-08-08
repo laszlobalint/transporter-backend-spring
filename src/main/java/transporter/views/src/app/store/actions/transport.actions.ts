@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+
 import { Transport } from '../../models/transport.model';
 
 export enum TransportActionTypes {

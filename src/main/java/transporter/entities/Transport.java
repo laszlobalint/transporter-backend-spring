@@ -13,6 +13,8 @@ import java.util.Set;
 @Table(name = "transport")
 public class Transport {
 
+    public enum Route { FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY }
+
     public static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",
@@ -29,6 +31,10 @@ public class Transport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Route route;
+
     @Column(name = "departure_time", nullable = false)
     @NotNull
     private LocalDateTime departureTime;
@@ -42,7 +48,8 @@ public class Transport {
 
     public Transport() {}
 
-    public Transport(LocalDateTime departureTime, Set<Booking> bookings) {
+    public Transport(Route route, LocalDateTime departureTime, Set<Booking> bookings) {
+        this.route = route;
         this.departureTime = departureTime;
         this.bookings = bookings;
     }
@@ -62,6 +69,14 @@ public class Transport {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -92,6 +107,7 @@ public class Transport {
     public String toString() {
         return "\nTransport information: " +
                 "\nID - " + id +
+                "\nRoute - " + route +
                 "\nDeparture time - " + departureTime +
                 "\nFree seats (?/4) - " + freeSeats +
                 "\nBookings: " + bookings;

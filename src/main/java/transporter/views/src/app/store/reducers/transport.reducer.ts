@@ -1,6 +1,8 @@
-import { Transport } from './../../models';
-import * as fromTransport from '../actions';
 import { Action } from '@ngrx/store';
+
+import * as fromTransport from '../actions';
+
+import { Transport } from './../../models';
 
 export interface TransportState {
     transports: Transport[];

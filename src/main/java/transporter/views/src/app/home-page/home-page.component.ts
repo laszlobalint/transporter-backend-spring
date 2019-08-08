@@ -1,7 +1,8 @@
-import { Transport } from './../models/transport.model';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+
 import * as fromCore from '../store';
+
 import { TransportState } from '../store/reducers/transport.reducer';
 
 @Component({
@@ -10,14 +11,16 @@ import { TransportState } from '../store/reducers/transport.reducer';
     styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
-    transports: any;
+    transports = [];
+
     constructor(private readonly coreStore: Store<fromCore.CoreState>) {
-        this.transports = this.coreStore.select<TransportState>(
-            state => state.transports
-        );
-        this.transports.subscribe((transportState: Transport[]) =>
-            console.log(transportState)
-        );
+        this.coreStore
+            .select<TransportState>(state => state.transports)
+            .subscribe((transportState: TransportState) =>
+                transportState.transports.length > 0
+                    ? (this.transports = transportState.transports)
+                    : (this.transports = undefined)
+            );
     }
 
     ngOnInit() {

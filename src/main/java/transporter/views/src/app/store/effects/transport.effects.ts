@@ -1,10 +1,12 @@
-import { Transport } from '../../models';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { TransportService } from '../../services/transport.service';
-import * as fromTransport from '../actions';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+
+import { TransportService } from '../../services/transport.service';
+
+import * as fromTransport from '../actions';
+import { Transport } from '../../models';
 
 @Injectable()
 export class TransportEffects {
