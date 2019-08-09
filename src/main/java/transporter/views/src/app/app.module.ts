@@ -14,9 +14,10 @@ import { TransportService } from './services/transport.service';
 
 import { DigitPipe } from './utils/pipes/digit.pipe';
 import { WeekdayPipe } from './utils/pipes/weekday.pipe';
+import { BookingComponentComponent } from './booking-component/booking-component.component';
 
 @NgModule({
-    declarations: [AppComponent, HomePageComponent, DigitPipe, WeekdayPipe],
+    declarations: [AppComponent, HomePageComponent, DigitPipe, WeekdayPipe, BookingComponentComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,

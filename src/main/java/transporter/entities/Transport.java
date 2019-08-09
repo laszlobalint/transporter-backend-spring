@@ -18,7 +18,7 @@ public class Transport {
     public static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",
-            "Gépjűrmű színe", "fehér",
+            "Gépjármű színe", "fehér",
             "Rendszám", "PVW-221",
             "Telefonszám (HUN)", "+36-70/6793041",
             "Telefonszám (RS)", "+381-63/7693041",

@@ -37,7 +37,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Autowired
     private TransportService transportService;
 
-    @Bean
+    /*@Bean
     public void init() {
         Transport transport1 = new Transport(Transport.Route.FROM_HUNGARY_TO_SERBIA, LocalDateTime.of(2019, 5, 16, 20, 0), null);
         transportService.saveTransport(transport1);
@@ -55,7 +55,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 Booking.LocationHungary.BAKERY_BUREK, Booking.LocationSerbia.NEW_CITY_HALL);
         booking2.setPassenger(passengerService.listPassenger(2L));
         bookingService.saveBooking(booking2);
-    }
+    }*/
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
