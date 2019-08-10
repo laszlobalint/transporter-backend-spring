@@ -1,6 +1,7 @@
 package transporter.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
@@ -19,6 +20,9 @@ public class PassengerService {
     }
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private BookingDAO bookingDAO;
 
     @Autowired
@@ -28,6 +32,7 @@ public class PassengerService {
     private PassengerService passengerService;
 
     public void savePassenger(Passenger passenger) {
+        passenger.setPassword(passwordEncoder.encode(passenger.getPassword()));
         passengerDAO.savePassenger(passenger);
     }
 

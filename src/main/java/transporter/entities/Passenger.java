@@ -18,6 +18,10 @@ public class Passenger {
     private String name;
 
     @NotEmpty
+    @Column(name = "password", length = 60, nullable = false)
+    private String password;
+
+    @NotEmpty
     @Column(name = "phone_number", length = 100, nullable = false)
     private String phoneNumber;
 
@@ -38,8 +42,9 @@ public class Passenger {
 
     public Passenger() {}
 
-    public Passenger(String name, String phoneNumber, String email, byte[] picture) {
+    public Passenger(String name, String password, String phoneNumber, String email, byte[] picture) {
         this.name = name;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.picture = picture;
@@ -61,6 +66,22 @@ public class Passenger {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
     }
 
     public String getPhoneNumber() {
