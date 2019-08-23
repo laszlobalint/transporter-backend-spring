@@ -3,9 +3,9 @@ package transporter.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import transporter.auth.AuthService;
 import transporter.entities.Passenger;
 import transporter.services.PassengerService;
 import javax.validation.Valid;
@@ -20,9 +20,6 @@ public class PassengerController {
 
     @Autowired
     private Environment environment;
-
-    @Autowired
-    private AuthService authService;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
@@ -65,11 +62,8 @@ public class PassengerController {
         return model;
     }
 
-    // TOKEN FUNCTIONALITY - UNDER IMPLEMENTATION
-    @GetMapping("/token")
-    public String getToken() {
-        String token = authService.createJWT(listPassenger(1L));
-        return "ID of the user: " + authService.decodeJWT(token).getSubject();
-        // return authService.validateToken(token);
+    @PostMapping("/login")
+    public String loginPassenger(@RequestParam MultiValueMap<String, String> body, Model model) {
+        return passengerService.loginPassenger(body.getFirst("email"), body.getFirst("plainPassword"));
     }
 }

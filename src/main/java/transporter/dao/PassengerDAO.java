@@ -41,4 +41,18 @@ public class PassengerDAO {
         entityManager.remove(entityManager.getReference(Passenger.class, id));
         entityManager.flush();
     }
+
+    public String findEncodedPasswordForPassengerByEmail(String email) {
+        return entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getSingleResult();
+    }
+
+    public Passenger findPassengerByEmail(String email) {
+        return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getSingleResult();
+    }
 }

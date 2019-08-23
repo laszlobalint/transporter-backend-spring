@@ -3,6 +3,7 @@ package transporter.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import transporter.auth.AuthService;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.entities.Booking;
@@ -30,6 +31,9 @@ public class PassengerService {
 
     @Autowired
     private PassengerService passengerService;
+
+    @Autowired
+    private AuthService authService;
 
     public void savePassenger(Passenger passenger) {
         passenger.setPassword(passwordEncoder.encode(passenger.getPassword()));
@@ -61,5 +65,16 @@ public class PassengerService {
             }
         }
         passengerDAO.removePassenger(id);
+    }
+
+    public String loginPassenger(String email, String plainPassword) {
+        String encodedPassword = passengerDAO.findEncodedPasswordForPassengerByEmail(email);
+        boolean isMatching = passwordEncoder.matches(plainPassword, encodedPassword);
+        if (isMatching) {
+            Passenger passenger = passengerDAO.findPassengerByEmail(email);
+            return authService.createJWT(passenger);
+        } else {
+            return "Wrong user credentials!";
+        }
     }
 }
