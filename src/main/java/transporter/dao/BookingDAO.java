@@ -33,13 +33,15 @@ public class BookingDAO {
     }
 
     public List<Booking> findBookingsByPassengerId(Long id) {
-        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.passenger p WHERE p.id = :id", Booking.class)
+        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.passenger p WHERE p.id = :id",
+                Booking.class)
                 .setParameter("id", id)
                 .getResultList();
     }
 
     public List<Booking> findBookingsByTransportId(Long id) {
-        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.transport t WHERE t.id = :id", Booking.class)
+        return entityManager.createQuery("SELECT b FROM Booking b JOIN b.transport t WHERE t.id = :id",
+                Booking.class)
                 .setParameter("id", id)
                 .getResultList();
     }
@@ -51,8 +53,9 @@ public class BookingDAO {
     }
 
     @Transactional
-    public void removeBooking(Booking booking) {
-        entityManager.remove(entityManager.contains(booking) ? booking : entityManager.merge(booking));
+    public void removeBooking(Long id) {
+        Booking b = listBooking(id);
+        entityManager.remove(b);
         entityManager.flush();
     }
 }

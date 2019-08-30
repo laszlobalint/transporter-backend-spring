@@ -19,7 +19,6 @@ public class AuthService {
     private Environment environment;
 
     public String createJWT(Passenger passenger) {
-
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         long ttlMillis = 604800000L;
         long nowMillis = System.currentTimeMillis();
@@ -36,42 +35,36 @@ public class AuthService {
         long expMillis = nowMillis + ttlMillis;
         Date exp = new Date(expMillis);
         builder.setExpiration(exp);
-
         return builder.compact();
     }
 
     public Claims decodeJWT(String jwt) {
-
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey")))
                 .parseClaimsJws(jwt).getBody();
-        System.out.println("Token ID: " + claims.getId());
-        System.out.println("User ID: " + claims.getSubject());
-        System.out.println("Name: " + claims.getIssuer());
-        System.out.println("Expiration: " + claims.getExpiration());
-
         return claims;
     }
 
     public String getPassengerName(String token) {
-
-        return Jwts.parser().setSigningKey(environment.getProperty("secretKey")).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(environment.getProperty("secretKey")).parseClaimsJws(token)
+                .getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest req) {
-
+    public Claims resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-
-            return bearerToken.substring(7);
+            return decodeJWT(bearerToken.substring(7));
         }
-
         return null;
     }
 
-    public boolean validateToken(String token) {
-        Jws<Claims> claims = Jwts.parser().setSigningKey(environment.getProperty("secretKey")).parseClaimsJws(token);
-
-        return !claims.getBody().getExpiration().before(new Date());
+    public boolean validateToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(environment.getProperty("secretKey"))
+                    .parseClaimsJws(bearerToken.substring(7));
+            return !claims.getBody().getExpiration().before(new Date());
+        }
+        return false;
     }
 }

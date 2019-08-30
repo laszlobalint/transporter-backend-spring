@@ -2,14 +2,19 @@ package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import transporter.auth.AuthService;
 import transporter.entities.Passenger;
 import transporter.services.PassengerService;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/passenger")
@@ -17,6 +22,9 @@ import java.util.List;
 public class PassengerController {
 
     private PassengerService passengerService;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private Environment environment;
@@ -36,34 +44,46 @@ public class PassengerController {
         return model;
     }
 
-    @GetMapping
-    public Passenger listPassenger(@PathVariable(value = "id") Long id) {
-        return passengerService.listPassenger(id);
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<Object> listPassenger(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        if (authService.validateToken(request)) {
+            return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+        } else  {
+            return ResponseEntity.status(401).body(null);
+        }
     }
 
-    @GetMapping("/all")
-    public List<Passenger> listAllPassengers() {
-        return passengerService.listAllPassengers();
+    @GetMapping(value = "/all", produces = "application/json")
+    public ResponseEntity<List<Passenger>> listAllPassengers(HttpServletRequest request) {
+        if (authService.validateToken(request)) {
+            return ResponseEntity.status(200).body(passengerService.listAllPassengers());
+        } else  {
+            return ResponseEntity.status(401).body(null);
+        }
     }
 
-    @PutMapping
-    public Model modifyPassenger(@ModelAttribute Passenger passenger, Model model) {
-        Long id = null;
-        passengerService.modifyPassenger(passenger, id);
-        model.addAttribute("message", "Sikeresen módosítottad a profilodat!");
-        return model;
+    @PutMapping(produces = "application/json")
+    public ResponseEntity<Passenger> modifyPassenger(@RequestParam MultiValueMap<String, String> body,
+                                                     HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        Passenger p = new Passenger(body.getFirst("name"), body.getFirst("password"),
+                body.getFirst("phoneNumber"), body.getFirst("email"),
+                Objects.requireNonNull(body.getFirst("picture")).getBytes());
+        passengerService.modifyPassenger(p, id);
+        return ResponseEntity.status(200).body(passengerService.listPassenger(id));
     }
 
-    @DeleteMapping
-    public Model removePassenger(Model model) {
-        Long id = null;
+    @DeleteMapping(produces = "application/json")
+    public ResponseEntity<String> removePassenger(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         passengerService.removePassenger(id);
-        model.addAttribute("message", "Sikeresen törölted a foglalásodat!");
-        return model;
+        return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
     }
 
-    @PostMapping("/login")
-    public String loginPassenger(@RequestParam MultiValueMap<String, String> body, Model model) {
-        return passengerService.loginPassenger(body.getFirst("email"), body.getFirst("plainPassword"));
+    @PostMapping(value = "/login", produces = "application/json")
+    public ResponseEntity<String> loginPassenger(@RequestParam MultiValueMap<String, String> body) {
+        return ResponseEntity.status(200).body(passengerService.loginPassenger(body.getFirst("email"),
+                body.getFirst("plainPassword")));
     }
 }

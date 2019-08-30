@@ -51,18 +51,19 @@ public class PassengerService {
     public void modifyPassenger(Passenger p, Long id) {
         Passenger passenger = passengerDAO.listPassenger(id);
         if (p.getName() != null) passenger.setName(p.getName());
-        if (p.getEmail() != null) passenger.setEmail(p.getEmail());
+        if (p.getPassword() != null) passenger.setPassword(passwordEncoder.encode(passenger.getPassword()));
         if (p.getPhoneNumber() != null) passenger.setPhoneNumber(p.getPhoneNumber());
+        if (p.getEmail() != null) passenger.setEmail(p.getEmail());
         if (p.getPicture() != null) passenger.setPicture(p.getPicture());
         passengerDAO.modifyPassenger(passenger);
     }
 
     public void removePassenger(Long id) {
         List<Booking> removableBookings = bookingDAO.findBookingsByPassengerId(id);
-        if (removableBookings.size() > 0) {
-            for (Booking b : removableBookings) {
+        if (removableBookings.size() != 0) {
+            removableBookings.forEach((b) -> {
                 bookingService.removeBooking(b.getId());
-            }
+            });
         }
         passengerDAO.removePassenger(id);
     }
