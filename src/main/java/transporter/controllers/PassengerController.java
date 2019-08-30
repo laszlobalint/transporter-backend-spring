@@ -3,7 +3,6 @@ package transporter.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import transporter.entities.Passenger;
 import transporter.services.PassengerService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,19 +31,22 @@ public class PassengerController {
         this.passengerService = passengerService;
     }
 
-    @PostMapping
-    public Model savePassenger(@Valid Passenger passenger, BindingResult bindingResult, Model model) {
+    @PostMapping(produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Passenger> savePassenger(@RequestBody MultiValueMap<String, String> body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("message", "Hibás adatokat adtál meg a profilodnál!");
+            return ResponseEntity.status(400).body(null);
         } else {
-            passengerService.savePassenger(passenger);
-            model.addAttribute("message", "Sikeresen mentetted a profilodat!");
+            Passenger p = new Passenger(body.getFirst("name"), body.getFirst("password"),
+                    body.getFirst("phoneNumber"), body.getFirst("email"),
+                    Objects.requireNonNull(body.getFirst("picture")).getBytes());
+            passengerService.savePassenger(p);
+            return ResponseEntity.status(200).body(passengerService.listPassengerByEmail(body.getFirst("email")));
         }
-        return model;
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<Object> listPassenger(HttpServletRequest request) {
+    public ResponseEntity<Passenger> listPassenger(HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         if (authService.validateToken(request)) {
             return ResponseEntity.status(200).body(passengerService.listPassenger(id));
@@ -55,8 +56,10 @@ public class PassengerController {
     }
 
     @GetMapping(value = "/all", produces = "application/json")
-    public ResponseEntity<List<Passenger>> listAllPassengers(HttpServletRequest request) {
-        if (authService.validateToken(request)) {
+    public ResponseEntity<List<Passenger>> listAllPassengers(@RequestParam MultiValueMap<String, String> body,
+                                                             HttpServletRequest request) {
+        if (authService.validateToken(request) &&
+                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
             return ResponseEntity.status(200).body(passengerService.listAllPassengers());
         } else  {
             return ResponseEntity.status(401).body(null);

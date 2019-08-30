@@ -29,7 +29,7 @@ public class AuthService {
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
                 .setIssuedAt(now)
                 .setSubject(passenger.getId().toString())
-                .setIssuer(passenger.getName())
+                .setIssuer(passenger.getEmail())
                 .signWith(signatureAlgorithm, signingKey);
 
         long expMillis = nowMillis + ttlMillis;

@@ -44,6 +44,10 @@ public class PassengerService {
         return passengerDAO.listPassenger(id);
     }
 
+    public Passenger listPassengerByEmail(String email) {
+        return passengerDAO.findPassengerByEmail(email);
+    }
+
     public List<Passenger> listAllPassengers() {
         return new ArrayList<>(passengerDAO.listAllPassengers());
     }
@@ -51,7 +55,7 @@ public class PassengerService {
     public void modifyPassenger(Passenger p, Long id) {
         Passenger passenger = passengerDAO.listPassenger(id);
         if (p.getName() != null) passenger.setName(p.getName());
-        if (p.getPassword() != null) passenger.setPassword(passwordEncoder.encode(passenger.getPassword()));
+        if (p.getPassword() != null) passenger.setPassword(passwordEncoder.encode(p.getPassword()));
         if (p.getPhoneNumber() != null) passenger.setPhoneNumber(p.getPhoneNumber());
         if (p.getEmail() != null) passenger.setEmail(p.getEmail());
         if (p.getPicture() != null) passenger.setPicture(p.getPicture());
