@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { Transport } from '../../models/transport.model';
+import { Transport } from '../../_models/transport.model';
 
 export enum TransportActionTypes {
     FetchTransport = '[Transport] Fetch Tranports',

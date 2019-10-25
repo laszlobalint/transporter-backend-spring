@@ -8,17 +8,24 @@ import { reducers, resetStateMetaReducer, effects } from './store';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { HomePageComponent } from './home-page/home-page.component';
+import { HomeComponent } from './home/home.component';
 
-import { TransportService } from './services/transport.service';
+import { TransportService } from './_services/transport.service';
 
 import { DigitPipe } from './utils/pipes/digit.pipe';
 import { WeekdayPipe } from './utils/pipes/weekday.pipe';
-import { BookingComponentComponent } from './booking-component/booking-component.component';
-import { RegisterComponentComponent } from './register-component/register-component.component';
+import { BookingComponent } from './booking/booking.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
-    declarations: [AppComponent, HomePageComponent, DigitPipe, WeekdayPipe, BookingComponentComponent, RegisterComponentComponent],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        DigitPipe,
+        WeekdayPipe,
+        BookingComponent,
+        RegisterComponent,
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,

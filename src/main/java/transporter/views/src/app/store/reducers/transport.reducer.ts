@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 import * as fromTransport from '../actions';
 
-import { Transport } from './../../models';
+import { Transport } from '../../_models';
 
 export interface TransportState {
     transports: Transport[];

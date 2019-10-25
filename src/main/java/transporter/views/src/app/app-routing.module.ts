@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomePageComponent } from './home-page/home-page.component';
-import { BookingComponentComponent } from './booking-component/booking-component.component';
-import { RegisterComponentComponent } from './register-component/register-component.component';
+import { HomeComponent } from './home/home.component';
+import { BookingComponent } from './booking/booking.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
-    { path: 'booking/:id', component: BookingComponentComponent },
-    { path: 'register', component: RegisterComponentComponent },
-    { path: '', component: HomePageComponent },
+    { path: 'booking/:id', component: BookingComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: '', component: HomeComponent },
 ];
 
 @NgModule({
