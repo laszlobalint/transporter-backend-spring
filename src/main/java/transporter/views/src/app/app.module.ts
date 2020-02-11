@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, resetStateMetaReducer, effects } from './store';
 
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -30,6 +31,8 @@ import { RegisterComponent } from './register/register.component';
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
         StoreModule.forRoot(reducers, {
             metaReducers: [resetStateMetaReducer],
         }),

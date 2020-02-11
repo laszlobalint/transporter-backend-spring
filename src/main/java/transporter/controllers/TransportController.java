@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/transport")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class TransportController {
 
     private TransportService transportService;

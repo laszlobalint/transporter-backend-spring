@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/booking")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class BookingController {
 
     private BookingService bookingService;

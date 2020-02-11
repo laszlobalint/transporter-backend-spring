@@ -32,12 +32,12 @@
                 {{ transport.freeSeats }}
             </div>
             <div class="col-sm">
-                {{ transport.departureTime.year }}.
-                {{ transport.departureTime.monthValue | digit }}.
-                {{ transport.departureTime.dayOfMonth | digit }}.
-                {{ transport.departureTime.dayOfWeek | weekday }}
-                {{ transport.departureTime.hour | digit }}:{{
-                    transport.departureTime.minute | digit
+                {{ transport.departureTime['year'] }}.
+                {{ transport.departureTime['monthValue'] | digit }}.
+                {{ transport.departureTime['dayOfMonth'] | digit }}.
+                {{ transport.departureTime['dayOfWeek'] | weekday }}
+                {{ transport.departureTime['hour'] | digit }}:{{
+                    transport.departureTime['minute'] | digit
                 }}
             </div>
             <div class="col-sm">
