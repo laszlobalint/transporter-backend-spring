@@ -1,5 +1,7 @@
+import { PassengerService } from './../_services/passenger.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { checkPasswords } from '../_utils/validators.utils';
 
 @Component({
     selector: 'app-register',
@@ -7,9 +9,66 @@ import { FormBuilder } from '@angular/forms';
     styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-    constructor(private readonly formBuilder: FormBuilder) {}
+    public form = new FormGroup({});
 
-    ngOnInit() {}
+    constructor(
+        private readonly formBuilder: FormBuilder,
+        private readonly passengerService: PassengerService
+    ) {}
 
-    onRegister() {}
+    public ngOnInit(): void {
+        this.form = this.formBuilder.group({
+            name: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(2),
+                    Validators.maxLength(100),
+                ],
+            ],
+            email: ['', [Validators.required, Validators.email]],
+            phoneNumber: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.maxLength(20),
+                ],
+            ],
+            passwordGroup: this.formBuilder.group(
+                {
+                    password: [
+                        '',
+                        [
+                            Validators.required,
+                            Validators.minLength(8),
+                            Validators.maxLength(100),
+                        ],
+                    ],
+                    passwordConfirm: [
+                        '',
+                        [
+                            Validators.required,
+                            Validators.minLength(8),
+                            Validators.maxLength(100),
+                        ],
+                    ],
+                },
+                { validator: checkPasswords }
+            ),
+        });
+    }
+
+    public onRegister(): void {
+        this.passengerService
+            .savePassenger({
+                name: this.form.value.name,
+                email: this.form.value.email,
+                password: this.form.controls['passwordGroup'].value.password,
+                picture: new Blob(),
+            })
+            .subscribe((response: string) => {
+                alert(response);
+            });
+    }
 }

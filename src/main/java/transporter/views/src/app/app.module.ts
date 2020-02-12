@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 
+import { PassengerService } from './_services/passenger.service';
 import { TransportService } from './_services/transport.service';
 
 import { DigitPipe } from './utils/pipes/digit.pipe';
@@ -38,7 +39,7 @@ import { RegisterComponent } from './register/register.component';
         }),
         EffectsModule.forRoot(effects),
     ],
-    providers: [TransportService],
+    providers: [TransportService, PassengerService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

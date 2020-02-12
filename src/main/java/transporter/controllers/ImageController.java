@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping(value = "/images")
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ImageController {
 

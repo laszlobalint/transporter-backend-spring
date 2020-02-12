@@ -2,6 +2,7 @@ package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/passenger")
+@RequestMapping(value = "/passenger")
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class PassengerController {
 
@@ -31,8 +32,7 @@ public class PassengerController {
         this.passengerService = passengerService;
     }
 
-    @PostMapping(produces = "application/json")
-    @ResponseBody
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Passenger> savePassenger(@RequestBody MultiValueMap<String, String> body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(null);

@@ -6,11 +6,11 @@ import { Transport } from '../_models';
 
 @Injectable()
 export class TransportService {
-    public readonly TRANSPORT_API_URL = 'http://localhost:8080/transport/all';
+    public readonly TRANSPORT_API_URL = 'http://localhost:8080/transport';
 
     constructor(private readonly http: HttpClient) {}
 
     public fetchTransports(): Observable<Transport[]> {
-        return this.http.get<Transport[]>(this.TRANSPORT_API_URL);
+        return this.http.get<Transport[]>(`${this.TRANSPORT_API_URL}/all`);
     }
 }

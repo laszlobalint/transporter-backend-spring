@@ -7,3 +7,14 @@ export interface Passenger {
     isActivated: boolean;
     bookingCount: number;
 }
+
+export interface Register {
+    name: string;
+    email: string;
+    password: string;
+    picture?: Blob;
+}
+
+export interface PasswordValidation {
+    notSame: boolean;
+}
