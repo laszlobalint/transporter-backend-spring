@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import transporter.auth.AuthService;
 import transporter.entities.Passenger;
 import transporter.services.PassengerService;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/passenger")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class PassengerController {
 
     private PassengerService passengerService;
@@ -33,15 +30,15 @@ public class PassengerController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Passenger> savePassenger(@RequestBody MultiValueMap<String, String> body, BindingResult bindingResult) {
+    @ResponseBody
+    public ResponseEntity<Passenger> savePassenger(@RequestBody Passenger body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(null);
         } else {
-            Passenger p = new Passenger(body.getFirst("name"), body.getFirst("password"),
-                    body.getFirst("phoneNumber"), body.getFirst("email"),
-                    Objects.requireNonNull(body.getFirst("picture")).getBytes());
+            Passenger p = new Passenger(body.getName(), body.getPassword(),
+                    body.getPhoneNumber(), body.getEmail());
             passengerService.savePassenger(p);
-            return ResponseEntity.status(200).body(passengerService.listPassengerByEmail(body.getFirst("email")));
+            return ResponseEntity.status(200).body(passengerService.listPassengerByEmail(body.getEmail()));
         }
     }
 
@@ -71,8 +68,7 @@ public class PassengerController {
                                                      HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         Passenger p = new Passenger(body.getFirst("name"), body.getFirst("password"),
-                body.getFirst("phoneNumber"), body.getFirst("email"),
-                Objects.requireNonNull(body.getFirst("picture")).getBytes());
+                body.getFirst("phoneNumber"), body.getFirst("email"));
         passengerService.modifyPassenger(p, id);
         return ResponseEntity.status(200).body(passengerService.listPassenger(id));
     }

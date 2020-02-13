@@ -58,7 +58,6 @@ public class PassengerService {
         if (p.getPassword() != null) passenger.setPassword(passwordEncoder.encode(p.getPassword()));
         if (p.getPhoneNumber() != null) passenger.setPhoneNumber(p.getPhoneNumber());
         if (p.getEmail() != null) passenger.setEmail(p.getEmail());
-        if (p.getPicture() != null) passenger.setPicture(p.getPicture());
         passengerDAO.modifyPassenger(passenger);
     }
 

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@CrossOrigin(origins = "http://localhost:4200")
 public class TransportDAO {
 
     @PersistenceContext

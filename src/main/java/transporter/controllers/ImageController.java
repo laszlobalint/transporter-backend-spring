@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/images")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ImageController {
 
     private Map<String, Resource> images = new HashMap<>();

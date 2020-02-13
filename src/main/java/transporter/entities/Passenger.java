@@ -3,7 +3,6 @@ package transporter.entities;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.Arrays;
 
 @Entity
 @Table(name = "passenger")
@@ -30,10 +29,6 @@ public class Passenger {
     @Column(name = "email", length = 200, nullable = false)
     private String email;
 
-    @Lob
-    @Column(name = "picture", nullable = true)
-    private byte[] picture;
-
     @Column(name = "is_activated", nullable = false)
     private boolean isActivated;
 
@@ -42,12 +37,11 @@ public class Passenger {
 
     public Passenger() {}
 
-    public Passenger(String name, String password, String phoneNumber, String email, byte[] picture) {
+    public Passenger(String name, String password, String phoneNumber, String email) {
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.picture = picture;
         this.isActivated = false;
         this.bookingCount = 0;
     }
@@ -100,14 +94,6 @@ public class Passenger {
         this.email = email;
     }
 
-    public byte[] getPicture() {
-        return picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
-    }
-
     public boolean getIsActivated() {
         return isActivated;
     }
@@ -131,7 +117,6 @@ public class Passenger {
                 "\nName - " + name + '\'' +
                 "\nPhone number - " + phoneNumber + '\'' +
                 "\nEmail address - " + email + '\'' +
-                "\nPicture data - " + Arrays.toString(picture) +
                 "\nActivated - " + isActivated +
                 "\nBooking count - " + bookingCount;
     }

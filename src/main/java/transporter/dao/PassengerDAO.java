@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@CrossOrigin(origins = "http://localhost:4200")
 public class PassengerDAO {
 
     @PersistenceContext

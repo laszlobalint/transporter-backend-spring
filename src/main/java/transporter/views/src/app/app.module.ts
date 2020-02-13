@@ -36,6 +36,10 @@ import { RegisterComponent } from './register/register.component';
         ReactiveFormsModule,
         StoreModule.forRoot(reducers, {
             metaReducers: [resetStateMetaReducer],
+            runtimeChecks: {
+                strictStateImmutability: true,
+                strictActionImmutability: true,
+            },
         }),
         EffectsModule.forRoot(effects),
     ],

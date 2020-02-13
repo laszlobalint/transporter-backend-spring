@@ -6,7 +6,7 @@
     <filter>
         <filter-name>SimpleCorsFilter</filter-name>
         <filter-class>
-            transporter.SimpleCorsFilter
+            transporter.filters.SimpleCorsFilter
         </filter-class>
     </filter>
     <filter-mapping>

@@ -2,6 +2,7 @@ import { PassengerService } from './../_services/passenger.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { checkPasswords } from '../_utils/validators.utils';
+import { Passenger } from '../_models';
 
 @Component({
     selector: 'app-register',
@@ -65,10 +66,9 @@ export class RegisterComponent implements OnInit {
                 name: this.form.value.name,
                 email: this.form.value.email,
                 password: this.form.controls['passwordGroup'].value.password,
-                picture: new Blob(),
             })
-            .subscribe((response: string) => {
-                alert(response);
+            .subscribe((response: Passenger) => {
+                console.log(response);
             });
     }
 }

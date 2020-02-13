@@ -1,4 +1,4 @@
-import { Register } from './../_models/passenger.model';
+import { Register, Passenger } from './../_models/passenger.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,8 +9,8 @@ export class PassengerService {
 
     constructor(private readonly http: HttpClient) {}
 
-    public savePassenger(passenger: Register): Observable<string> {
-        return this.http.post<string>(this.PASSENGER_API_URL, passenger, {
+    public savePassenger(passenger: Register): Observable<Passenger> {
+        return this.http.post<Passenger>(this.PASSENGER_API_URL, passenger, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
             }),
