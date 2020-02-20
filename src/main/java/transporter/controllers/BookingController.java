@@ -1,5 +1,6 @@
 package transporter.controllers;
 
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +30,17 @@ public class BookingController {
         return model;
     }
 
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public Booking listBooking(@PathVariable(value = "id") Long id) {
         return bookingService.listBooking(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Booking> listAllBookings() {
         return bookingService.listAllBookings();
     }
 
-    @PutMapping
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Model modifyBooking(@ModelAttribute Booking booking, Model model) {
         Long id = null;
         bookingService.modifyBooking(booking.getLocationSerbia(), booking.getLocationHungary(), id);
@@ -47,7 +48,7 @@ public class BookingController {
         return model;
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public Model removeBooking(Model model) {
         Long id = null;
         bookingService.removeBooking(id);

@@ -2,14 +2,14 @@ export interface Passenger {
     id: number;
     name: string;
     phoneNumber: string;
-    email: string;
+    plainPassword: string;
     isActivated: boolean;
     bookingCount: number;
 }
 
 export interface Register {
     name: string;
-    email: string;
+    plainPassword: string;
     password: string;
 }
 

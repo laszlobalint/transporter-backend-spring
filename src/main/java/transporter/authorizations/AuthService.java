@@ -1,4 +1,4 @@
-package transporter.auth;
+package transporter.authorizations;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +52,9 @@ public class AuthService {
 
     public Claims resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer "))
             return decodeJWT(bearerToken.substring(7));
-        }
-        return null;
+        else return null;
     }
 
     public boolean validateToken(HttpServletRequest req) {

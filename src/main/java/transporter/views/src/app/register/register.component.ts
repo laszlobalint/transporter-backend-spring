@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
                     Validators.maxLength(100),
                 ],
             ],
-            email: ['', [Validators.required, Validators.email]],
+            plainPassword: ['', [Validators.required, Validators.plainPassword]],
             phoneNumber: [
                 '',
                 [
@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
         this.passengerService
             .savePassenger({
                 name: this.form.value.name,
-                email: this.form.value.email,
+                plainPassword: this.form.value.plainPassword,
                 password: this.form.controls['passwordGroup'].value.password,
             })
             .subscribe((response: Passenger) => {

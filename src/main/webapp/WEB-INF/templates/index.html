@@ -17,7 +17,7 @@
             <th:block th:each="passenger : ${passengers}">
                 <tr>
                     <td th:text="${passenger.name}"></td>
-                    <td th:text="${passenger.email}"></td>
+                    <td th:text="${passenger.plainPassword}"></td>
                 </tr>
             </th:block>
         </tbody>

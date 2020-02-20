@@ -1,7 +1,6 @@
 package transporter.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
 import javax.persistence.EntityManager;

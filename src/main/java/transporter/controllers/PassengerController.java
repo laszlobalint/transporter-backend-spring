@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import transporter.auth.AuthService;
+import transporter.authorizations.AuthService;
+import transporter.entities.LoginPassenger;
 import transporter.entities.Passenger;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/passenger")
@@ -31,9 +31,11 @@ public class PassengerController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Passenger> savePassenger(@RequestBody Passenger body, BindingResult bindingResult) {
+    public ResponseEntity<Object> savePassenger(@RequestBody Passenger body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(bindingResult.getAllErrors());
+        } else if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
+            return ResponseEntity.status(409).body("Az e-mail cím már használatban van!");
         } else {
             Passenger p = new Passenger(body.getName(), body.getPassword(),
                     body.getPhoneNumber(), body.getEmail());
@@ -42,28 +44,35 @@ public class PassengerController {
         }
     }
 
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<Passenger> listPassenger(HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public ResponseEntity listPassenger(HttpServletRequest request) {
+        Long id;
         if (authService.validateToken(request)) {
-            return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-        } else  {
-            return ResponseEntity.status(401).body(null);
+            id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+            if (id != null)
+                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+            else
+                return ResponseEntity.status(401).body("Nincs felhasználó a megadott ID-val!");
+        } else {
+            return ResponseEntity.status(401).body("Nem kérhetőek le a felhasználó adatai!");
         }
     }
 
-    @GetMapping(value = "/all", produces = "application/json")
-    public ResponseEntity<List<Passenger>> listAllPassengers(@RequestParam MultiValueMap<String, String> body,
+    @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public ResponseEntity listAllPassengers(@RequestParam MultiValueMap<String, String> body,
                                                              HttpServletRequest request) {
         if (authService.validateToken(request) &&
                 authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
             return ResponseEntity.status(200).body(passengerService.listAllPassengers());
-        } else  {
-            return ResponseEntity.status(401).body(null);
+        } else {
+            return ResponseEntity.status(401).body("Adminisztrátori jogok szükségesek a kéréshez!");
         }
     }
 
-    @PutMapping(produces = "application/json")
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
     public ResponseEntity<Passenger> modifyPassenger(@RequestParam MultiValueMap<String, String> body,
                                                      HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
@@ -73,16 +82,21 @@ public class PassengerController {
         return ResponseEntity.status(200).body(passengerService.listPassenger(id));
     }
 
-    @DeleteMapping(produces = "application/json")
+    @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
     public ResponseEntity<String> removePassenger(HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         passengerService.removePassenger(id);
         return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
     }
 
-    @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<String> loginPassenger(@RequestParam MultiValueMap<String, String> body) {
-        return ResponseEntity.status(200).body(passengerService.loginPassenger(body.getFirst("email"),
-                body.getFirst("plainPassword")));
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public ResponseEntity<String> loginPassenger(@RequestBody LoginPassenger body) {
+        if (passengerService.listPassengerByEmail(body.getEmail()) == null)
+            return ResponseEntity.status(404).body("Az e-mail cím nincs használatban!");
+        else
+            return ResponseEntity.status(200).body(passengerService.loginPassenger(body.getEmail(),
+                    body.getPlainPassword()));
     }
 }

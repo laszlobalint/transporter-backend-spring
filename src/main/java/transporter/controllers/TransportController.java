@@ -1,5 +1,6 @@
 package transporter.controllers;
 
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,8 @@ public class TransportController {
         this.transportService = transportService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
     public Model saveTransport(@Valid Transport transport, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
@@ -30,17 +32,20 @@ public class TransportController {
         return model;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public Transport listTransport(@PathVariable(value = "id") Long id) {
         return transportService.listTransport(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public List<Transport> listAllTransports() {
         return transportService.listAllTransport();
     }
 
-    @PutMapping
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
     public Model modifyTransport(@ModelAttribute Transport transport, Model model) {
         Long id = null;
         transportService.modifyTransport(transport.getFreeSeats(), id);
@@ -48,7 +53,8 @@ public class TransportController {
         return model;
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
     public Model removeTransport(Model model) {
         Long id = null;
         transportService.removeTransport(id);

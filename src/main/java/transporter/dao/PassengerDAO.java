@@ -1,9 +1,9 @@
 package transporter.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import transporter.entities.Passenger;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -42,16 +42,34 @@ public class PassengerDAO {
     }
 
     public String findEncodedPasswordForPassengerByEmail(String email) {
-        return entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
-                .setParameter("email", email)
-                .setMaxResults(1)
-                .getSingleResult();
+        String password;
+        try {
+            password = entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
+                    .setParameter("email", email)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+        if (password != null)
+            return password;
+        else
+            return null;
     }
 
     public Passenger findPassengerByEmail(String email) {
-        return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
-                .setParameter("email", email)
-                .setMaxResults(1)
-                .getSingleResult();
+        Passenger passenger;
+        try {
+            passenger = entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
+                    .setParameter("email", email)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+        if (passenger != null)
+            return passenger;
+        else
+            return null;
     }
 }

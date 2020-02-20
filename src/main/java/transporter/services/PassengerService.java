@@ -3,7 +3,7 @@ package transporter.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import transporter.auth.AuthService;
+import transporter.authorizations.AuthService;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.entities.Booking;
@@ -78,7 +78,7 @@ public class PassengerService {
             Passenger passenger = passengerDAO.findPassengerByEmail(email);
             return authService.createJWT(passenger);
         } else {
-            return "Wrong user credentials!";
+            return "Helytelen e-mail címet vagy jelszót adtál meg!";
         }
     }
 }
