@@ -21,7 +21,16 @@ public class PassengerDAO {
     }
 
     public Passenger listPassenger(Long id) {
-        return entityManager.find(Passenger.class, id);
+        Passenger passenger;
+        try {
+            passenger = entityManager.find(Passenger.class, id);
+        } catch (NoResultException nre) {
+            passenger = null;
+        }
+        if (passenger != null)
+            return passenger;
+        else
+            return null;
     }
 
     public List<Passenger> listAllPassengers() {

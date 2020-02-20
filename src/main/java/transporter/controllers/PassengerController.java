@@ -84,10 +84,16 @@ public class PassengerController {
 
     @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<String> removePassenger(HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        passengerService.removePassenger(id);
-        return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
+    public ResponseEntity removePassenger(HttpServletRequest request) {
+        Long id;
+        if (authService.validateToken(request)) {
+            id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+            if (id != null && passengerService.listPassenger(id) != null) {
+                passengerService.removePassenger(id);
+                return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
+            }
+        }
+        return ResponseEntity.status(403).body("Nem törölhető a profil!");
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
