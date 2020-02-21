@@ -61,8 +61,7 @@ public class PassengerController {
 
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity listAllPassengers(@RequestParam MultiValueMap<String, String> body,
-                                                             HttpServletRequest request) {
+    public ResponseEntity listAllPassengers(HttpServletRequest request) {
         if (authService.validateToken(request) &&
                 authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
             return ResponseEntity.status(200).body(passengerService.listAllPassengers());
@@ -71,15 +70,18 @@ public class PassengerController {
         }
     }
 
+
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Passenger> modifyPassenger(@RequestParam MultiValueMap<String, String> body,
+    public ResponseEntity modifyPassenger(@RequestBody Passenger body,
                                                      HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Passenger p = new Passenger(body.getFirst("name"), body.getFirst("password"),
-                body.getFirst("phoneNumber"), body.getFirst("email"));
-        passengerService.modifyPassenger(p, id);
-        return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+        Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
+        Passenger saved = passengerService.modifyPassenger(edited, id);
+        if (saved != null)
+            return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+        else
+            return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
     }
 
     @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})

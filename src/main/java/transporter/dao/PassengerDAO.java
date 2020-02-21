@@ -39,9 +39,10 @@ public class PassengerDAO {
     }
 
     @Transactional
-    public void modifyPassenger(Passenger passenger) {
-        entityManager.merge(passenger);
+    public Passenger modifyPassenger(Passenger passenger) {
+        Passenger saved = entityManager.merge(passenger);
         entityManager.flush();
+        return saved;
     }
 
     @Transactional
