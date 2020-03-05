@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
@@ -75,13 +74,17 @@ public class PassengerController {
     @ResponseBody
     public ResponseEntity modifyPassenger(@RequestBody Passenger body,
                                                      HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
-        Passenger saved = passengerService.modifyPassenger(edited, id);
-        if (saved != null)
-            return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-        else
-            return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
+        if (authService.validateToken(request)) {
+            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+            Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
+            Passenger saved = passengerService.modifyPassenger(edited, id);
+            if (saved != null)
+                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+            else
+                return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
+        } else {
+            return ResponseEntity.status(403).body("Nem változtathatóak meg a felhasználó adatai!");
+        }
     }
 
     @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
