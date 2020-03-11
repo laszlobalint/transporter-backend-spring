@@ -62,10 +62,13 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)
     private Transport transport;
 
+    @Transient
+    private String departureTimeString;
+
     public Booking() {}
 
-    public Booking(LocalDateTime departureTime, LocationSerbia pickUp, LocationHungary dropOff) {
-        this.departureTime = departureTime;
+    public Booking(String departureTime, LocationSerbia pickUp, LocationHungary dropOff) {
+        this.departureTime = LocalDateTime.parse(departureTime);
         this.locationSerbia = pickUp;
         this.locationHungary = dropOff;
     }
@@ -90,6 +93,14 @@ public class Booking {
 
     public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public String getDepartureTimeString() {
+        return departureTimeString;
+    }
+
+    public void setDepartureTimeString(String departureTimeString) {
+        this.departureTimeString = departureTimeString;
     }
 
     public LocationSerbia getLocationSerbia() {

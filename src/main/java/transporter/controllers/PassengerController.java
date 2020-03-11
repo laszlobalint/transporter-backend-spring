@@ -16,11 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/passenger")
 public class PassengerController {
 
+    @Autowired
     private PassengerService passengerService;
-
     @Autowired
     private AuthService authService;
-
     @Autowired
     private Environment environment;
 

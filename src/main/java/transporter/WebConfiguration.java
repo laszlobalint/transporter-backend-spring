@@ -23,14 +23,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import transporter.entities.Booking;
-import transporter.entities.Passenger;
-import transporter.entities.Transport;
+import transporter.authorizations.AuthService;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
 import transporter.services.TransportService;
-
-import java.time.LocalDateTime;
 
 @Configuration
 @EnableWebMvc
@@ -48,6 +44,8 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter implements We
     private TransportService transportService;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     public void init() {
