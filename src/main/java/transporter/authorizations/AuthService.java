@@ -25,13 +25,11 @@ public class AuthService {
         Date now = new Date(nowMillis);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey"));
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
                 .setIssuedAt(now)
                 .setSubject(passenger.getId().toString())
                 .setIssuer(passenger.getEmail())
                 .signWith(signatureAlgorithm, signingKey);
-
         long expMillis = nowMillis + ttlMillis;
         Date exp = new Date(expMillis);
         builder.setExpiration(exp);

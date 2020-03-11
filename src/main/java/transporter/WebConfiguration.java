@@ -23,7 +23,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import transporter.authorizations.AuthService;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
 import transporter.services.TransportService;
