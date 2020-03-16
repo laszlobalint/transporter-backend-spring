@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
                     Validators.maxLength(100),
                 ],
             ],
-            plainPassword: ['', [Validators.required, Validators.plainPassword]],
+            email: ['', [Validators.required, Validators.email]],
             phoneNumber: [
                 '',
                 [
