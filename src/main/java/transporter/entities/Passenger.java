@@ -35,7 +35,8 @@ public class Passenger {
     @Column(name = "booking_count", nullable = false)
     private int bookingCount;
 
-    public Passenger() {}
+    public Passenger() {
+    }
 
     public Passenger(String name, String password, String phoneNumber, String email) {
         this.name = name;
@@ -121,4 +122,3 @@ public class Passenger {
                 "\nBooking count - " + bookingCount;
     }
 }
-

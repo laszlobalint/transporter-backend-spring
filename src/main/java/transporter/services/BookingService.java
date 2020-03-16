@@ -44,7 +44,7 @@ public class BookingService {
     }
 
     public List<Booking> listAllBookings() {
-        return new ArrayList<>( bookingDAO.listAllBookings());
+        return new ArrayList<>(bookingDAO.listAllBookings());
     }
 
     public void modifyBooking(Booking.LocationSerbia ls, Booking.LocationHungary lh, Long id) {

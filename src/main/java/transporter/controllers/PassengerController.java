@@ -69,8 +69,7 @@ public class PassengerController {
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> modifyPassenger(@RequestBody Passenger body,
-                                                     HttpServletRequest request) {
+    public ResponseEntity<Object> modifyPassenger(@RequestBody Passenger body, HttpServletRequest request) {
         if (authService.validateToken(request)) {
             Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
             Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());

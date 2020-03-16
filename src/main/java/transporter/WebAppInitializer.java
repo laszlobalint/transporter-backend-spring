@@ -14,26 +14,26 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {WebConfiguration.class};
+        return new Class[]{WebConfiguration.class};
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] {"/"};
+        return new String[]{"/"};
     }
 
     @Override
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
-        return new Filter[] {characterEncodingFilter};
+        return new Filter[]{characterEncodingFilter};
     }
 
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
         MultipartConfigElement multipartConfigElement =
                 new MultipartConfigElement(System.getProperty("java.io.tmpdir"),
-                5 * 1024 * 1024, 20 * 1024 * 1024, 0);
+                        5 * 1024 * 1024, 20 * 1024 * 1024, 0);
         registration.setMultipartConfig(multipartConfigElement);
     }
 }

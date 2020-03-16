@@ -9,9 +9,12 @@ import java.util.Map;
 @Table(name = "booking")
 public class Booking {
 
-    public enum LocationSerbia { NEW_CITY_HALL, MARKET_LIDL, POLICE_STATION, MARKET_024, RADANOVAC, PALIC_WATERTOWER,
-        RESTAURANT_ABRAHAM }
-    public enum LocationHungary { SING_SING_MUSIC_HALL, MARKET_SMALL_TESCO, BAKERY_BUREK, GRINGOS_BUS_STOP, ICERINK }
+    public enum LocationSerbia {
+        NEW_CITY_HALL, MARKET_LIDL, POLICE_STATION, MARKET_024, RADANOVAC, PALIC_WATERTOWER,
+        RESTAURANT_ABRAHAM
+    }
+
+    public enum LocationHungary {SING_SING_MUSIC_HALL, MARKET_SMALL_TESCO, BAKERY_BUREK, GRINGOS_BUS_STOP, ICERINK}
 
     public static Map<LocationSerbia, String> serbiaLocationAddresses = Map.of(
             LocationSerbia.NEW_CITY_HALL,
@@ -65,7 +68,8 @@ public class Booking {
     @Transient
     private String departureTimeString;
 
-    public Booking() {}
+    public Booking() {
+    }
 
     public Booking(String departureTime, LocationSerbia pickUp, LocationHungary dropOff) {
         this.departureTime = LocalDateTime.parse(departureTime);

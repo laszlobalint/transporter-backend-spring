@@ -34,7 +34,7 @@ public class TransportController {
         return model;
     }
 
-    @GetMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Transport listTransport(@PathVariable(value = "id") Long id) {
         return transportService.listTransport(id);

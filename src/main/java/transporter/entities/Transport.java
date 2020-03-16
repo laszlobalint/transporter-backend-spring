@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "transport")
 public class Transport {
 
-    public enum Route { FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY }
+    public enum Route {FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY}
 
     public static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
@@ -46,7 +46,8 @@ public class Transport {
     @JsonIgnore
     private Set<Booking> bookings;
 
-    public Transport() {}
+    public Transport() {
+    }
 
     public Transport(Route route, LocalDateTime departureTime, Set<Booking> bookings) {
         this.route = route;

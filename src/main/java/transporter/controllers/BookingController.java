@@ -60,12 +60,17 @@ public class BookingController {
             return ResponseEntity.status(403).body("Nem lehet lekérdezni az összes foglalást!");
     }
 
-    // TO-DO
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/{bookingId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity modifyBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), id);
-        return ResponseEntity.status(200).body("Sikeresen módosítottad a foglalásodat!");
+        Booking b = bookingService.listBooking(bookingId);
+        if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {
+            bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), bookingId);
+            if (bookingService.listBooking(bookingId).getLocationHungary() == body.getLocationHungary() &&
+                    bookingService.listBooking(bookingId).getLocationSerbia() == body.getLocationSerbia())
+                return ResponseEntity.status(200).body("Sikeresen módosítottad a foglalásodat!");
+        }
+        return ResponseEntity.status(400).body("Nem sikerült módosítani a foglalást!");
     }
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
