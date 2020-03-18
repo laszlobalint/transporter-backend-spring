@@ -23,7 +23,7 @@ public class Transport {
             "Telefonszám (HUN)", "+36-70/6793041",
             "Telefonszám (RS)", "+381-63/7693041",
             "E-mail cím", "laszlobalint1987@gmail.com",
-            "Fuvardíj", "300 dinár VAGY 800 forint",
+            "Fuvardíj", "400 dinár VAGY 1000 forint",
             "Egyéb infók", "klíma, nemdohányzó, csomagszállítás, készpénzfizetés"
     );
 
@@ -45,6 +45,9 @@ public class Transport {
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "transport")
     @JsonIgnore
     private Set<Booking> bookings;
+
+    @Transient
+    private String departureTimeString;
 
     public Transport() {
     }
@@ -86,6 +89,14 @@ public class Transport {
 
     public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public String getDepartureTimeString() {
+        return departureTimeString;
+    }
+
+    public void setDepartureTimeString(String departureTimeString) {
+        this.departureTimeString = departureTimeString;
     }
 
     public Set<Booking> getBookings() {

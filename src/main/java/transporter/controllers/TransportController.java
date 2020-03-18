@@ -1,13 +1,16 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import transporter.authorizations.AuthService;
 import transporter.entities.Transport;
 import transporter.services.TransportService;
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -16,6 +19,10 @@ public class TransportController {
 
     @Autowired
     private TransportService transportService;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private Environment environment;
 
     public TransportController(TransportService transportService) {
         this.transportService = transportService;
@@ -23,15 +30,14 @@ public class TransportController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public Model saveTransport(@Valid Transport transport, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("message", "Hibás adatokat adtál meg az utazásnál!");
-        } else {
-            transportService.saveTransport(transport);
-            model.addAttribute("message", "Sikeresen mentetted az utazást!");
+    public ResponseEntity<Object> saveTransport(@RequestBody Transport body, HttpServletRequest request) {
+        if (authService.validateToken(request) &&
+                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
+            Transport t = new Transport(body.getRoute(), LocalDateTime.parse(body.getDepartureTimeString()), null);
+            transportService.saveTransport(t);
+            return ResponseEntity.status(200).body("Sikeresen meghirdetted az új fuvart!");
         }
-        return model;
+        return ResponseEntity.status(400).body("Az új fuvar meghirdetése sikertelen!");
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

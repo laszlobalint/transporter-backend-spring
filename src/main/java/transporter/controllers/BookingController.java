@@ -39,8 +39,8 @@ public class BookingController {
             b.setPassenger(passengerService.listPassenger(id));
             bookingService.saveBooking(b);
             return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-        } else
-            return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
+        }
+        return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
     }
 
     @GetMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
