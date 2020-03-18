@@ -6,8 +6,9 @@ import transporter.dao.BookingDAO;
 import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransportService {
@@ -33,7 +34,10 @@ public class TransportService {
     }
 
     public List<Transport> listAllTransport() {
-        return new ArrayList<>(transportDAO.listAllTransports());
+        return transportDAO.listAllTransports()
+                .stream()
+                .filter(t -> t.getDepartureTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public void modifyTransport(int freeSeats, Long id) {

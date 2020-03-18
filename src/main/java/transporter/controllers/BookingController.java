@@ -38,14 +38,14 @@ public class BookingController {
             Booking b = new Booking(LocalDateTime.parse(body.getDepartureTimeString()), body.getLocationHungary(), body.getLocationSerbia());
             b.setPassenger(passengerService.listPassenger(id));
             bookingService.saveBooking(b);
-            return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+            return ResponseEntity.status(200).body("Sikeresen lefoglaltad a helyet a fuvarra!");
         }
         return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
     }
 
     @GetMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> listBooking(@PathVariable Long bookingId, HttpServletRequest request) {
-        if (authService.validateToken(request) && bookingService.listBooking((bookingId)) != null)
+        if (authService.validateToken(request) && bookingService.listBooking(bookingId) != null)
             return ResponseEntity.status(200).body(bookingService.listBooking(bookingId));
         else
             return ResponseEntity.status(400).body("Nem kérhető le a megadott foglalás!");
