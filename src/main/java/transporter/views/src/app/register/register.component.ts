@@ -7,7 +7,6 @@ import { Passenger } from '../_models';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
     public form = new FormGroup({});
@@ -62,9 +61,8 @@ export class RegisterComponent implements OnInit {
 
     public onRegister(): void {
         this.passengerService
-            .savePassenger({
-                name: this.form.value.name,
-                plainPassword: this.form.value.plainPassword,
+            .save({
+                ...this.form.value,
                 password: this.form.controls['passwordGroup'].value.password,
             })
             .subscribe((response: Passenger) => {

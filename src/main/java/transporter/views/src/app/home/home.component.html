@@ -1,55 +1,53 @@
-<div class="text-center">
-    <h1 class="cover-heading">
-        Foglalj fuvart Szegedre vagy Szabadkára:
-    </h1>
-    <div *ngIf="transports" class="container-fluid">
-        <div class="row font-weight-bold text-uppercase">
-            <div class="col-sm">Útirány</div>
-            <div class="col-sm">
-                Szabad ülőhelyek:
-            </div>
-            <div class="col-sm">
-                Indulás ideje:
-            </div>
-            <div class="col-sm"></div>
+<h1 class="cover-heading">
+    Foglalj fuvart Szegedre vagy Szabadkára:
+</h1>
+<div *ngIf="transports" class="container">
+    <div class="row font-weight-bold text-uppercase">
+        <div class="col-sm">Útirány</div>
+        <div class="col-sm">
+            Szabad ülőhelyek:
         </div>
-        <div *ngFor="let transport of transports" class="row">
-            <div
-                *ngIf="
-                    transport.route === 'FROM_HUNGARY_TO_SERBIA';
-                    then hunser;
-                    else serhun
-                "
-            ></div>
-            <ng-template #serhun>
-                <div class="col-sm">Szabadkáról Szegedre</div>
-            </ng-template>
-            <ng-template #hunser>
-                <div class="col-sm">Szegedről Szabadkára</div>
-            </ng-template>
+        <div class="col-sm">
+            Indulás ideje:
+        </div>
+        <div class="col-sm"></div>
+    </div>
+    <div *ngFor="let transport of transports" class="row">
+        <div
+            *ngIf="
+                transport.route === 'FROM_HUNGARY_TO_SERBIA';
+                then hunser;
+                else serhun
+            "
+        ></div>
+        <ng-template #serhun>
+            <div class="col-sm">Szabadkáról Szegedre</div>
+        </ng-template>
+        <ng-template #hunser>
+            <div class="col-sm">Szegedről Szabadkára</div>
+        </ng-template>
 
-            <div class="col-sm">
-                {{ transport.freeSeats }}
-            </div>
-            <div class="col-sm">
-                {{ transport.departureTime['year'] }}.
-                {{ transport.departureTime['monthValue'] | digit }}.
-                {{ transport.departureTime['dayOfMonth'] | digit }}.
-                {{ transport.departureTime['dayOfWeek'] | weekday }}
-                {{ transport.departureTime['hour'] | digit }}:{{
-                    transport.departureTime['minute'] | digit
-                }}
-            </div>
-            <div class="col-sm">
-                <button
-                    type="button"
-                    class="btn btn-dark"
-                    [routerLink]="['/booking', transport.id]"
-                    [disabled]="transport.freeSeats === 0"
-                >
-                    Foglalok
-                </button>
-            </div>
+        <div class="col-sm">
+            {{ transport.freeSeats }}
+        </div>
+        <div class="col-sm">
+            {{ transport.departureTime[0] }}.
+            {{ transport.departureTime[1] | digit }}.
+            {{ transport.departureTime[2] | digit }}.
+            {{ transport.departureTime | weekday }}
+            {{ transport.departureTime[3] | digit }}:{{
+                transport.departureTime[4] | digit
+            }}
+        </div>
+        <div class="col-sm">
+            <button
+                type="button"
+                class="btn btn-dark"
+                [routerLink]="['/booking', transport.id]"
+                [disabled]="transport.freeSeats === 0"
+            >
+                Foglalok
+            </button>
         </div>
     </div>
 </div>

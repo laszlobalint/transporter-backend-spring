@@ -4,21 +4,19 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'weekday',
 })
 export class WeekdayPipe implements PipeTransform {
-    transform(value: string): string {
-        if (value) {
-            return `${this.WEEKDAYS[value.toUpperCase()]}`;
-        } else {
-            return value;
-        }
+    public transform(value: Date): string {
+        return `${
+            this.WEEKDAYS[new Date(value[0], value[1], value[2]).getDay()]
+        }`;
     }
 
     private WEEKDAYS = {
-        MONDAY: 'hétfő',
-        TUESDAY: 'kedd',
-        WEDNESDAY: 'szerda',
-        THURSDAY: 'csütörtök',
-        FRIDAY: 'péntek',
-        SATURDAY: 'szombat',
-        SUNDAY: 'vasárnap',
+        1: 'hétfő',
+        2: 'kedd',
+        3: 'szerda',
+        4: 'csütörtök',
+        5: 'péntek',
+        6: 'szombat',
+        7: 'vasárnap',
     };
 }

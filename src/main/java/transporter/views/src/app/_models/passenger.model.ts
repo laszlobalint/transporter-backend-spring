@@ -7,10 +7,16 @@ export interface Passenger {
     bookingCount: number;
 }
 
-export interface Register {
+export interface RegisterPassenger {
     name: string;
-    plainPassword: string;
+    email: string;
     password: string;
+    phoneNumber: string;
+}
+
+export interface LoginPassenger {
+    email: string;
+    plainPassword: string;
 }
 
 export interface PasswordValidation {

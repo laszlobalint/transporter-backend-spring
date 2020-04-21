@@ -10,7 +10,9 @@ export class TransportService {
 
     constructor(private readonly http: HttpClient) {}
 
-    public fetchTransports(): Observable<Transport[]> {
-        return this.http.get<Transport[]>(`${this.TRANSPORT_API_URL}/all`);
+    public fetch(): Observable<Transport[]> {
+        return this.http.get<Transport[]>(
+            `${this.TRANSPORT_API_URL}/transports/all`
+        );
     }
 }

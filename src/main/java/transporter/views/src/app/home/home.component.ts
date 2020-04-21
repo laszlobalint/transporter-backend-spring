@@ -1,30 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Transport } from './../../../../../../../../target/classes/transporter/views/src/app/_models/transport.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import * as fromRoot from '../store';
 import { Store } from '@ngrx/store';
-
-import * as fromCore from '../store';
-
-import { TransportState } from '../store/reducers/transport.reducer';
-import { Transport } from '../_models';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-    public transports?: Transport[];
+export class HomeComponent implements OnInit, OnDestroy {
+    public transports: Transport[];
+    private transportsSubscription: Subscription;
 
-    constructor(private readonly coreStore: Store<fromCore.CoreState>) {
-        this.coreStore
-            .select<TransportState>(state => state.transports)
-            .subscribe((transportState: TransportState) => {
-                if (transportState.transports.length > 0) {
-                    this.transports = transportState.transports;
-                }
-            });
+    constructor(private readonly rootStore: Store<fromRoot.State>) {}
+
+    public ngOnInit(): void {
+        this.rootStore.dispatch(fromRoot.FetchTransport());
+
+        this.transportsSubscription = this.rootStore
+            .select('transports')
+            .pipe(
+                map((state) => {
+                    this.transports = state.transports;
+                })
+            )
+            .subscribe();
     }
 
-    ngOnInit(): void {
-        this.coreStore.dispatch(new fromCore.FetchTransport());
+    public ngOnDestroy(): void {
+        this.transportsSubscription.unsubscribe();
     }
 }

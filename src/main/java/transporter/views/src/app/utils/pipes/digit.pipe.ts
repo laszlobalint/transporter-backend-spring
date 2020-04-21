@@ -4,11 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'digit',
 })
 export class DigitPipe implements PipeTransform {
-    transform(value: number): string {
-        if (value.toString().length <= 1) {
-            return `0${value}`;
-        } else {
-            return value.toString();
-        }
+    public transform(value: number): string {
+        if (value.toString().length <= 1) return `0${value}`;
+        return value.toString();
     }
 }

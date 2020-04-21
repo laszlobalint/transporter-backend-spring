@@ -1,7 +1,7 @@
 <form [formGroup]="form">
     <div class="form-group row">
         <label for="name" class="col-sm-2 col-form-label">Név</label>
-        <div class="col-sm-10">
+        <div class="col-sm-4">
             <input
                 type="text"
                 class="form-control"
@@ -12,20 +12,20 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="plainPassword" class="col-sm-2 col-form-label">E-mail cím</label>
-        <div class="col-sm-10">
+        <label for="email" class="col-sm-2 col-form-label">E-mail cím</label>
+        <div class="col-sm-4">
             <input
-                type="plainPassword"
+                type="email"
                 class="form-control"
-                id="plainPassword"
+                id="email"
                 placeholder="Add meg az e-mail címedet..."
-                formControlName="plainPassword"
+                formControlName="email"
             />
         </div>
     </div>
     <div class="form-group row">
         <label for="name" class="col-sm-2 col-form-label">Telefonszám</label>
-        <div class="col-sm-10">
+        <div class="col-sm-4">
             <input
                 type="text"
                 class="form-control"
@@ -35,8 +35,8 @@
             />
         </div>
     </div>
-    <div formGroupName="passwordGroup">
-        <div class="form-group">
+    <div class="form-group row" formGroupName="passwordGroup">
+        <div class="form-group column col-sm-3">
             <label for="password">Jelszó</label>
             <input
                 type="password"
@@ -46,7 +46,7 @@
                 formControlName="password"
             />
         </div>
-        <div class="form-group">
+        <div class="form-group column col-sm-3">
             <label for="passwordConfirm">Jelszóismétlés</label>
             <input
                 type="password"
@@ -57,6 +57,7 @@
             />
         </div>
     </div>
+    <div></div>
     <div class="form-group row">
         <div class="col-sm-10">
             <button
@@ -64,7 +65,7 @@
                 class="btn btn-primary"
                 (click)="onRegister()"
             >
-                Küldés
+                Mentés
             </button>
         </div>
     </div>

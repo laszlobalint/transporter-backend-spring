@@ -47,10 +47,7 @@ public class TransportController {
 
     @GetMapping(value = "/transports/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAllTransports(HttpServletRequest request) {
-        if (authService.validateToken(request))
-            return ResponseEntity.status(200).body(transportService.listAllTransport());
-        else
-            return ResponseEntity.status(403).body("Nem lehet lekérdezni az összes fuvart!");
+        return ResponseEntity.status(200).body(transportService.listAllTransport());
     }
 
     @PutMapping(value = "/{transportId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
