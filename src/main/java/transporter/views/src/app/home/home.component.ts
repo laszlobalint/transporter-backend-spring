@@ -1,9 +1,9 @@
 import { map } from 'rxjs/operators';
-import { Transport } from './../../../../../../../../target/classes/transporter/views/src/app/_models/transport.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as fromRoot from '../store';
 import { Store } from '@ngrx/store';
+import { Transport } from '../_models';
 
 @Component({
     selector: 'app-home',

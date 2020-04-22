@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Transport } from 'src/app/_models';
+import { Transport } from '../../_models';
 
 export const FetchTransport = createAction('[Transport] Fetch Tranports');
 export const FetchTransportSuccess = createAction(

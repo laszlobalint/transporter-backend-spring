@@ -7,14 +7,14 @@ export interface Passenger {
     bookingCount: number;
 }
 
-export interface RegisterPassenger {
+export interface RegisterPassengerDto {
     name: string;
     email: string;
     password: string;
     phoneNumber: string;
 }
 
-export interface LoginPassenger {
+export interface LoginPassengerDto {
     email: string;
     plainPassword: string;
 }

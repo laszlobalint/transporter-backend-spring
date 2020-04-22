@@ -36,7 +36,7 @@ public class PassengerController {
                     body.getPhoneNumber(), body.getEmail());
             passengerService.savePassenger(p);
             if (passengerService.listPassengerByEmail(p.getEmail()) != null)
-                return ResponseEntity.status(200).body(p.getName() + "sikeresen regisztrált!");
+                return ResponseEntity.status(200).body(p.getName() + " sikeresen regisztrált!");
         }
         return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült a regisztráció!");
     }

@@ -12,7 +12,7 @@ public class LoginPassenger {
     public LoginPassenger() {
     }
 
-    public LoginPassenger(@NotEmpty @Email String plainPassword, @NotEmpty String email) {
+    public LoginPassenger(@NotEmpty String plainPassword, @NotEmpty @Email String email) {
         this.plainPassword = plainPassword;
         this.email = email;
     }
