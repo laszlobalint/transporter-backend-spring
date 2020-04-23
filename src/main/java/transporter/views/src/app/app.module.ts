@@ -1,3 +1,4 @@
+import { AuthGuard } from './auth/guards/auth.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -18,47 +19,48 @@ import { BookingComponent } from './booking/booking.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        DigitPipe,
-        WeekdayPipe,
-        BookingComponent,
-        HeaderComponent,
-    ],
-    imports: [
-        AuthModule,
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot({
-            timeOut: 5000,
-            positionClass: 'toast-bottom-right',
-            preventDuplicates: true,
-            maxOpened: 1,
-        }),
-        StoreModule.forRoot(reducers, {
-            runtimeChecks: {
-                strictStateImmutability: false,
-                strictActionImmutability: false,
-            },
-        }),
-        EffectsModule.forRoot(effects),
-    ],
-    providers: [
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi: true,
-        },
-        TransportService,
-        PassengerService,
-    ],
-    bootstrap: [AppComponent],
+  declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent],
+  imports: [
+    AuthModule,
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      maxOpened: 1,
+    }),
+    StoreModule.forRoot(reducers, {
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 20,
+    }),
+    EffectsModule.forRoot(effects),
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService,
+    TransportService,
+    PassengerService,
+    AuthGuard,
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

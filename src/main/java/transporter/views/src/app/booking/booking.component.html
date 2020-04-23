@@ -1,63 +1,47 @@
 <form>
-    <div class="form-group row">
-        <label for="name" class="col-sm-2 col-form-label">Név</label>
-        <div class="col-sm-10">
-            <input
-                type="name"
-                class="form-control"
-                id="name"
-                placeholder="Add meg a teljes nevedet..."
-            />
-        </div>
+  <div class="form-group row">
+    <label for="name" class="col-sm-2 col-form-label">Indulás ideje</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" [value]="transport.departureTime" disabled />
     </div>
-    <div class="form-group row">
-        <label for="plainPassword" class="col-sm-2 col-form-label"
-            >E-mail cím</label
-        >
-        <div class="col-sm-10">
-            <input
-                type="plainPassword"
-                class="form-control"
-                id="plainPassword"
-                placeholder="Add meg az e-mail címedet..."
-            />
-        </div>
+  </div>
+  <div class="form-group row">
+    <label for="plainPassword" class="col-sm-2 col-form-label">Útvonal</label>
+    <div class="col-sm-10">
+      <input
+        type="text"
+        class="form-control"
+        [value]="transport.route === 'FROM_HUNGARY_TO_SERBIA' ? 'Szegedről Szabadkára' : 'Szabadkáról Szegedre'"
+        disabled
+      />
     </div>
-    <fieldset class="form-group">
-        <div class="row">
-            <legend class="col-form-label col-sm-2 pt-0">
-                Találkozási pont
-            </legend>
-            <div class="col-sm-10">
-                <select id="location" required>
-                    <option
-                        *ngFor="let location of serbianLocations"
-                        [value]="location"
-                        [selected]="serbianLocations[0]"
-                        >{{ location }}</option
-                    >
-                </select>
-            </div>
-        </div>
-    </fieldset>
-    <div class="form-group row">
-        <div class="col-sm-2">Checkbox</div>
-        <div class="col-sm-10">
-            <div class="form-check">
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="gridCheck1"
-                />
-                <label class="form-check-label" for="gridCheck1">
-                    Example checkbox
-                </label>
-            </div>
-        </div>
+  </div>
+  <div class="form-group row">
+    <label for="plainPassword" class="col-sm-2 col-form-label">Szabad ülőhelye</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" [value]="transport.freeSeats" disabled />
     </div>
-    <div class="form-group row">
-        <div class="col-sm-10">
-            <button type="submit" class="btn btn-primary">Lefoglalom</button>
-        </div>
+  </div>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">
+        Találkozási pont
+      </legend>
+      <div class="col-sm-10">
+        <select *ngIf="transport.route === 'FROM_HUNGARY_TO_SERBIA'; else serhun" required>
+          <option *ngFor="let item of LocationHungary | keyvalue" [value]="item.key">{{ item.value }}</option>
+        </select>
+        <ng-template #serhun>
+          <select required>
+            <option *ngFor="let item of LocationSerbia | keyvalue" [value]="item.key">{{ item.value }}</option>
+          </select>
+        </ng-template>
+      </div>
     </div>
+  </fieldset>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary">Lefoglalom</button>
+    </div>
+  </div>
 </form>

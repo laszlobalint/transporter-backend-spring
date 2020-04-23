@@ -9,71 +9,60 @@ import { AuthService } from 'src/app/_services/auth.service';
 
 @Injectable()
 export class AuthEffects {
-    public login$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(fromActions.LoginPassenger),
-            mergeMap(({ loginPassenger }) =>
-                this.authService.login(loginPassenger).pipe(
-                    map((token) => {
-                        this.toastrService.success(
-                            '',
-                            'Sikeres bejelentkezés!'
-                        );
-                        return fromActions.LoginPassengerSuccess({
-                            token,
-                        });
-                    }),
-                    catchError((error) => {
-                        this.toastrService.error(
-                            '',
-                            'Fuvarokat nem sikerült betölteni!'
-                        );
-                        return of(fromActions.LoginPassengerFailure({ error }));
-                    })
-                )
-            )
-        )
-    );
+  public login$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.LoginPassenger),
+      mergeMap(({ loginPassenger }) =>
+        this.authService.login(loginPassenger).pipe(
+          map((token) => {
+            this.toastrService.success('', 'Sikeres bejelentkezés!');
+            return fromActions.LoginPassengerSuccess({
+              token,
+            });
+          }),
+          catchError((error) => {
+            this.toastrService.error('', 'Fuvarokat nem sikerült betölteni!');
+            return of(fromActions.LoginPassengerFailure({ error }));
+          }),
+        ),
+      ),
+    ),
+  );
 
-    public logout$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(fromActions.LogoutPassenger),
-            map(() => {
-                this.router.navigate(['/login']);
-                return fromActions.DoNothing();
-            })
-        )
-    );
+  public logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.LogoutPassenger),
+      map(() => {
+        this.router.navigate(['/login']);
+        return fromActions.DoNothing();
+      }),
+    ),
+  );
 
-    public fetchInfo$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(fromActions.LoginPassengerSuccess),
-            mergeMap(({ token }) =>
-                this.authService.fetchInfo().pipe(
-                    map((passenger) => {
-                        this.router.navigate(['/']);
-                        return fromActions.GetPassengerInfoSuccess({
-                            passenger,
-                        });
-                    }),
-                    catchError((error) => {
-                        this.toastrService.error(
-                            '',
-                            'Felhasználó adatokat em sikerült betölteni!'
-                        );
-                        return of(
-                            fromActions.GetPassengerInfoFailure({ error })
-                        );
-                    })
-                )
-            )
-        )
-    );
+  public fetchInfo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.LoginPassengerSuccess),
+      mergeMap(({ token }) =>
+        this.authService.fetchInfo().pipe(
+          map((passenger) => {
+            this.router.navigate(['/']);
+            return fromActions.GetPassengerInfoSuccess({
+              passenger,
+            });
+          }),
+          catchError((error) => {
+            this.toastrService.error('', 'Felhasználó adatokat em sikerült betölteni!');
+            return of(fromActions.GetPassengerInfoFailure({ error }));
+          }),
+        ),
+      ),
+    ),
+  );
 
-    constructor(
-        private readonly actions$: Actions,
-        private readonly toastrService: ToastrService,
-        private readonly authService: AuthService,
-        private readonly router: Router
-    ) {}
+  constructor(
+    private readonly actions$: Actions,
+    private readonly toastrService: ToastrService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+  ) {}
 }

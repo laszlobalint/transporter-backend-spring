@@ -18,7 +18,7 @@ public class Booking {
 
     public static Map<LocationSerbia, String> serbiaLocationAddresses = Map.of(
             LocationSerbia.NEW_CITY_HALL,
-            "Szabadka, Mars téri városi piac mögött található Sing Sing szórakozóhely előtti parkoló",
+            "Szabadka, Makszim Gorkij utca és Đure Đaković sarka, Új Városháza előtti buszmegálló",
             LocationSerbia.MARKET_LIDL,
             "Szabadka, Szegedi út és Pap Pál utca sarka, Lidl áruház előtti buszmegálló",
             LocationSerbia.POLICE_STATION,
@@ -31,9 +31,10 @@ public class Booking {
             "Palics, Horgosi út, vasúti átjáró környéke, víztorony előtti buszmegálló",
             LocationSerbia.RESTAURANT_ABRAHAM,
             "Palics, Horgosi út és Ludasi utca sarka, Ábrahám vendéglő előtti parkoló");
+
     public static Map<LocationHungary, String> hungaryLocationAddresses = Map.of(
             LocationHungary.SING_SING_MUSIC_HALL,
-            "Szeged, Makszim Gorkij utca és Đure Đaković sarka, Új Városháza előtti buszmegálló",
+            "Szeged, Mars téri városi piac mögött található Sing Sing szórakozóhely előtti parkoló",
             LocationHungary.MARKET_SMALL_TESCO,
             "Szeged, Dugonics téri TESCO Expressz ('Kis Tesco') előtti autóparkoló",
             LocationHungary.BAKERY_BUREK,

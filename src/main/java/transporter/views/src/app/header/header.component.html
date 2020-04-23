@@ -1,19 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" [href]="['/home']">Főoldal</a>
-    <a class="navbar-brand" [href]="['/login']">Bejelentkezés</a>
-    <a class="navbar-brand" [href]="['/logout']">Kijelentkezés</a>
-    <div class="collapse navbar-collapse d-flex justify-content-between">
-        <a class="navbar-brand" [href]="['/register']">Regisztráció</a>
-        <form class="form-inline my-2 my-lg-0">
-            <input
-                class="form-control mr-sm-2"
-                type="search"
-                placeholder="Keress időpont alapján..."
-                aria-label="Search"
-            />
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-                Keresés
-            </button>
-        </form>
-    </div>
+<nav *ngIf="{ passenger: passenger$ | async } as state" class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" [routerLink]="['/home']">Főoldal</a>
+  <a *ngIf="!state.passenger" class="navbar-brand" [routerLink]="['/login']">Bejelentkezés</a>
+  <a *ngIf="state.passenger" class="navbar-brand" [routerLink]="['/logout']">Kijelentkezés</a>
+  <div class="collapse navbar-collapse d-flex justify-content-between">
+    <a *ngIf="!state.passenger" class="navbar-brand" [routerLink]="['/register']">Regisztráció</a>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Keress időpont alapján..." aria-label="Search" />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Keresés
+      </button>
+    </form>
+  </div>
 </nav>

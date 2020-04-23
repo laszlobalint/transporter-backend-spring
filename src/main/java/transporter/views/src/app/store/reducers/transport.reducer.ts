@@ -3,30 +3,27 @@ import * as fromActions from '../actions';
 import { Transport } from '../../_models';
 
 export interface TransportState {
-    transports?: Transport[];
+  transports?: Transport[];
 }
 
 export const initialState: TransportState = {
-    transports: [],
+  transports: [],
 };
 
 const reducerFunction = createReducer(
-    initialState,
-    on(fromActions.FetchTransportSuccess, (state, { transports }) => ({
-        ...state,
-        transports,
-    }))
+  initialState,
+  on(fromActions.FetchTransportSuccess, (state, { transports }) => ({
+    ...state,
+    transports,
+  })),
 );
 
 export interface State {
-    transports: TransportState;
+  transports: TransportState;
 }
 
 export const transportsFeatureKey = 'transports';
 
-export function reducer(
-    state: TransportState | undefined,
-    action: Action
-): TransportState {
-    return reducerFunction(state, action);
+export function reducer(state: TransportState | undefined, action: Action): TransportState {
+  return reducerFunction(state, action);
 }

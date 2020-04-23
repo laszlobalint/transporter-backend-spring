@@ -8,33 +8,30 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class TransportEffects {
-    @Effect()
-    public fetchTransport$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(fromActions.FetchTransport),
-            mergeMap(() =>
-                this.transportService.fetch().pipe(
-                    map((transports) => {
-                        this.toastrService.success('', 'Fuvarok betöltve!');
-                        return fromActions.FetchTransportSuccess({
-                            transports,
-                        });
-                    }),
-                    catchError((error) => {
-                        this.toastrService.error(
-                            '',
-                            'Fuvarokat nem sikerült betölteni!'
-                        );
-                        return of(fromActions.FetchTransportFailure({ error }));
-                    })
-                )
-            )
-        )
-    );
+  @Effect()
+  public fetchTransport$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.FetchTransport),
+      mergeMap(() =>
+        this.transportService.fetch().pipe(
+          map((transports) => {
+            this.toastrService.success('', 'Fuvarok betöltve!');
+            return fromActions.FetchTransportSuccess({
+              transports,
+            });
+          }),
+          catchError((error) => {
+            this.toastrService.error('', 'Fuvarokat nem sikerült betölteni!');
+            return of(fromActions.FetchTransportFailure({ error }));
+          }),
+        ),
+      ),
+    ),
+  );
 
-    constructor(
-        private readonly actions$: Actions,
-        private readonly transportService: TransportService,
-        private readonly toastrService: ToastrService
-    ) {}
+  constructor(
+    private readonly actions$: Actions,
+    private readonly transportService: TransportService,
+    private readonly toastrService: ToastrService,
+  ) {}
 }

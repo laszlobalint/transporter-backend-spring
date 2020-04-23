@@ -5,16 +5,11 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PassengerService {
-    public readonly PASSENGER_API_URL = 'http://localhost:8080/passenger';
+  public readonly PASSENGER_API_URL = 'http://localhost:8080/passenger';
 
-    constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-    public save(
-        registerPassenger: RegisterPassengerDto
-    ): Observable<Passenger> {
-        return this.http.post<Passenger>(
-            this.PASSENGER_API_URL,
-            registerPassenger
-        );
-    }
+  public save(registerPassenger: RegisterPassengerDto): Observable<Passenger> {
+    return this.http.post<Passenger>(this.PASSENGER_API_URL, registerPassenger);
+  }
 }

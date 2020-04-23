@@ -9,15 +9,9 @@ import { LogoutComponent } from './logout/logout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    declarations: [RegisterComponent, LoginComponent, LogoutComponent],
-    imports: [
-        BrowserModule,
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
-    providers: [AuthService],
-    exports: [RegisterComponent, LoginComponent, LogoutComponent],
+  declarations: [RegisterComponent, LoginComponent, LogoutComponent],
+  imports: [BrowserModule, CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  providers: [AuthService],
+  exports: [RegisterComponent, LoginComponent, LogoutComponent],
 })
 export class AuthModule {}
