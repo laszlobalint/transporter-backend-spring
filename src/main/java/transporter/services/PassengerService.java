@@ -22,16 +22,12 @@ public class PassengerService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private BookingDAO bookingDAO;
-
     @Autowired
     private BookingService bookingService;
-
     @Autowired
     private PassengerService passengerService;
-
     @Autowired
     private AuthService authService;
 

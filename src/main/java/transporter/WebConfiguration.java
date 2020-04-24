@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,14 +24,9 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import transporter.entities.Booking;
-import transporter.entities.Passenger;
-import transporter.entities.Transport;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
 import transporter.services.TransportService;
-
-import java.time.LocalDateTime;
 
 @Configuration
 @EnableWebMvc
@@ -50,6 +46,8 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter implements We
     private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private Environment environment;
 
     @Bean
     public void init() {
