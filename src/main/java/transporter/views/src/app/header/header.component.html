@@ -4,6 +4,7 @@
   <a *ngIf="state.passenger" class="navbar-brand" [routerLink]="['/logout']">Kijelentkezés</a>
   <div class="collapse navbar-collapse d-flex justify-content-between">
     <a *ngIf="!state.passenger" class="navbar-brand" [routerLink]="['/register']">Regisztráció</a>
+    <a *ngIf="state.passenger" class="navbar-brand">Üdv, {{ state.passenger.name }}!</a>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Keress időpont alapján..." aria-label="Search" />
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">

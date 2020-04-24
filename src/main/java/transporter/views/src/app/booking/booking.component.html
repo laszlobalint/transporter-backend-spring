@@ -1,30 +1,23 @@
-<form>
-  <div class="form-group row">
-    <label for="name" class="col-sm-2 col-form-label">Indulás ideje</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" [value]="transport.departureTime" disabled />
+<form *ngIf="{ passenger: passenger$ | async, transports: transports$ | async } as state">
+  <div class="card">
+    <div class="card-header">
+      Utazási információk
     </div>
-  </div>
-  <div class="form-group row">
-    <label for="plainPassword" class="col-sm-2 col-form-label">Útvonal</label>
-    <div class="col-sm-10">
-      <input
-        type="text"
-        class="form-control"
-        [value]="transport.route === 'FROM_HUNGARY_TO_SERBIA' ? 'Szegedről Szabadkára' : 'Szabadkáról Szegedre'"
-        disabled
-      />
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="plainPassword" class="col-sm-2 col-form-label">Szabad ülőhelye</label>
-    <div class="col-sm-10">
-      <input type="number" class="form-control" [value]="transport.freeSeats" disabled />
-    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Indulás ideje: {{ transport.departureTime[0] }}. {{ transport.departureTime[1] | digit }}. {{ transport.departureTime[2] | digit }}.
+        {{ transport.departureTime | weekday }}
+        {{ transport.departureTime[3] | digit }}:{{ transport.departureTime[4] | digit }}
+      </li>
+      <li class="list-group-item">
+        Útvonal: {{ transport.route === 'FROM_HUNGARY_TO_SERBIA' ? 'Szegedről Szabadkára' : 'Szabadkáról Szegedre' }}
+      </li>
+      <li class="list-group-item">Szabad ülőhelyek: {{ transport.freeSeats }} fő részére</li>
+    </ul>
   </div>
   <fieldset class="form-group">
-    <div class="row">
-      <legend class="col-form-label col-sm-2 pt-0">
+    <div class="card">
+      <legend class="card-header">
         Találkozási pont
       </legend>
       <div class="col-sm-10">
@@ -39,9 +32,19 @@
       </div>
     </div>
   </fieldset>
+  <div class="card">
+    <div class="card-header">
+      Utazó adatai
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Utas/Foglaló neve: {{ state.passenger.name }}</li>
+      <li class="list-group-item">Utas/Foglaló telefonszáma: {{ state.passenger.phoneNumber }}</li>
+      <li class="list-group-item">Utas/Foglaló e-mail címe: {{ state.passenger.email }}</li>
+    </ul>
+  </div>
   <div class="form-group row">
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary">Lefoglalom</button>
+      <button type="submit" class="btn btn-primary m-2">Lefoglalom</button>
     </div>
   </div>
 </form>

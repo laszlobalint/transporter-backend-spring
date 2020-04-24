@@ -4,6 +4,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "passenger")
 public class Passenger {
@@ -17,6 +19,7 @@ public class Passenger {
     private String name;
 
     @NotEmpty
+    @JsonIgnore
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 

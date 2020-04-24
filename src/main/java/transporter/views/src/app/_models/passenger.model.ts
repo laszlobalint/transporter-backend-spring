@@ -1,8 +1,9 @@
 export interface Passenger {
   id: number;
   name: string;
+  password: string;
   phoneNumber: string;
-  plainPassword: string;
+  email: string;
   isActivated: boolean;
   bookingCount: number;
 }

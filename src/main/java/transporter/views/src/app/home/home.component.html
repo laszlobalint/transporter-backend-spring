@@ -1,5 +1,5 @@
-<div *ngIf="{ transports: transports$ | async } as state">
-  <h1 class="cover-heading">
+<div *ngIf="{ passenger: passenger$ | async, transports: transports$ | async } as state">
+  <h1 class="cover-heading m-2 p-2">
     Foglalj fuvart Szegedre vagy Szabadkára:
   </h1>
   <div *ngIf="state.transports" class="container">
@@ -31,7 +31,15 @@
         {{ transport.departureTime[3] | digit }}:{{ transport.departureTime[4] | digit }}
       </div>
       <div class="col-sm">
-        <button type="button" class="btn btn-dark" [routerLink]="['/booking', transport.id]" [disabled]="transport.freeSeats === 0">
+        <button
+          type="button"
+          class="btn btn-dark p-1 m-2"
+          [routerLink]="['/booking', transport.id]"
+          [disabled]="transport.freeSeats === 0 || !state.passenger"
+          data-toggle="tooltip"
+          data-placement="right"
+          title="Jelentkezz be, hogy foglalhass!"
+        >
           Foglalok
         </button>
       </div>

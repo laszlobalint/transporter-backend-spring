@@ -16,8 +16,6 @@ export class AuthService {
   }
 
   public fetchInfo(): Observable<Passenger> {
-    return this.http.get<Passenger>(`${this.PASSENGER_API_URL}`, {
-      responseType: 'text' as 'json',
-    });
+    return this.http.get<Passenger>(`${this.PASSENGER_API_URL}`);
   }
 }

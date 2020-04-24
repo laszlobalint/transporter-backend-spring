@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
-import { map, catchError, mergeMap, switchMap } from 'rxjs/operators';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { map, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as fromActions from '../actions';
 import { ToastrService } from 'ngx-toastr';
