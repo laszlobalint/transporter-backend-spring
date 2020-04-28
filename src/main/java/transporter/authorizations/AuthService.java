@@ -21,27 +21,22 @@ public class AuthService {
 
     public String createJWT(Passenger passenger) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        long ttlMillis = 604800000L;
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey"));
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
-                .setIssuedAt(now)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setSubject(passenger.getId().toString())
                 .setIssuer(passenger.getEmail())
                 .signWith(signatureAlgorithm, signingKey);
-        long expMillis = nowMillis + ttlMillis;
-        Date exp = new Date(expMillis);
+        Date exp = new Date(System.currentTimeMillis() + 604800000L);
         builder.setExpiration(exp);
         return builder.compact();
     }
 
     public Claims decodeJWT(String jwt) {
-        Claims claims = Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey")))
                 .parseClaimsJws(jwt).getBody();
-        return claims;
     }
 
     public String getPassengerName(String token) {
@@ -64,5 +59,9 @@ public class AuthService {
             return !claims.getBody().getExpiration().before(new Date());
         }
         return false;
+    }
+
+    public boolean validateAdmin(HttpServletRequest req) {
+        return validateToken(req) && resolveToken(req).getIssuer().equals(environment.getProperty("adminEmail"));
     }
 }

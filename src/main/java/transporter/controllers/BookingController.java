@@ -1,10 +1,8 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
 import transporter.entities.Booking;
@@ -24,8 +22,6 @@ public class BookingController {
     private PassengerService passengerService;
     @Autowired
     private AuthService authService;
-    @Autowired
-    private Environment environment;
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -53,8 +49,7 @@ public class BookingController {
 
     @GetMapping(value = "/bookings/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAllBookings(HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail")))
+        if (authService.validateAdmin(request))
             return ResponseEntity.status(200).body(bookingService.listAllBookings());
         else
             return ResponseEntity.status(403).body("Nem lehet lekérdezni az összes foglalást!");
@@ -74,7 +69,7 @@ public class BookingController {
     }
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> removeBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
+    public ResponseEntity<String> removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         Booking b = bookingService.listBooking(bookingId);
         if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {

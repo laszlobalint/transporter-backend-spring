@@ -1,7 +1,6 @@
 package transporter.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -12,6 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name = "transport")
 public class Transport {
+
+    private final int MAX_SEATS = 4;
 
     public enum Route {FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY}
 
@@ -40,7 +41,7 @@ public class Transport {
     private LocalDateTime departureTime;
 
     @Column(name = "free_seats", nullable = false)
-    private int freeSeats = 4;
+    private int freeSeats = MAX_SEATS;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "transport")
     @JsonIgnore

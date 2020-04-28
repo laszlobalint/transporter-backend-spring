@@ -21,16 +21,7 @@ public class PassengerDAO {
     }
 
     public Passenger listPassenger(Long id) {
-        Passenger passenger;
-        try {
-            passenger = entityManager.find(Passenger.class, id);
-        } catch (NoResultException nre) {
-            passenger = null;
-        }
-        if (passenger != null)
-            return passenger;
-        else
-            return null;
+        return entityManager.find(Passenger.class, id);
     }
 
     public List<Passenger> listAllPassengers() {
@@ -40,9 +31,7 @@ public class PassengerDAO {
 
     @Transactional
     public Passenger modifyPassenger(Passenger passenger) {
-        Passenger saved = entityManager.merge(passenger);
-        entityManager.flush();
-        return saved;
+        return entityManager.merge(passenger);
     }
 
     @Transactional
@@ -52,34 +41,16 @@ public class PassengerDAO {
     }
 
     public String findEncodedPasswordForPassengerByEmail(String email) {
-        String password;
-        try {
-            password = entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
-                    .setParameter("email", email)
-                    .setMaxResults(1)
-                    .getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
-        if (password != null)
-            return password;
-        else
-            return null;
+        return entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getSingleResult();
     }
 
     public Passenger findPassengerByEmail(String email) {
-        Passenger passenger;
-        try {
-            passenger = entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
-                    .setParameter("email", email)
-                    .setMaxResults(1)
-                    .getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
-        if (passenger != null)
-            return passenger;
-        else
-            return null;
+        return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getSingleResult();
     }
 }

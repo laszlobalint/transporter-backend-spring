@@ -1,12 +1,11 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
-import transporter.entities.LoginPassenger;
+import transporter.entities.Login;
 import transporter.entities.Passenger;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +18,6 @@ public class PassengerController {
     private PassengerService passengerService;
     @Autowired
     private AuthService authService;
-    @Autowired
-    private Environment environment;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
@@ -58,14 +55,11 @@ public class PassengerController {
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ResponseEntity listAllPassengers(HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
+        if (authService.validateAdmin(request))
             return ResponseEntity.status(200).body(passengerService.listAllPassengers());
-        } else {
+        else
             return ResponseEntity.status(401).body("Adminisztrátori jogok szükségesek a kéréshez!");
-        }
     }
-
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
@@ -98,7 +92,7 @@ public class PassengerController {
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<String> loginPassenger(@RequestBody LoginPassenger body) {
+    public ResponseEntity<String> loginPassenger(@RequestBody Login body) {
         if (passengerService.listPassengerByEmail(body.getEmail()) == null)
             return ResponseEntity.status(404).body("Az e-mail cím nincs használatban!");
         else

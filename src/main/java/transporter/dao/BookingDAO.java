@@ -51,9 +51,8 @@ public class BookingDAO {
     }
 
     @Transactional
-    public void removeBooking(Long id) {
-        Booking b = listBooking(id);
-        entityManager.remove(b);
+    public void removeBooking(Booking booking) {
+        entityManager.remove(booking);
         entityManager.flush();
     }
 }

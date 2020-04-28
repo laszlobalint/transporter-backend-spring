@@ -3,6 +3,7 @@ package transporter;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,8 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackageClasses = AppConfiguration.class)
 @PropertySource("classpath:/application.properties")
-@EnableJpaRepositories
+@EnableJpaRepositories("transporter.dao")
+@EntityScan("transporter.entities")
 @EnableTransactionManagement
 public class AppConfiguration {
 
@@ -53,14 +55,6 @@ public class AppConfiguration {
 
         return properties;
     }
-
-//    @Bean
-//    public Flyway flyway() {
-//        Flyway flyway = new Flyway();
-//        flyway.setDataSource(dataSource());
-//        flyway.migrate();
-//        return flyway;
-//    }
 
     @Bean
     public JpaTransactionManager transactionManager() {

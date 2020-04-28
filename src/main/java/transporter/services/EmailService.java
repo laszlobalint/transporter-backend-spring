@@ -10,7 +10,6 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
-
     @Autowired
     private SimpleMailMessage preConfiguredMessage;
 

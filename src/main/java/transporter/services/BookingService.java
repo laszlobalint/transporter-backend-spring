@@ -15,7 +15,6 @@ import java.util.List;
 public class BookingService {
 
     private BookingDAO bookingDAO;
-
     public BookingService(BookingDAO bookingDAO) {
         this.bookingDAO = bookingDAO;
     }
@@ -56,17 +55,14 @@ public class BookingService {
 
     public void removeBooking(Long id) {
         Booking booking = bookingDAO.listBooking(id);
-
         Passenger p = booking.getPassenger();
         if (p.getBookingCount() > 0) {
             p.setBookingCount(p.getBookingCount() - 1);
             passengerDAO.modifyPassenger(p);
         }
-
         Transport t = transportDAO.findTransportByDepartureTime(booking.getDepartureTime());
         t.setFreeSeats(t.getFreeSeats() + 1);
         transportDAO.saveTransport(t);
-
-        bookingDAO.removeBooking(id);
+        bookingDAO.removeBooking(booking);
     }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 public class PassengerService {
 
     private PassengerDAO passengerDAO;
-
     public PassengerService(PassengerDAO passengerDAO) {
         this.passengerDAO = passengerDAO;
     }

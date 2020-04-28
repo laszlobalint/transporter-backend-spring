@@ -38,9 +38,9 @@ public class EmailConfiguration {
     @Bean
     public SimpleMailMessage emailTemplate() {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("laszlobalint.mrm@gmail.com");
-        message.setFrom("laszlobalint.mrm@gmail.com");
-        message.setText("Simple e-mail template");
+        message.setTo("To");
+        message.setFrom("From");
+        message.setText("Text");
         return message;
     }
 }

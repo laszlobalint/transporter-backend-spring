@@ -1,7 +1,6 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,6 @@ public class TransportController {
     private TransportService transportService;
     @Autowired
     private AuthService authService;
-    @Autowired
-    private Environment environment;
 
     public TransportController(TransportService transportService) {
         this.transportService = transportService;
@@ -28,8 +25,7 @@ public class TransportController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> saveTransport(@RequestBody Transport body, HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
+        if (authService.validateAdmin(request)) {
             Transport t = new Transport(body.getRoute(), LocalDateTime.parse(body.getDepartureTimeString()), null);
             transportService.saveTransport(t);
             return ResponseEntity.status(200).body("Sikeresen meghirdetted az új fuvart!");
@@ -46,14 +42,13 @@ public class TransportController {
     }
 
     @GetMapping(value = "/transports/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity listAllTransports(HttpServletRequest request) {
+    public ResponseEntity listAllTransports() {
         return ResponseEntity.status(200).body(transportService.listAllTransport());
     }
 
     @PutMapping(value = "/{transportId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> modifyTransport(@RequestBody Transport body, @PathVariable Long transportId, HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
+        if (authService.validateAdmin(request)) {
             transportService.modifyTransport(body.getFreeSeats(), transportId);
             if (transportService.listTransport(transportId).getFreeSeats() == body.getFreeSeats())
                 return ResponseEntity.status(200).body(transportService.listTransport(transportId));
@@ -64,7 +59,6 @@ public class TransportController {
     @DeleteMapping(value = "/{transportId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> removeTransport(@PathVariable Long transportId, HttpServletRequest request) {
         if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail")) &&
                 transportService.listTransport(transportId) != null) {
             transportService.removeTransport(transportId);
             if (transportService.listTransport(transportId) == null)

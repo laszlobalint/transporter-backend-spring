@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 public class TransportService {
 
     private TransportDAO transportDAO;
-
     public TransportService(TransportDAO transportDAO) {
         this.transportDAO = transportDAO;
     }
