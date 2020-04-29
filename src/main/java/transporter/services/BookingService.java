@@ -15,13 +15,13 @@ import java.util.List;
 public class BookingService {
 
     private BookingDAO bookingDAO;
+
     public BookingService(BookingDAO bookingDAO) {
         this.bookingDAO = bookingDAO;
     }
 
     @Autowired
     private PassengerDAO passengerDAO;
-
     @Autowired
     private TransportDAO transportDAO;
 

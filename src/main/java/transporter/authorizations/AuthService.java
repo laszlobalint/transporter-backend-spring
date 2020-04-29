@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import transporter.entities.Booking;
 import transporter.entities.Passenger;
+import transporter.services.BookingService;
+
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -18,6 +21,8 @@ public class AuthService {
 
     @Autowired
     private Environment environment;
+    @Autowired
+    private BookingService bookingService;
 
     public String createJWT(Passenger passenger) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -63,5 +68,11 @@ public class AuthService {
 
     public boolean validateAdmin(HttpServletRequest req) {
         return validateToken(req) && resolveToken(req).getIssuer().equals(environment.getProperty("adminEmail"));
+    }
+
+    public boolean validatePersonalRequest(HttpServletRequest req, Long bookingId) {
+        Long id = Long.parseLong(resolveToken(req).getSubject(), 10);
+        Booking b = bookingService.listBooking(bookingId);
+        return validateToken(req) && b.getPassenger().getId().equals(id);
     }
 }

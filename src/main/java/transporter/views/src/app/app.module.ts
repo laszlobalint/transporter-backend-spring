@@ -13,14 +13,14 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PassengerService } from './_services/passenger.service';
 import { TransportService } from './_services/transport.service';
-import { DigitPipe } from './utils/pipes/digit.pipe';
-import { WeekdayPipe } from './utils/pipes/weekday.pipe';
 import { BookingComponent } from './booking/booking.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { WeekdayPipe } from './_utils/pipes/weekday.pipe';
+import { DigitPipe } from './_utils/pipes/digit.pipe';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent],

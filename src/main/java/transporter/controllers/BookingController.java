@@ -57,9 +57,7 @@ public class BookingController {
 
     @PutMapping(value = "/{bookingId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity modifyBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Booking b = bookingService.listBooking(bookingId);
-        if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {
+        if (authService.validatePersonalRequest(request, bookingId)) {
             bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), bookingId);
             if (bookingService.listBooking(bookingId).getLocationHungary() == body.getLocationHungary() &&
                     bookingService.listBooking(bookingId).getLocationSerbia() == body.getLocationSerbia())
@@ -70,9 +68,7 @@ public class BookingController {
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Booking b = bookingService.listBooking(bookingId);
-        if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {
+        if (authService.validatePersonalRequest(request, bookingId)) {
             bookingService.removeBooking(bookingId);
             if (bookingService.listBooking(bookingId) == null)
                 return ResponseEntity.status(200).body("Sikeresen törölted a foglalásodat!");

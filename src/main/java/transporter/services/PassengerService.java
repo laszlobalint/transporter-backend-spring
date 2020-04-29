@@ -26,8 +26,6 @@ public class PassengerService {
     @Autowired
     private BookingService bookingService;
     @Autowired
-    private PassengerService passengerService;
-    @Autowired
     private AuthService authService;
 
     public void savePassenger(Passenger passenger) {

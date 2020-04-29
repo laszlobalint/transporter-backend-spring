@@ -52,7 +52,6 @@ public class AppConfiguration {
         properties.put("hibernate.dialect", environment.getProperty("hibernate.dialect"));
         properties.put("hibernate.connection.driver_class", environment.getProperty("hibernate.driver"));
         properties.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.strategy"));
-
         return properties;
     }
 

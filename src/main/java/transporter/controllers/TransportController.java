@@ -58,7 +58,7 @@ public class TransportController {
 
     @DeleteMapping(value = "/{transportId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> removeTransport(@PathVariable Long transportId, HttpServletRequest request) {
-        if (authService.validateToken(request) &&
+        if (authService.validateAdmin(request) &&
                 transportService.listTransport(transportId) != null) {
             transportService.removeTransport(transportId);
             if (transportService.listTransport(transportId) == null)

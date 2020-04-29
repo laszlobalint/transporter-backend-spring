@@ -23,3 +23,8 @@ export interface LoginPassengerDto {
 export interface PasswordValidation {
   notSame: boolean;
 }
+
+export interface InputValidation {
+  'is-invalid': boolean;
+  'is-valid': boolean;
+}

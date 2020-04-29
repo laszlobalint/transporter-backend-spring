@@ -1,9 +1,10 @@
 package transporter.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import transporter.entities.Passenger;
+import transporter.services.EmailService;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,10 +14,14 @@ public class PassengerDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
     public void savePassenger(Passenger passenger) {
         entityManager.persist(passenger);
+        emailService.sendMail(passenger.getEmail(), "Regisztráció",
+                "Sikeresen regisztráltál a Transporter alkalmazásban! Adataid: " + passenger);
         entityManager.flush();
     }
 

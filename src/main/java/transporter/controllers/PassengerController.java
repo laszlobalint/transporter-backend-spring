@@ -38,18 +38,13 @@ public class PassengerController {
         return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült a regisztráció!");
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/{passengerId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> listPassenger(HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            if (id != null)
-                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-            else
-                return ResponseEntity.status(401).body("Nincs felhasználó a megadott ID-val!");
-        } else {
+    public ResponseEntity<Object> listPassenger(@PathVariable Long passengerId, HttpServletRequest request) {
+        if (authService.validatePersonalRequest(request, passengerId) || authService.validateAdmin(request))
+            return ResponseEntity.status(401).body("Nincs felhasználó a megadott ID-val!");
+        else
             return ResponseEntity.status(403).body("Nem kérhetőek le a felhasználó adatai!");
-        }
     }
 
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -61,15 +56,14 @@ public class PassengerController {
             return ResponseEntity.status(401).body("Adminisztrátori jogok szükségesek a kéréshez!");
     }
 
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/{passengerId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> modifyPassenger(@RequestBody Passenger body, HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+    public ResponseEntity<Object> modifyPassenger(@PathVariable Long passengerId, @RequestBody Passenger body, HttpServletRequest request) {
+        if (authService.validatePersonalRequest(request, passengerId) || authService.validateAdmin(request)) {
             Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
-            Passenger saved = passengerService.modifyPassenger(edited, id);
+            Passenger saved = passengerService.modifyPassenger(edited, passengerId);
             if (saved != null)
-                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
+                return ResponseEntity.status(200).body(passengerService.listPassenger(passengerId));
             else
                 return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
         } else {
@@ -77,13 +71,12 @@ public class PassengerController {
         }
     }
 
-    @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/{passengerId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> removePassenger(HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            if (id != null && passengerService.listPassenger(id) != null) {
-                passengerService.removePassenger(id);
+    public ResponseEntity<Object> removePassenger(@PathVariable Long passengerId, HttpServletRequest request) {
+        if (authService.validatePersonalRequest(request, passengerId) || authService.validateAdmin(request)) {
+            if (passengerService.listPassenger(passengerId) != null) {
+                passengerService.removePassenger(passengerId);
                 return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
             }
         }
