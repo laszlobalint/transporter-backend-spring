@@ -5,8 +5,10 @@ import org.springframework.stereotype.Repository;
 import transporter.entities.Passenger;
 import transporter.services.EmailService;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -30,8 +32,13 @@ public class PassengerDAO {
     }
 
     public List<Passenger> listAllPassengers() {
-        return entityManager.createQuery("SELECT p FROM Passenger p ORDER by p.name", Passenger.class)
-                .getResultList();
+        try {
+            return entityManager.createQuery("SELECT p FROM Passenger p ORDER by p.name", Passenger.class)
+                    .getResultList();
+        } catch (NoResultException nre) {
+            return new ArrayList<>();
+        }
+
     }
 
     @Transactional
@@ -46,16 +53,24 @@ public class PassengerDAO {
     }
 
     public String findEncodedPasswordForPassengerByEmail(String email) {
-        return entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
-                .setParameter("email", email)
-                .setMaxResults(1)
-                .getSingleResult();
+        try {
+            return entityManager.createQuery("SELECT p.password FROM Passenger p WHERE p.email = :email", String.class)
+                    .setParameter("email", email)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 
     public Passenger findPassengerByEmail(String email) {
-        return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
-                .setParameter("email", email)
-                .setMaxResults(1)
-                .getSingleResult();
+        try {
+            return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.email = :email", Passenger.class)
+                    .setParameter("email", email)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 }

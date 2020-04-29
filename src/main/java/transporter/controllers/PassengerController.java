@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
 import transporter.entities.Login;
 import transporter.entities.Passenger;
+import transporter.entities.Register;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,17 +26,19 @@ public class PassengerController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> savePassenger(@RequestBody Passenger body) {
-        if (passengerService.listPassengerByEmail(body.getEmail()) != null)
+    public ResponseEntity<Object> savePassenger(@RequestBody Register body) {
+        if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
             return ResponseEntity.status(409).body("Az e-mail cím már használatban van!");
-        else {
+        } else {
             Passenger p = new Passenger(body.getName(), body.getPassword(),
                     body.getPhoneNumber(), body.getEmail());
             passengerService.savePassenger(p);
-            if (passengerService.listPassengerByEmail(p.getEmail()) != null)
+            if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
                 return ResponseEntity.status(200).body(p.getName() + " sikeresen regisztrált!");
+            } else {
+                return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült regisztrálni!");
+            }
         }
-        return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült a regisztráció!");
     }
 
     @GetMapping(value = "/{passengerId}", produces = {MediaType.APPLICATION_JSON_VALUE})

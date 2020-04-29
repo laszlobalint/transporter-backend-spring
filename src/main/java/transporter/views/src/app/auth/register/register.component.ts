@@ -1,8 +1,11 @@
-import { PassengerService } from '../../_services/passenger.service';
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Passenger, InputValidation } from '../../_models';
+import { InputValidation } from '../../_models';
 import { checkPasswords } from '../../_utils/pipes/validators.utils';
+import { EMAIL_REGEX } from '../../app.constants';
+import { AuthService } from '../../_services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,20 +14,22 @@ import { checkPasswords } from '../../_utils/pipes/validators.utils';
 export class RegisterComponent implements OnInit {
   public form = new FormGroup({});
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly passengerService: PassengerService) {}
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly toastrService: ToastrService,
+    private readonly router: Router,
+  ) {}
 
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      email: [
-        '',
-        [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)],
-      ],
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEX)]],
       phoneNumber: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
       passwordGroup: this.formBuilder.group(
         {
-          password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
-          passwordConfirm: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+          password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(80)]],
+          passwordConfirm: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(80)]],
         },
         { validator: checkPasswords },
       ),
@@ -32,12 +37,14 @@ export class RegisterComponent implements OnInit {
   }
 
   public onRegister(): void {
-    this.passengerService
-      .save({
-        ...this.form.value,
-        password: this.form.controls['passwordGroup'].value.password,
-      })
-      .subscribe((response: Passenger) => {});
+    const registerPassenger = { ...this.form.getRawValue(), password: this.form.controls['passwordGroup'].value.password };
+    delete registerPassenger.passwordGroup;
+    this.authService.register(registerPassenger).subscribe((response) => {
+      this.toastrService.success('', `${response} Hamarosan átirányítunk a belépési oldalra...`);
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 7000);
+    });
   }
 
   public showInputValidityStatus(field: string): InputValidation {

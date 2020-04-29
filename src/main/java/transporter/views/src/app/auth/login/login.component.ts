@@ -2,6 +2,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../store';
+import { EMAIL_REGEX } from '../../app.constants';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +15,8 @@ export class LoginComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      plainPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEX)]],
+      plainPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(80)]],
     });
   }
 
