@@ -5,7 +5,9 @@ import { map, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as fromActions from '../actions';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthService } from '../../_services/auth.service';
+import { PassengerService } from '../../_services/passenger.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthEffects {
@@ -43,7 +45,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(fromActions.LoginPassengerSuccess),
       mergeMap(({ token }) =>
-        this.authService.fetchInfo().pipe(
+        this.passengerService.fetch(this.jwtHelper.decodeToken(token).sub).pipe(
           map((passenger) => {
             this.router.navigate(['/']);
             return fromActions.GetPassengerInfoSuccess({
@@ -51,7 +53,7 @@ export class AuthEffects {
             });
           }),
           catchError((error) => {
-            this.toastrService.error('', 'Felhasználó adatokat em sikerült betölteni!');
+            this.toastrService.error('', 'Felhasználó adatokat nem sikerült betölteni!');
             return of(fromActions.GetPassengerInfoFailure({ error }));
           }),
         ),
@@ -63,6 +65,8 @@ export class AuthEffects {
     private readonly actions$: Actions,
     private readonly toastrService: ToastrService,
     private readonly authService: AuthService,
+    private readonly passengerService: PassengerService,
     private readonly router: Router,
+    private readonly jwtHelper: JwtHelperService,
   ) {}
 }

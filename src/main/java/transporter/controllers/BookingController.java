@@ -6,11 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
 import transporter.entities.Booking;
+import transporter.entities.Transport;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
+import transporter.services.TransportService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 
 @RestController
 @RequestMapping(value = "/booking")
@@ -20,6 +25,8 @@ public class BookingController {
     private BookingService bookingService;
     @Autowired
     private PassengerService passengerService;
+    @Autowired
+    private TransportService transportService;
     @Autowired
     private AuthService authService;
 
@@ -31,7 +38,8 @@ public class BookingController {
     public ResponseEntity<Object> saveBooking(@RequestBody Booking body, HttpServletRequest request) {
         if (authService.validateToken(request)) {
             Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            Booking b = new Booking(LocalDateTime.parse(body.getDepartureTimeString()), body.getLocationHungary(), body.getLocationSerbia());
+            Transport t = transportService.listTransport(body.getTransport().getId());
+            Booking b = new Booking(t.getDepartureTime(), body.getLocationSerbia(), body.getLocationHungary());
             b.setPassenger(passengerService.listPassenger(id));
             bookingService.saveBooking(b);
             return ResponseEntity.status(200).body("Sikeresen lefoglaltad a helyet a fuvarra!");

@@ -45,7 +45,7 @@ public class PassengerController {
     @ResponseBody
     public ResponseEntity<Object> listPassenger(@PathVariable Long passengerId, HttpServletRequest request) {
         if (authService.validatePersonalRequest(request, passengerId) || authService.validateAdmin(request))
-            return ResponseEntity.status(401).body("Nincs felhasználó a megadott ID-val!");
+            return ResponseEntity.status(200).body(passengerService.listPassenger(passengerId));
         else
             return ResponseEntity.status(403).body("Nem kérhetőek le a felhasználó adatai!");
     }

@@ -1,9 +1,11 @@
 import { Passenger } from './passenger.model';
+import { Transport } from './transport.model';
 
 export interface Booking {
-  id: number;
-  departureTime: Date;
+  id?: number;
+  departureTime?: Date;
   locationSerbia: string;
   locationHungary: string;
-  passenger: Passenger;
+  passenger?: Passenger;
+  transport?: Transport;
 }

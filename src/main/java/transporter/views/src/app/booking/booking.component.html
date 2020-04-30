@@ -17,18 +17,29 @@
   </div>
   <fieldset class="form-group">
     <div class="card">
-      <legend class="card-header">
-        Találkozási pont
-      </legend>
       <div class="col-sm-10">
-        <select *ngIf="transport.route === 'FROM_HUNGARY_TO_SERBIA'; else serhun" required>
+        <legend class="card-header">
+          Találkozási pont - SZEGED
+        </legend>
+        <select
+          [(ngModel)]="selectedLocationHungary"
+          name="selectedLocationHungary"
+          (ngModelChange)="selectedLocationHungary = $event"
+          required
+        >
           <option *ngFor="let item of LocationHungary | keyvalue" [value]="item.key">{{ item.value }}</option>
         </select>
-        <ng-template #serhun>
-          <select required>
-            <option *ngFor="let item of LocationSerbia | keyvalue" [value]="item.key">{{ item.value }}</option>
-          </select>
-        </ng-template>
+        <legend class="card-header">
+          Találkozási pont - SZABADKA
+        </legend>
+        <select
+          [(ngModel)]="selectedLocationSerbia"
+          name="selectedLocationSerbia"
+          (ngModelChange)="selectedLocationSerbia = $event"
+          required
+        >
+          <option *ngFor="let item of LocationSerbia | keyvalue" [value]="item.key">{{ item.value }}</option>
+        </select>
       </div>
     </div>
   </fieldset>
@@ -44,7 +55,9 @@
   </div>
   <div class="form-group row">
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary m-2">Lefoglalom</button>
+      <button type="submit" class="btn btn-primary m-2" [disabled]="!selectedLocationSerbia || !selectedLocationHungary" (click)="onBook()">
+        Lefoglalom
+      </button>
     </div>
   </div>
 </form>

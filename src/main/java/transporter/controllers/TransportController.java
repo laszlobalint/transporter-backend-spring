@@ -26,7 +26,7 @@ public class TransportController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> saveTransport(@RequestBody Transport body, HttpServletRequest request) {
         if (authService.validateAdmin(request)) {
-            Transport t = new Transport(body.getRoute(), LocalDateTime.parse(body.getDepartureTimeString()), null);
+            Transport t = new Transport(body.getRoute(), body.getDepartureTime(), null);
             transportService.saveTransport(t);
             return ResponseEntity.status(200).body("Sikeresen meghirdetted az új fuvart!");
         }

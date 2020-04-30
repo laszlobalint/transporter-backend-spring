@@ -1,4 +1,4 @@
-import { RegisterPassengerDto, Passenger } from './../_models/passenger.model';
+import { Passenger } from './../_models/passenger.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,7 +9,7 @@ export class PassengerService {
 
   constructor(private readonly http: HttpClient) {}
 
-  public save(registerPassenger: RegisterPassengerDto): Observable<Passenger> {
-    return this.http.post<Passenger>(this.PASSENGER_API_URL, registerPassenger);
+  public fetch(id: string): Observable<Passenger> {
+    return this.http.get<Passenger>(`${this.PASSENGER_API_URL}/${+id}`);
   }
 }

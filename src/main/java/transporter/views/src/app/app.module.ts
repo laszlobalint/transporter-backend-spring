@@ -21,6 +21,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { WeekdayPipe } from './_utils/pipes/weekday.pipe';
 import { DigitPipe } from './_utils/pipes/digit.pipe';
+import { BookingService } from './_services/booking.service';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent],
@@ -59,6 +60,7 @@ import { DigitPipe } from './_utils/pipes/digit.pipe';
     JwtHelperService,
     TransportService,
     PassengerService,
+    BookingService,
     AuthGuard,
   ],
   bootstrap: [AppComponent],

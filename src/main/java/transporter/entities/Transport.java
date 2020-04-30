@@ -47,9 +47,6 @@ public class Transport {
     @JsonIgnore
     private Set<Booking> bookings;
 
-    @Transient
-    private String departureTimeString;
-
     public Transport() {
     }
 
@@ -66,6 +63,18 @@ public class Transport {
             bookings.add(booking);
             booking.setTransport(this);
         }
+    }
+
+    public int getMAX_SEATS() {
+        return MAX_SEATS;
+    }
+
+    public static Map<String, String> getDriverInfo() {
+        return driverInfo;
+    }
+
+    public static void setDriverInfo(Map<String, String> driverInfo) {
+        Transport.driverInfo = driverInfo;
     }
 
     public Long getId() {
@@ -92,12 +101,12 @@ public class Transport {
         this.departureTime = departureTime;
     }
 
-    public String getDepartureTimeString() {
-        return departureTimeString;
+    public int getFreeSeats() {
+        return freeSeats;
     }
 
-    public void setDepartureTimeString(String departureTimeString) {
-        this.departureTimeString = departureTimeString;
+    public void setFreeSeats(int freeSeats) {
+        this.freeSeats = freeSeats;
     }
 
     public Set<Booking> getBookings() {
@@ -106,14 +115,6 @@ public class Transport {
 
     public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
-    }
-
-    public int getFreeSeats() {
-        return freeSeats;
-    }
-
-    public void setFreeSeats(int freeSeats) {
-        this.freeSeats = freeSeats;
     }
 
     @Override
