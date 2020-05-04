@@ -24,9 +24,9 @@ export class AuthService {
       })
       .pipe(
         map((response) => response),
-        catchError((e: any) => {
-          this.toastrService.error('', `Nem sikerült a regisztráció!`);
-          return throwError(e);
+        catchError((error) => {
+          this.toastrService.error('', error.error);
+          return throwError(error);
         }),
       );
   }

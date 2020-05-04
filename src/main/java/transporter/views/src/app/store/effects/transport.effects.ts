@@ -21,7 +21,7 @@ export class TransportEffects {
             });
           }),
           catchError((error) => {
-            this.toastrService.error('', 'Fuvarokat nem sikerült betölteni!');
+            this.toastrService.error('', error.error);
             return of(fromActions.FetchTransportFailure({ error }));
           }),
         ),

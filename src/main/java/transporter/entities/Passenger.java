@@ -73,14 +73,6 @@ public class Passenger {
         this.password = password;
     }
 
-    public boolean isActivated() {
-        return isActivated;
-    }
-
-    public void setActivated(boolean activated) {
-        isActivated = activated;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -97,11 +89,11 @@ public class Passenger {
         this.email = email;
     }
 
-    public boolean getIsActivated() {
+    public boolean isActivated() {
         return isActivated;
     }
 
-    public void setIsActivated(boolean activated) {
+    public void setActivated(boolean activated) {
         isActivated = activated;
     }
 
@@ -115,12 +107,9 @@ public class Passenger {
 
     @Override
     public String toString() {
-        return "\nPassenger: " +
-                "\nID - " + id +
-                "\nName - " + name + '\'' +
-                "\nPhone number - " + phoneNumber + '\'' +
-                "\nEmail address - " + email + '\'' +
-                "\nActivated - " + isActivated +
-                "\nBooking count - " + bookingCount;
+        return "\nUtas adatai: " +
+                "\nNév - " + name +
+                "\nTelefonszám - " + phoneNumber +
+                "\nE-mail cím - " + email + "\n";
     }
 }

@@ -70,7 +70,7 @@ public class PassengerController {
             else
                 return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
         } else {
-            return ResponseEntity.status(403).body("Nem változtathatóak meg a felhasználó adatai!");
+            return ResponseEntity.status(403).body("Nem változtathatók meg a felhasználó adatai!");
         }
     }
 
@@ -88,11 +88,11 @@ public class PassengerController {
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<String> loginPassenger(@RequestBody Login body) {
+    public ResponseEntity loginPassenger(@RequestBody Login body) {
         if (passengerService.listPassengerByEmail(body.getEmail()) == null)
             return ResponseEntity.status(404).body("Az e-mail cím nincs használatban!");
         else
-            return ResponseEntity.status(200).body(passengerService.loginPassenger(body.getEmail(),
-                    body.getPlainPassword()));
+            return passengerService.loginPassenger(body.getEmail(),
+                    body.getPlainPassword());
     }
 }

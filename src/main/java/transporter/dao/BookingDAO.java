@@ -24,7 +24,7 @@ public class BookingDAO {
         entityManager.merge(booking);
         entityManager.merge(transport);
         emailService.sendMail(booking.getPassenger().getEmail(), "Fuvar foglalása",
-                "Sikeresen foglaltál a Transporter alkalmazásban! Foglalási infók: " + booking);
+                "Sikeresen foglaltál a Transporter alkalmazásban!\n" + booking);
         entityManager.flush();
     }
 

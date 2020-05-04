@@ -19,6 +19,7 @@ export const LocationSerbia = {
 };
 
 export const LocationHungary = {
+  MC_DONALDS_DRIVE_THROUGH: "Szeged, Rókusi körúti autós McDonald's gyorsétterem előtti buszmegálló",
   SING_SING_MUSIC_HALL: 'Szeged, Mars téri városi piac mögött található Sing Sing szórakozóhely előtti parkoló',
   MARKET_SMALL_TESCO: 'Szeged, Dugonics téri TESCO Expressz ("Kis Tesco") előtti autóparkoló',
   BAKERY_BUREK: 'Szeged, Petőfi Sándor sugárút és Nemes Takács utca sarkán lévő Burek Pékség előtt',

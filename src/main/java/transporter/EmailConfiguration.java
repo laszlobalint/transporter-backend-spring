@@ -20,7 +20,7 @@ public class EmailConfiguration {
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setUsername(environment.getProperty("adminEmail"));
-        mailSender.setPassword("");
+        mailSender.setPassword(environment.getProperty("adminPassword"));
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");

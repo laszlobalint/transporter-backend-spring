@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -12,11 +13,19 @@ import java.util.Set;
 @Table(name = "transport")
 public class Transport {
 
+    @Transient
     private final int MAX_SEATS = 4;
 
     public enum Route {FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY}
 
-    public static Map<String, String> driverInfo = Map.of(
+    @Transient
+    private Map<Route, String> routeStringMap = Map.of(
+            Route.FROM_HUNGARY_TO_SERBIA, "Szegedről Szabadkára",
+            Route.FROM_SERBIA_TO_HUNGARY, "Szabadkáról Szegedre"
+    );
+
+    @Transient
+    private static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",
             "Gépjármű színe", "fehér",
@@ -69,6 +78,14 @@ public class Transport {
         return MAX_SEATS;
     }
 
+    public Map<Route, String> getRouteStringMap() {
+        return routeStringMap;
+    }
+
+    public void setRouteStringMap(Map<Route, String> routeStringMap) {
+        this.routeStringMap = routeStringMap;
+    }
+
     public static Map<String, String> getDriverInfo() {
         return driverInfo;
     }
@@ -119,11 +136,11 @@ public class Transport {
 
     @Override
     public String toString() {
-        return "\nTransport information: " +
-                "\nID - " + id +
-                "\nRoute - " + route +
-                "\nDeparture time - " + departureTime +
-                "\nFree seats (?/4) - " + freeSeats +
-                "\nBookings: " + bookings;
+        return "\nFuvar adatok: " +
+                "\nÚtvonal - " + routeStringMap.get(route) +
+                "\nIndulási idő - " + departureTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm")) +
+                "\nSzabad helyek - " + freeSeats + "fő" +
+                "\nSofőr és autó: " +
+                "\n" + driverInfo;
     }
 }

@@ -1,6 +1,7 @@
 package transporter.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import transporter.authorizations.AuthService;
@@ -66,14 +67,14 @@ public class PassengerService {
         passengerDAO.removePassenger(id);
     }
 
-    public String loginPassenger(String email, String plainPassword) {
+    public ResponseEntity loginPassenger(String email, String plainPassword) {
         String encodedPassword = passengerDAO.findEncodedPasswordForPassengerByEmail(email);
         boolean isMatching = passwordEncoder.matches(plainPassword, encodedPassword);
         if (isMatching) {
             Passenger passenger = passengerDAO.findPassengerByEmail(email);
-            return authService.createJWT(passenger);
+            return ResponseEntity.status(200).body(authService.createJWT(passenger));
         } else {
-            return "Helytelen e-mail címet vagy jelszót adtál meg!";
+            return ResponseEntity.status(422).body("Helytelen e-mail címet vagy jelszót adtál meg!");
         }
     }
 }

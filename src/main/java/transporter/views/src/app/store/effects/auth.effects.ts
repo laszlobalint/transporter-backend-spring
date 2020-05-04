@@ -23,7 +23,7 @@ export class AuthEffects {
             });
           }),
           catchError((error) => {
-            this.toastrService.error('', 'Fuvarokat nem sikerült betölteni!');
+            this.toastrService.error('', error.error);
             return of(fromActions.LoginPassengerFailure({ error }));
           }),
         ),
@@ -53,7 +53,7 @@ export class AuthEffects {
             });
           }),
           catchError((error) => {
-            this.toastrService.error('', 'Felhasználó adatokat nem sikerült betölteni!');
+            this.toastrService.error('', error.error);
             return of(fromActions.GetPassengerInfoFailure({ error }));
           }),
         ),

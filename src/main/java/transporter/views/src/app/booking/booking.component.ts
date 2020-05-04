@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { LocationHungary, Transport, LocationSerbia } from './../_models/transport.model';
@@ -5,7 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Passenger } from '../_models';
 import * as fromRoot from '../store';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../_services/booking.service';
 
 @Component({
@@ -27,6 +28,8 @@ export class BookingComponent implements OnInit, OnDestroy {
     private readonly bookingService: BookingService,
     private readonly rootStore: Store<fromRoot.State>,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly toastrService: ToastrService,
   ) {
     this.transports$ = this.rootStore.select('transports').pipe(map((state) => state.transports));
     this.passenger$ = this.rootStore.select('auth').pipe(map((state) => state.passenger));
@@ -50,7 +53,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           locationHungary: this.selectedLocationHungary,
           locationSerbia: this.selectedLocationSerbia,
         })
-        .subscribe((response) => alert(response));
+        .subscribe((response) => {
+          this.router.navigate(['/']);
+          this.toastrService.success('', response);
+        });
     }
   }
 }
