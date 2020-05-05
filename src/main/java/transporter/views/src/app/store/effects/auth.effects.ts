@@ -1,13 +1,13 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, catchError, mergeMap } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import * as fromActions from '../actions';
-import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../_services/auth.service';
 import { PassengerService } from '../../_services/passenger.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthEffects {

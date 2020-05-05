@@ -13,18 +13,21 @@ import java.util.Set;
 @Table(name = "transport")
 public class Transport {
 
-    @Transient
-    private final int MAX_SEATS = 4;
-
     public enum Route {FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY}
 
     @Transient
+    @JsonIgnore
+    private final int MAX_SEATS = 4;
+
+    @Transient
+    @JsonIgnore
     private Map<Route, String> routeStringMap = Map.of(
             Route.FROM_HUNGARY_TO_SERBIA, "Szegedről Szabadkára",
             Route.FROM_SERBIA_TO_HUNGARY, "Szabadkáról Szegedre"
     );
 
     @Transient
+    @JsonIgnore
     private static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",

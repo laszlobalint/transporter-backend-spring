@@ -12,7 +12,7 @@ export const initialState: TransportState = {
 
 const reducerFunction = createReducer(
   initialState,
-  on(fromActions.FetchTransportSuccess, (state, { transports }) => ({
+  on(fromActions.FetchTransportsSuccess, (state, { transports }) => ({
     ...state,
     transports,
   })),

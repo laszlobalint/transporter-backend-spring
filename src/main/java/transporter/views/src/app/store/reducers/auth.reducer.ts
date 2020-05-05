@@ -1,5 +1,5 @@
-import { Passenger } from './../../_models/passenger.model';
 import { Action, createReducer, on } from '@ngrx/store';
+import { Passenger } from './../../_models/passenger.model';
 import * as fromActions from '../actions';
 
 export interface AuthState {

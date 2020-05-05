@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { map, take } from 'rxjs/operators';
-import * as fromRoot from '../../store';
 import { Store } from '@ngrx/store';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import * as fromRoot from '../../store';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

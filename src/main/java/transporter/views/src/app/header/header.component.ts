@@ -1,9 +1,9 @@
-import { Store } from '@ngrx/store';
-import { Passenger } from './../_models/passenger.model';
-import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
-import * as fromRoot from '../store';
+import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Passenger } from './../_models/passenger.model';
+import * as fromRoot from '../store';
 
 @Component({
   selector: 'app-header',

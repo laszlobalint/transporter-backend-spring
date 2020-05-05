@@ -1,7 +1,7 @@
-import { Passenger } from './../_models/passenger.model';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Passenger } from './../_models/passenger.model';
 
 @Injectable()
 export class PassengerService {

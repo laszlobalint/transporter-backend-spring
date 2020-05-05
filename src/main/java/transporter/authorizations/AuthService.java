@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.services.BookingService;
+import transporter.services.PassengerService;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,8 @@ public class AuthService {
 
     @Autowired
     private Environment environment;
+    @Autowired
+    private PassengerService passengerService;
     @Autowired
     private BookingService bookingService;
 
@@ -38,15 +41,10 @@ public class AuthService {
         return builder.compact();
     }
 
-    public Claims decodeJWT(String jwt) {
+    private Claims decodeJWT(String jwt) {
         return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey")))
                 .parseClaimsJws(jwt).getBody();
-    }
-
-    public String getPassengerName(String token) {
-        return Jwts.parser().setSigningKey(environment.getProperty("secretKey")).parseClaimsJws(token)
-                .getBody().getSubject();
     }
 
     public Claims resolveToken(HttpServletRequest req) {
@@ -70,9 +68,15 @@ public class AuthService {
         return validateToken(req) && resolveToken(req).getIssuer().equals(environment.getProperty("adminEmail"));
     }
 
-    public boolean validatePersonalRequest(HttpServletRequest req, Long bookingId) {
+    public boolean validatePersonalRequestByBooking(HttpServletRequest req, Long bookingId) {
         Long id = Long.parseLong(resolveToken(req).getSubject(), 10);
         Booking b = bookingService.listBooking(bookingId);
         return validateToken(req) && b.getPassenger().getId().equals(id);
+    }
+
+    public boolean validatePersonalRequestByPassenger(HttpServletRequest req, Long passengerId) {
+        Long id = Long.parseLong(resolveToken(req).getSubject(), 10);
+        Passenger p = passengerService.listPassenger(passengerId);
+        return validateToken(req) && p.getId().equals(id);
     }
 }

@@ -1,14 +1,16 @@
-import { AuthGuard } from './auth/guards/auth.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { reducers, effects } from './store';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { reducers, effects } from './store';
+import { AuthGuard } from './auth/guards/auth.guard';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PassengerService } from './_services/passenger.service';
@@ -17,14 +19,14 @@ import { BookingComponent } from './booking/booking.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { environment } from '../environments/environment';
 import { WeekdayPipe } from './_utils/pipes/weekday.pipe';
 import { DigitPipe } from './_utils/pipes/digit.pipe';
 import { BookingService } from './_services/booking.service';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent],
+  declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent, FooterComponent],
   imports: [
     AuthModule,
     BrowserModule,
@@ -45,9 +47,7 @@ import { BookingService } from './_services/booking.service';
         strictActionImmutability: false,
       },
     }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 20,
-    }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot(effects),
   ],
   providers: [

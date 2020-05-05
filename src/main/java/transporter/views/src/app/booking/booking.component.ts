@@ -1,12 +1,11 @@
-import { ToastrService } from 'ngx-toastr';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { LocationHungary, Transport, LocationSerbia } from './../_models/transport.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Passenger } from '../_models';
-import * as fromRoot from '../store';
-import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { Passenger, LocationHungary, Transport, LocationSerbia } from './../_models';
+import * as fromRoot from '../store';
 import { BookingService } from '../_services/booking.service';
 
 @Component({

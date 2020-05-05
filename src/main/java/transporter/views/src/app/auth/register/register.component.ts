@@ -1,11 +1,11 @@
-import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { InputValidation } from '../../_models';
 import { checkPasswords } from '../../_utils/pipes/validators.utils';
 import { EMAIL_REGEX } from '../../app.constants';
 import { AuthService } from '../../_services/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',

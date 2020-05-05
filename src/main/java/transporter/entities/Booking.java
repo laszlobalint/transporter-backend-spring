@@ -1,5 +1,7 @@
 package transporter.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ public class Booking {
     public enum LocationHungary {MC_DONALDS_DRIVE_THROUGH, SING_SING_MUSIC_HALL, MARKET_SMALL_TESCO, BAKERY_BUREK, GRINGOS_BUS_STOP, ICERINK}
 
     @Transient
+    @JsonIgnore
     private Map<LocationSerbia, String> locationSerbiaStringMap = Map.of(
             LocationSerbia.NEW_CITY_HALL, "Szabadka, Makszim Gorkij utca és Đure Đaković sarka, Új Városháza előtti buszmegálló",
             LocationSerbia.MARKET_LIDL, "Szabadka, Szegedi út és Pap Pál utca sarka, Lidl áruház előtti buszmegálló",
@@ -29,6 +32,7 @@ public class Booking {
     );
 
     @Transient
+    @JsonIgnore
     private Map<LocationHungary, String> locationHungaryStringMap = Map.of(
             LocationHungary.MC_DONALDS_DRIVE_THROUGH, "Szeged, Rókusi körúti autós McDonald's gyorsétterem előtti buszmegálló",
             LocationHungary.SING_SING_MUSIC_HALL, "Szeged, Mars téri városi piac mögött található Sing Sing szórakozóhely előtti parkoló",

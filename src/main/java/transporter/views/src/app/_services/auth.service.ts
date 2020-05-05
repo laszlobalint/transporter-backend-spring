@@ -1,9 +1,9 @@
-import { ToastrService } from 'ngx-toastr';
-import { LoginPassengerDto, RegisterPassengerDto } from './../_models/passenger.model';
-import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { LoginPassengerDto, RegisterPassengerDto } from './../_models/passenger.model';
 
 @Injectable()
 export class AuthService {

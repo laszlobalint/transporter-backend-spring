@@ -72,7 +72,8 @@ public class PassengerService {
         boolean isMatching = passwordEncoder.matches(plainPassword, encodedPassword);
         if (isMatching) {
             Passenger passenger = passengerDAO.findPassengerByEmail(email);
-            return ResponseEntity.status(200).body(authService.createJWT(passenger));
+            if (!passenger.isActivated()) return passengerDAO.activatePassengerProfile(passenger);
+            else return ResponseEntity.status(200).body(authService.createJWT(passenger));
         } else {
             return ResponseEntity.status(422).body("Helytelen e-mail címet vagy jelszót adtál meg!");
         }

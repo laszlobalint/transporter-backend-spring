@@ -1,7 +1,9 @@
 package transporter.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import transporter.authorizations.AuthService;
 import transporter.entities.Passenger;
 import transporter.services.EmailService;
 import javax.persistence.EntityManager;
@@ -18,12 +20,16 @@ public class PassengerDAO {
     private EntityManager entityManager;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AuthService authService;
+
 
     @Transactional
     public void savePassenger(Passenger passenger) {
         entityManager.persist(passenger);
         emailService.sendMail(passenger.getEmail(), "Regisztráció",
-                "Sikeresen regisztráltál a Transporter alkalmazásban! Adataid: " + passenger);
+                "Sikeresen regisztráltál a Transporter alkalmazásban!\nAz első sikeres bejelentkezéssel" +
+                        "válik aktívvá a profilod. Kérlek, keresd fel az oldalt és jelentkezz be.\n" + passenger);
         entityManager.flush();
     }
 
@@ -38,7 +44,6 @@ public class PassengerDAO {
         } catch (NoResultException nre) {
             return new ArrayList<>();
         }
-
     }
 
     @Transactional
@@ -72,5 +77,12 @@ public class PassengerDAO {
         } catch (NoResultException nre) {
             return null;
         }
+    }
+
+    @Transactional
+    public ResponseEntity activatePassengerProfile(Passenger passenger) {
+        passenger.setActivated(true);
+        entityManager.merge(passenger);
+        return ResponseEntity.status(200).body(authService.createJWT(findPassengerByEmail(passenger.getEmail())));
     }
 }

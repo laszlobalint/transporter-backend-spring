@@ -3,25 +3,25 @@ import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { TransportService } from '../../_services/transport.service';
 import * as fromActions from '../actions';
+import { BookingService } from '../../_services/booking.service';
 
 @Injectable()
-export class TransportEffects {
-  public fetchTransport$ = createEffect(() =>
+export class BookingEffects {
+  public fetchBookings$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.FetchTransports),
+      ofType(fromActions.LoginPassengerSuccess),
       mergeMap(() =>
-        this.transportService.fetch().pipe(
-          map((transports) => {
-            this.toastrService.success('', 'Fuvarok betöltve!');
-            return fromActions.FetchTransportsSuccess({
-              transports,
+        this.bookingService.fetch().pipe(
+          map((bookings) => {
+            this.toastrService.success('', 'Foglalások betöltve!');
+            return fromActions.FetchBookingsSuccess({
+              bookings,
             });
           }),
           catchError((error) => {
             this.toastrService.error('', error.error);
-            return of(fromActions.FetchTransportsFailure({ error }));
+            return of(fromActions.FetchBookingsFailure({ error }));
           }),
         ),
       ),
@@ -30,7 +30,7 @@ export class TransportEffects {
 
   constructor(
     private readonly actions$: Actions,
-    private readonly transportService: TransportService,
+    private readonly bookingService: BookingService,
     private readonly toastrService: ToastrService,
   ) {}
 }

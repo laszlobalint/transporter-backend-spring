@@ -55,6 +55,15 @@ public class BookingController {
             return ResponseEntity.status(400).body("Nem kérhető le a megadott foglalás!");
     }
 
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> listPassengerBookings(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        if (authService.validatePersonalRequestByPassenger(request, id))
+            return ResponseEntity.status(200).body(bookingService.listPassengerBookings(id));
+        else
+            return ResponseEntity.status(400).body("Nem kérhetők le az utas foglalásai!");
+    }
+
     @GetMapping(value = "/bookings/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAllBookings(HttpServletRequest request) {
         if (authService.validateAdmin(request))
@@ -65,7 +74,7 @@ public class BookingController {
 
     @PutMapping(value = "/{bookingId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity modifyBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
-        if (authService.validatePersonalRequest(request, bookingId)) {
+        if (authService.validatePersonalRequestByBooking(request, bookingId)) {
             bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), bookingId);
             if (bookingService.listBooking(bookingId).getLocationHungary() == body.getLocationHungary() &&
                     bookingService.listBooking(bookingId).getLocationSerbia() == body.getLocationSerbia())
@@ -76,7 +85,7 @@ public class BookingController {
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
-        if (authService.validatePersonalRequest(request, bookingId)) {
+        if (authService.validatePersonalRequestByBooking(request, bookingId)) {
             bookingService.removeBooking(bookingId);
             if (bookingService.listBooking(bookingId) == null)
                 return ResponseEntity.status(200).body("Sikeresen törölted a foglalásodat!");

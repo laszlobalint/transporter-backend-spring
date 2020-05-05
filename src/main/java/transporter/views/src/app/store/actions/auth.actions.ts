@@ -1,5 +1,5 @@
-import { Passenger, LoginPassengerDto } from './../../_models/passenger.model';
 import { createAction, props } from '@ngrx/store';
+import { Passenger, LoginPassengerDto } from './../../_models/passenger.model';
 
 export const LoginPassenger = createAction('[Auth] Login Passenger', props<{ loginPassenger: LoginPassengerDto }>());
 export const LoginPassengerSuccess = createAction('[Auth] Login Passenger Success', props<{ token: string }>());

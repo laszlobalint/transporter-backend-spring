@@ -1,9 +1,9 @@
-<div *ngIf="{ passenger: passenger$ | async, transports: transports$ | async } as state">
-  <h1 class="cover-heading m-2 p-2">
+<div *ngIf="{ passenger: passenger$ | async, bookings: bookings$ | async, transports: transports$ | async } as state">
+  <h2 class="cover-heading m-2 p-2">
     Foglalj fuvart Szegedre vagy Szabadkára:
-  </h1>
+  </h2>
   <div *ngIf="state.transports" class="container">
-    <div class="row font-weight-bold text-uppercase">
+    <div class="row font-weight-bold text-uppercase m-1 p-1">
       <div class="col-sm">Útirány</div>
       <div class="col-sm">
         Szabad ülőhelyek:
@@ -22,9 +22,7 @@
         <div class="col-sm">Szegedről Szabadkára</div>
       </ng-template>
 
-      <div class="col-sm">
-        {{ transport.freeSeats }}
-      </div>
+      <div class="col-sm">{{ transport.freeSeats }} fő szabad férőhely</div>
       <div class="col-sm">
         {{ transport.departureTime[0] }}. {{ transport.departureTime[1] | digit }}. {{ transport.departureTime[2] | digit }}.
         {{ transport.departureTime | weekday }}
@@ -44,5 +42,21 @@
         </button>
       </div>
     </div>
+  </div>
+  <hr />
+  <div *ngIf="passenger$ | async" class="card-header">
+    Korábbi foglalásaid
+  </div>
+  <div *ngFor="let booking of state.bookings" class="card">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Indulás ideje: {{ booking.departureTime[0] }}. {{ booking.departureTime[1] | digit }}. {{ booking.departureTime[2] | digit }}.
+        {{ booking.departureTime | weekday }}
+        {{ booking.departureTime[3] | digit }}:{{ booking.departureTime[4] | digit }}
+      </li>
+      <li class="list-group-item">Szegedi találkozási hely: {{ LocationHungary[booking.locationHungary] }}</li>
+      <li class="list-group-item">Szabadkai találkozási hely: {{ LocationSerbia[booking.locationSerbia] }}</li>
+      <li class="list-group-item"></li>
+    </ul>
   </div>
 </div>

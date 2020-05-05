@@ -10,6 +10,7 @@ import transporter.entities.Passenger;
 import transporter.entities.Transport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -40,6 +41,13 @@ public class BookingService {
 
     public Booking listBooking(Long id) {
         return bookingDAO.listBooking(id);
+    }
+
+    public List<Booking> listPassengerBookings(Long id) {
+        return bookingDAO.listAllBookings()
+                .stream()
+                .filter(b -> b.getPassenger().getId().equals(id))
+                .collect(Collectors.toList());
     }
 
     public List<Booking> listAllBookings() {

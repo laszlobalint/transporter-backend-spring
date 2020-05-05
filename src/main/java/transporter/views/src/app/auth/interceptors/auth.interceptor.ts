@@ -1,9 +1,9 @@
-import { Observable } from 'rxjs';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as fromRoot from '../../store';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import * as fromRoot from '../../store';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

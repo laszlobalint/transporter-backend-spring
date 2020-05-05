@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../store';
 import { EMAIL_REGEX } from '../../app.constants';
+import { InputValidation } from '../../_models';
 
 @Component({
   selector: 'app-login',
@@ -27,5 +28,16 @@ export class LoginComponent implements OnInit {
         loginPassenger,
       }),
     );
+  }
+
+  public showInputValidityStatus(field: string): InputValidation {
+    let isFieldValid: boolean;
+    if (this.form.controls[field].dirty && this.form.controls[field].touched) {
+      isFieldValid = this.form.controls[field].valid;
+      return {
+        'is-invalid': !isFieldValid,
+        'is-valid': isFieldValid,
+      };
+    }
   }
 }
