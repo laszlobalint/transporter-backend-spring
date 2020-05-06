@@ -5,7 +5,7 @@ export interface Transport {
   route: string;
   departureTime: Date;
   freeSeats: number;
-  bookings?: Booking;
+  bookings?: Booking[];
 }
 
 export const LocationSerbia = {

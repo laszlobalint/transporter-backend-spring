@@ -16,6 +16,17 @@ const reducerFunction = createReducer(
     ...state,
     transports,
   })),
+  on(fromActions.DeleteBookingSuccess, (state, { deleteBookingDto }) => ({
+    ...state,
+    transports: [
+      ...state.transports.map((t) => {
+        if (t.id === deleteBookingDto.transportId) {
+          t.freeSeats++;
+        }
+        return t;
+      }),
+    ],
+  })),
 );
 
 export interface State {

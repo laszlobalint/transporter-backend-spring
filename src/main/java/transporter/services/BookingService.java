@@ -8,6 +8,8 @@ import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,17 +28,19 @@ public class BookingService {
     @Autowired
     private TransportDAO transportDAO;
 
-    public void saveBooking(Booking booking) {
+    public Booking saveBooking(Booking booking) {
         Transport t = transportDAO.findTransportByDepartureTime(booking.getDepartureTime());
         if (t.getFreeSeats() > 0) {
             booking.setTransport(t);
-            bookingDAO.saveBooking(booking, t);
+            Booking savedBooking = bookingDAO.saveBooking(booking, t);
             t.setFreeSeats(t.getFreeSeats() - 1);
             transportDAO.saveTransport(t);
             Passenger p = booking.getPassenger();
             p.setBookingCount(p.getBookingCount() + 1);
             passengerDAO.modifyPassenger(p);
+            return savedBooking;
         }
+        return null;
     }
 
     public Booking listBooking(Long id) {
@@ -46,7 +50,7 @@ public class BookingService {
     public List<Booking> listPassengerBookings(Long id) {
         return bookingDAO.listAllBookings()
                 .stream()
-                .filter(b -> b.getPassenger().getId().equals(id))
+                .filter(b -> b.getPassenger().getId().equals(id) && b.getDepartureTime().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
 
@@ -61,7 +65,7 @@ public class BookingService {
         bookingDAO.modifyBooking(booking);
     }
 
-    public void removeBooking(Long id) {
+    public Long removeBooking(Long id) {
         Booking booking = bookingDAO.listBooking(id);
         Passenger p = booking.getPassenger();
         if (p.getBookingCount() > 0) {
@@ -72,5 +76,6 @@ public class BookingService {
         t.setFreeSeats(t.getFreeSeats() + 1);
         transportDAO.saveTransport(t);
         bookingDAO.removeBooking(booking);
+        return t.getId();
     }
 }

@@ -53,6 +53,7 @@
         Indulás ideje: {{ booking.departureTime[0] }}. {{ booking.departureTime[1] | digit }}. {{ booking.departureTime[2] | digit }}.
         {{ booking.departureTime | weekday }}
         {{ booking.departureTime[3] | digit }}:{{ booking.departureTime[4] | digit }}
+        <i class="fa fa-trash-o" style="font-size: 28px; cursor: pointer;" (click)="onDeleteBooking(booking.id)"></i>
       </li>
       <li class="list-group-item">Szegedi találkozási hely: {{ LocationHungary[booking.locationHungary] }}</li>
       <li class="list-group-item">Szabadkai találkozási hely: {{ LocationSerbia[booking.locationSerbia] }}</li>

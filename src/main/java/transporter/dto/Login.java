@@ -1,4 +1,4 @@
-package transporter.entities;
+package transporter.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

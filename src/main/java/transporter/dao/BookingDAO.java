@@ -20,12 +20,13 @@ public class BookingDAO {
     private EmailService emailService;
 
     @Transactional
-    public void saveBooking(Booking booking, Transport transport) {
-        entityManager.merge(booking);
+    public Booking saveBooking(Booking booking, Transport transport) {
+        Booking savedBooking = entityManager.merge(booking);
         entityManager.merge(transport);
         emailService.sendMail(booking.getPassenger().getEmail(), "Fuvar foglalása",
                 "Sikeresen foglaltál a Transporter alkalmazásban!\n" + booking);
         entityManager.flush();
+        return savedBooking;
     }
 
     public Booking listBooking(Long id) {
@@ -59,7 +60,7 @@ public class BookingDAO {
 
     @Transactional
     public void removeBooking(Booking booking) {
-        entityManager.remove(booking);
+        entityManager.remove(entityManager.contains(booking) ? booking : entityManager.merge(booking));
         entityManager.flush();
     }
 }

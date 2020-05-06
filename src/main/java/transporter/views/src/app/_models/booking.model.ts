@@ -9,3 +9,8 @@ export interface Booking {
   passenger?: Passenger;
   transport?: Transport;
 }
+
+export interface DeleteBookingDto {
+  transportId: number;
+  bookingId: number;
+}

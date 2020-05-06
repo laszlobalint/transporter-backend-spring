@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Booking } from '../_models';
+import { Booking, DeleteBookingDto } from '../_models';
 
 @Injectable()
 export class BookingService {
@@ -13,9 +13,11 @@ export class BookingService {
     return this.http.get<Booking[]>(`${this.BOOKING_API_URL}`);
   }
 
-  public save(booking: Booking): Observable<string> {
-    return this.http.post<string>(`${this.BOOKING_API_URL}`, booking, {
-      responseType: 'text' as 'json',
-    });
+  public save(booking: Booking): Observable<Booking> {
+    return this.http.post<Booking>(`${this.BOOKING_API_URL}`, booking);
+  }
+
+  public delete(id: number): Observable<DeleteBookingDto> {
+    return this.http.delete<DeleteBookingDto>(`${this.BOOKING_API_URL}/${id}`);
   }
 }

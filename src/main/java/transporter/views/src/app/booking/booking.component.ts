@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
@@ -18,8 +18,8 @@ export class BookingComponent implements OnInit, OnDestroy {
   public transport?: Transport;
   private transportSubscription: Subscription;
   public readonly keys = Object.keys;
-  LocationHungary = LocationHungary;
-  LocationSerbia = LocationSerbia;
+  public LocationHungary = LocationHungary;
+  public LocationSerbia = LocationSerbia;
   public selectedLocationHungary: string;
   public selectedLocationSerbia: string;
 
@@ -27,7 +27,6 @@ export class BookingComponent implements OnInit, OnDestroy {
     private readonly bookingService: BookingService,
     private readonly rootStore: Store<fromRoot.State>,
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
     private readonly toastrService: ToastrService,
   ) {
     this.transports$ = this.rootStore.select('transports').pipe(map((state) => state.transports));
@@ -46,16 +45,15 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   public onBook(): void {
     if (confirm('Biztosan le akarod foglalni a fuvart?')) {
-      this.bookingService
-        .save({
-          transport: this.transport,
-          locationHungary: this.selectedLocationHungary,
-          locationSerbia: this.selectedLocationSerbia,
-        })
-        .subscribe((response) => {
-          this.router.navigate(['/']);
-          this.toastrService.success('', response);
-        });
+      this.rootStore.dispatch(
+        fromRoot.SaveBooking({
+          booking: {
+            transport: this.transport,
+            locationHungary: this.selectedLocationHungary,
+            locationSerbia: this.selectedLocationSerbia,
+          },
+        }),
+      );
     }
   }
 }

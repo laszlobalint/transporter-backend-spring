@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
+import transporter.dto.DeleteBooking;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
 import transporter.services.BookingService;
@@ -41,8 +42,7 @@ public class BookingController {
             Transport t = transportService.listTransport(body.getTransport().getId());
             Booking b = new Booking(t.getDepartureTime(), body.getLocationSerbia(), body.getLocationHungary());
             b.setPassenger(passengerService.listPassenger(id));
-            bookingService.saveBooking(b);
-            return ResponseEntity.status(200).body("Sikeresen lefoglaltad a helyet a fuvarra!");
+            return ResponseEntity.status(200).body(bookingService.saveBooking(b));
         }
         return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
     }
@@ -84,11 +84,11 @@ public class BookingController {
     }
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
+    public ResponseEntity removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
         if (authService.validatePersonalRequestByBooking(request, bookingId)) {
-            bookingService.removeBooking(bookingId);
+            Long transportId = bookingService.removeBooking(bookingId);
             if (bookingService.listBooking(bookingId) == null)
-                return ResponseEntity.status(200).body("Sikeresen törölted a foglalásodat!");
+                return ResponseEntity.status(200).body(new DeleteBooking(transportId, bookingId));
         }
         return ResponseEntity.status(400).body("Nem sikerült törölni a foglalást!");
     }

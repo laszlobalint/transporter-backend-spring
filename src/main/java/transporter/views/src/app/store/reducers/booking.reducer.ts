@@ -16,6 +16,14 @@ const reducerFunction = createReducer(
     ...state,
     bookings,
   })),
+  on(fromActions.SaveBookingSuccess, (state, { booking }) => ({
+    ...state,
+    bookings: [...state.bookings, booking],
+  })),
+  on(fromActions.DeleteBookingSuccess, (state, { deleteBookingDto }) => ({
+    ...state,
+    bookings: [...state.bookings.filter((b) => b.id !== deleteBookingDto.bookingId)],
+  })),
 );
 
 export interface State {

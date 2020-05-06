@@ -5,9 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
-import transporter.entities.Login;
+import transporter.dto.Login;
 import transporter.entities.Passenger;
-import transporter.entities.Register;
+import transporter.dto.Register;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
 
