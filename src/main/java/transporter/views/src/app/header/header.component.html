@@ -1,15 +1,49 @@
 <nav *ngIf="{ passenger: passenger$ | async } as state" class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" [routerLink]="['/home']">Főoldal</a>
-  <a *ngIf="!state.passenger" class="navbar-brand" [routerLink]="['/login']">Bejelentkezés</a>
-  <a *ngIf="state.passenger" class="navbar-brand" [routerLink]="['/logout']">Kijelentkezés</a>
-  <div class="collapse navbar-collapse d-flex justify-content-between">
-    <a *ngIf="!state.passenger" class="navbar-brand" [routerLink]="['/register']">Regisztráció</a>
-    <a *ngIf="state.passenger" class="navbar-brand">Üdv, {{ state.passenger.name }}!</a>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Keress időpont alapján..." aria-label="Search" />
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-        Keresés
-      </button>
-    </form>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" [routerLink]="['/home']">Főoldal</a>
+      </li>
+      <li class="nav-item">
+        <a *ngIf="!state.passenger" class="nav-link" [routerLink]="['/register']">Regisztráció</a>
+      </li>
+      <li class="nav-item">
+        <a *ngIf="!state.passenger" class="nav-link" [routerLink]="['/login']">Bejelentkezés</a>
+        <a *ngIf="state.passenger" class="nav-link" [routerLink]="['/logout']">Kijelentkezés</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a
+          *ngIf="state.passenger"
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Profil
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Profil szerkesztése</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Múltbeli foglalások</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Kapcsolatfelvétel</a>
+        </div>
+      </li>
+    </ul>
   </div>
+  <a *ngIf="state.passenger" class="navbar-brand">Üdv, {{ state.passenger.name }}!</a>
 </nav>
