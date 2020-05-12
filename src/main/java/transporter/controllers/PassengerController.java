@@ -1,13 +1,17 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
+import transporter.dto.ContactHelp;
 import transporter.dto.Login;
+import transporter.dto.UpdatePassenger;
 import transporter.entities.Passenger;
 import transporter.dto.Register;
+import transporter.services.EmailService;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +23,10 @@ public class PassengerController {
     private PassengerService passengerService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    EmailService emailService;
+    @Autowired
+    Environment environment;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
@@ -61,14 +69,9 @@ public class PassengerController {
 
     @PutMapping(value = "/{passengerId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> modifyPassenger(@PathVariable Long passengerId, @RequestBody Passenger body, HttpServletRequest request) {
+    public ResponseEntity<Object> modifyPassenger(@PathVariable Long passengerId, @RequestBody UpdatePassenger body, HttpServletRequest request) {
         if (authService.validatePersonalRequestByPassenger(request, passengerId) || authService.validateAdmin(request)) {
-            Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
-            Passenger saved = passengerService.modifyPassenger(edited, passengerId);
-            if (saved != null)
-                return ResponseEntity.status(200).body(passengerService.listPassenger(passengerId));
-            else
-                return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
+            return ResponseEntity.status(200).body(passengerService.modifyPassenger(body.getName(), body.getPassword(), body.getEmail(), body.getPhoneNumber(), passengerId));
         } else {
             return ResponseEntity.status(403).body("Nem változtathatók meg a felhasználó adatai!");
         }
@@ -84,6 +87,13 @@ public class PassengerController {
             }
         }
         return ResponseEntity.status(403).body("Nem törölhető a profil!");
+    }
+
+    @PostMapping(value = "/contact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public ResponseEntity contactAdmin(@RequestBody ContactHelp body) {
+        emailService.sendMail(environment.getProperty("adminEmail"), body.getSubject(), "E-mail feladója: " + body.getEmail() + "\n" + body.getMessage());
+        return ResponseEntity.status(200).body("Sikeresen elküldted az e-mailt! ");
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -47,10 +47,17 @@ public class BookingService {
         return bookingDAO.listBooking(id);
     }
 
-    public List<Booking> listPassengerBookings(Long id) {
+    public List<Booking> listFuturePassengerBookings(Long id) {
         return bookingDAO.listAllBookings()
                 .stream()
                 .filter(b -> b.getPassenger().getId().equals(id) && b.getDepartureTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Booking> listPastPassengerBookings(Long id) {
+        return bookingDAO.listAllBookings()
+                .stream()
+                .filter(b -> b.getPassenger().getId().equals(id) && b.getDepartureTime().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
 

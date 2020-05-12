@@ -2,8 +2,8 @@ import { map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as fromRoot from '../store';
-import { Transport, Passenger, Booking, LocationHungary, LocationSerbia } from './../_models';
+import * as fromRoot from '../../store';
+import { Transport, Passenger, Booking, LocationHungary, LocationSerbia } from '../../_models';
 
 @Component({
   selector: 'app-home',

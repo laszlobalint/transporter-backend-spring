@@ -46,14 +46,12 @@ public class PassengerService {
         return new ArrayList<>(passengerDAO.listAllPassengers());
     }
 
-    public Passenger modifyPassenger(Passenger edited, Long id) {
+    public Passenger modifyPassenger(String name, String plainPassword, String email, String phoneNumber, Long id) {
         Passenger passenger = passengerDAO.listPassenger(id);
-        if (edited.getName() != null && edited.getName().length() > 2) passenger.setName(edited.getName());
-        if (edited.getPassword() != null && edited.getPassword().length() > 2)
-            passenger.setPassword(passwordEncoder.encode(edited.getPassword()));
-        if (edited.getPhoneNumber() != null && edited.getPhoneNumber().length() > 2)
-            passenger.setPhoneNumber(edited.getPhoneNumber());
-        if (edited.getEmail() != null && edited.getEmail().length() > 2) passenger.setEmail(edited.getEmail());
+        passenger.setPhoneNumber(phoneNumber);
+        passenger.setEmail(email);
+        passenger.setName(name);
+        passenger.setPassword(passwordEncoder.encode(plainPassword.trim()));
         return passengerDAO.modifyPassenger(passenger);
     }
 

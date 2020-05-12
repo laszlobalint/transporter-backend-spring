@@ -13,10 +13,6 @@ import transporter.services.PassengerService;
 import transporter.services.TransportService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
 @RestController
 @RequestMapping(value = "/booking")
@@ -56,12 +52,21 @@ public class BookingController {
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> listPassengerBookings(HttpServletRequest request) {
+    public ResponseEntity<Object> listFuturePassengerBookings(HttpServletRequest request) {
         Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
         if (authService.validatePersonalRequestByPassenger(request, id))
-            return ResponseEntity.status(200).body(bookingService.listPassengerBookings(id));
+            return ResponseEntity.status(200).body(bookingService.listFuturePassengerBookings(id));
         else
-            return ResponseEntity.status(400).body("Nem kérhetők le az utas foglalásai!");
+            return ResponseEntity.status(400).body("Nem kérhetők le az utas következő foglalásai!");
+    }
+
+    @GetMapping(value = "/past/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> listPastPassengerBookings(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        if (authService.validatePersonalRequestByPassenger(request, id))
+            return ResponseEntity.status(200).body(bookingService.listPastPassengerBookings(id));
+        else
+            return ResponseEntity.status(400).body("Nem kérhetők le az utas múltbeli foglalásai!");
     }
 
     @GetMapping(value = "/bookings/all", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -9,6 +9,7 @@ export interface Passenger {
 }
 
 export interface RegisterPassengerDto {
+  id?: string;
   name: string;
   email: string;
   password: string;
@@ -28,3 +29,12 @@ export interface InputValidation {
   'is-invalid': boolean;
   'is-valid': boolean;
 }
+
+export interface ContactHelp {
+  name: string;
+  email: string;
+  subject: string;
+  messge: string;
+}
+
+export type UpdatePassengerDto = RegisterPassengerDto;

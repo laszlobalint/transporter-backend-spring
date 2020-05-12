@@ -13,7 +13,7 @@ export class BookingEffects {
     this.actions$.pipe(
       ofType(fromActions.FetchBookings, fromActions.LoginPassengerSuccess),
       mergeMap(() =>
-        this.bookingService.fetch().pipe(
+        this.bookingService.fetchActive().pipe(
           map((bookings) => {
             this.toastrService.success('', 'Foglalások betöltve!');
             return fromActions.FetchBookingsSuccess({

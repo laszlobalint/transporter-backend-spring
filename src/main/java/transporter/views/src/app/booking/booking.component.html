@@ -58,7 +58,12 @@
   </div>
   <div class="form-group row">
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary m-2" [disabled]="!selectedLocationSerbia || !selectedLocationHungary" (click)="onBook()">
+      <button
+        type="submit"
+        class="btn btn-outline-secondary m-2"
+        [disabled]="!selectedLocationSerbia || !selectedLocationHungary"
+        (click)="onBook()"
+      >
         Lefoglalom
       </button>
     </div>

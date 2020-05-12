@@ -1,0 +1,24 @@
+<div *ngIf="{ bookings: pastBookings } as state">
+  <h2>
+    Korábbi foglalásaid
+  </h2>
+  <div *ngFor="let booking of state.bookings" class="card">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Indulás ideje: {{ booking.departureTime[0] }}. {{ booking.departureTime[1] | digit }}. {{ booking.departureTime[2] | digit }}.
+        {{ booking.departureTime | weekday }}
+        {{ booking.departureTime[3] | digit }}:{{ booking.departureTime[4] | digit }}
+      </li>
+      <li *ngIf="booking.transport.route === 'FROM_HUNGARY_TO_SERBIA'; then hunser; else serhun"></li>
+      <ng-template #serhun>
+        <div class="list-group-item">Útvonal: Szabadkáról Szegedre</div>
+      </ng-template>
+      <ng-template #hunser>
+        <div class="list-group-item">Útvonal: Szegedről Szabadkára</div>
+      </ng-template>
+      <li class="list-group-item">Szegedi találkozási hely: {{ LocationHungary[booking.locationHungary] }}</li>
+      <li class="list-group-item">Szabadkai találkozási hely: {{ LocationSerbia[booking.locationSerbia] }}</li>
+      <li class="list-group-item"></li>
+    </ul>
+  </div>
+</div>

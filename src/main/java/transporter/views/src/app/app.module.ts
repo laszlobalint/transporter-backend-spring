@@ -12,23 +12,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { reducers, effects } from './store';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
 import { PassengerService } from './_services/passenger.service';
 import { TransportService } from './_services/transport.service';
 import { BookingComponent } from './booking/booking.component';
-import { HeaderComponent } from './header/header.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 import { environment } from '../environments/environment';
-import { WeekdayPipe } from './_utils/pipes/weekday.pipe';
-import { DigitPipe } from './_utils/pipes/digit.pipe';
 import { BookingService } from './_services/booking.service';
-import { FooterComponent } from './footer/footer.component';
+import { PassengerModule } from './passenger/passenger.module';
+import { HomeModule } from './home/home.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, DigitPipe, WeekdayPipe, BookingComponent, HeaderComponent, FooterComponent],
+  declarations: [AppComponent, BookingComponent],
   imports: [
     AuthModule,
+    HomeModule,
+    PassengerModule,
+    SharedModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

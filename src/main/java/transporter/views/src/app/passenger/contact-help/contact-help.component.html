@@ -1,0 +1,74 @@
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 wow">
+        <h2>Vedd fel a sofőrrel a kapcsolatot</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mt-3">
+        <p>
+          Az alkalmazás szeretné az utas és a fuvarozó idejét is megspórolni, illetve egyszerűsíteni a foglalás és utazáskezelés menetét.
+          Természetesen, előfordulhatnak váratlan helyzetek, amik megkívánják, hogy közvetlenül is kommunikáljanak a felek, így ha ilyen
+          helyzetbe ütközöl, kérlek, vedd fel a kapcsolatot az alábbi űrlap segítségével vagy telefonon.
+        </p>
+        <div class="find-widget">Fuvarozó: <a href="#">László Bálint</a></div>
+        <div class="find-widget">Telefonszám (RS): <a href="#">+381-63/76-93-041</a></div>
+        <div class="find-widget">Telefonszám (HU): <a href="#">+36-70/67-93-041</a></div>
+        <div class="find-widget">Weboldal: <a href="#" target="_blank">www.transporter.rs</a></div>
+        <div class="find-widget">
+          Dátum: <a href="#">{{ now | date: 'yyyy.MM.dd.' }}</a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <form [formGroup]="form">
+          <div class="form-group label-floating">
+            <label class="control-label" for="name">Teljes név</label>
+            <input
+              [ngClass]="showInputValidityStatus('name')"
+              class="form-control"
+              type="text"
+              formControlName="name"
+              placeholder="Kérlek, add meg a nevedet..."
+            />
+          </div>
+          <div class="form-group label-floating">
+            <label class="control-label" for="email">E-mail cím</label>
+            <input
+              [ngClass]="showInputValidityStatus('email')"
+              class="form-control"
+              type="email"
+              formControlName="email"
+              placeholder="Kérlek, add meg az e-mail címedet..."
+            />
+          </div>
+          <div class="form-group label-floating">
+            <label class="control-label">Tárgy/Cím</label>
+            <input
+              [ngClass]="showInputValidityStatus('subject')"
+              class="form-control"
+              type="text"
+              formControlName="subject"
+              placeholder="Kérlek, add meg az üzenet tárgyát/címét..."
+            />
+          </div>
+          <div class="form-group label-floating">
+            <label for="message" class="control-label">Üzenet</label>
+            <textarea
+              [ngClass]="showInputValidityStatus('message')"
+              class="form-control"
+              rows="3"
+              formControlName="message"
+              placeholder="Kérlek, írd le az üzenetedet..."
+            ></textarea>
+          </div>
+          <div class="form-submit mt-2">
+            <button class="btn btn-outline-secondary" type="submit" id="form-submit" [disabled]="form.invalid" (click)="onSend()">
+              Üzenet küldése
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

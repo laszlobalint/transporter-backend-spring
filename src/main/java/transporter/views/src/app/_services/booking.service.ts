@@ -9,8 +9,12 @@ export class BookingService {
 
   constructor(private readonly http: HttpClient) {}
 
-  public fetch(): Observable<Booking[]> {
+  public fetchActive(): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${this.BOOKING_API_URL}`);
+  }
+
+  public fetchInactive(): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.BOOKING_API_URL}/past/all`);
   }
 
   public save(booking: Booking): Observable<Booking> {
