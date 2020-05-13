@@ -8,7 +8,6 @@ import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

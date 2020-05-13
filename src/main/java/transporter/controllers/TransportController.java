@@ -8,7 +8,6 @@ import transporter.authorizations.AuthService;
 import transporter.entities.Transport;
 import transporter.services.TransportService;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(value = "/transport")

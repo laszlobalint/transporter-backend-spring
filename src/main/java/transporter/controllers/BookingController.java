@@ -11,7 +11,6 @@ import transporter.entities.Transport;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
 import transporter.services.TransportService;
-
 import javax.servlet.http.HttpServletRequest;
 
 @RestController

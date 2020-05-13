@@ -2,9 +2,8 @@ package transporter.dto;
 
 public class DeleteBooking {
 
-    public Long transportId;
-
-    public Long bookingId;
+    private Long transportId;
+    private Long bookingId;
 
     public DeleteBooking(Long transportId, Long bookingId) {
         this.transportId = transportId;

@@ -3,11 +3,8 @@ package transporter.dto;
 public class UpdatePassenger {
 
     private String name;
-
     private String email;
-
     private String password;
-
     private String phoneNumber;
 
     public String getName() {

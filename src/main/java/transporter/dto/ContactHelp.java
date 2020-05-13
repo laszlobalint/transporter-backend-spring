@@ -2,13 +2,10 @@ package transporter.dto;
 
 public class ContactHelp {
 
-    public String name;
-
-    public String email;
-
-    public String subject;
-
-    public String message;
+    private String name;
+    private String email;
+    private String subject;
+    private String message;
 
     public String getName() {
         return name;

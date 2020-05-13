@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
 import transporter.services.EmailService;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;

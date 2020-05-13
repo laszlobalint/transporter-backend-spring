@@ -9,7 +9,6 @@ import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
-
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;

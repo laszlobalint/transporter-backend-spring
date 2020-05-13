@@ -1,7 +1,6 @@
 package transporter;
 
 import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,6 @@ public class EmailConfiguration {
         props.put("mail.smtp.connectiontimeout", "60000");
         props.put("mail.smtp.writetimeout", "60000");
         props.put("mail.debug", "true");
-
         return mailSender;
     }
 
