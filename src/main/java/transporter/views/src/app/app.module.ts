@@ -22,6 +22,7 @@ import { BookingService } from './_services/booking.service';
 import { PassengerModule } from './passenger/passenger.module';
 import { HomeModule } from './home/home.module';
 import { SharedModule } from './shared/shared.module';
+import { ErrorInterceptorProvider } from './auth/interceptors/http-response.interceptor';
 
 @NgModule({
   declarations: [AppComponent, BookingComponent],
@@ -58,6 +59,7 @@ import { SharedModule } from './shared/shared.module';
       multi: true,
     },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    ErrorInterceptorProvider,
     JwtHelperService,
     TransportService,
     PassengerService,

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Passenger, ContactHelp, UpdatePassengerDto } from './../_models';
+import { Message, Passenger, ContactHelp, UpdatePassengerDto } from './../_models';
 
 @Injectable()
 export class PassengerService {
@@ -17,9 +17,7 @@ export class PassengerService {
     return this.http.put<Passenger>(`${this.PASSENGER_API_URL}/${updatePassengerDto.id}`, updatePassengerDto);
   }
 
-  public sendMessage(contactHelp: ContactHelp): Observable<string> {
-    return this.http.post<string>(`${this.PASSENGER_API_URL}/contact`, contactHelp, {
-      responseType: 'text' as 'json',
-    });
+  public sendMessage(contactHelp: ContactHelp): Observable<Message> {
+    return this.http.post<Message>(`${this.PASSENGER_API_URL}/contact`, contactHelp);
   }
 }

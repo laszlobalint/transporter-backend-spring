@@ -24,7 +24,7 @@ import java.util.Properties;
 @ComponentScan(basePackageClasses = AppConfiguration.class)
 @PropertySource("classpath:/application.properties")
 @EnableJpaRepositories("transporter.dao")
-@EntityScan("transporter.entities")
+@EntityScan({"transporter.entities", "transporter.dto"})
 @EnableTransactionManagement
 public class AppConfiguration {
 

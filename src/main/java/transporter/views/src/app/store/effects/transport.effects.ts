@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { map, catchError, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { TransportService } from '../../_services/transport.service';
 import * as fromActions from '../actions';
@@ -18,10 +17,6 @@ export class TransportEffects {
             return fromActions.FetchTransportsSuccess({
               transports,
             });
-          }),
-          catchError((error) => {
-            this.toastrService.error('', error.error);
-            return of(fromActions.FetchTransportsFailure({ error }));
           }),
         ),
       ),

@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
     const registerPassenger = { ...this.form.getRawValue(), password: this.form.controls['passwordGroup'].value.password };
     delete registerPassenger.passwordGroup;
     this.authService.register(registerPassenger).subscribe((response) => {
-      this.toastrService.success('', `${response} Hamarosan átirányítunk a belépési oldalra...`);
+      this.toastrService.success('', `${response.message} Hamarosan átirányítunk a belépési oldalra...`);
       setTimeout(() => {
         this.router.navigate(['/login']);
       }, 7000);

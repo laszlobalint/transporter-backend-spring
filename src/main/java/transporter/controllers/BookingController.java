@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
 import transporter.dto.DeleteBooking;
+import transporter.dto.Message;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
 import transporter.services.BookingService;
@@ -39,7 +40,7 @@ public class BookingController {
             b.setPassenger(passengerService.listPassenger(id));
             return ResponseEntity.status(200).body(bookingService.saveBooking(b));
         }
-        return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült lefoglalni a fuvart!"));
     }
 
     @GetMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -47,7 +48,7 @@ public class BookingController {
         if (authService.validateToken(request) && bookingService.listBooking(bookingId) != null)
             return ResponseEntity.status(200).body(bookingService.listBooking(bookingId));
         else
-            return ResponseEntity.status(400).body("Nem kérhető le a megadott foglalás!");
+            return ResponseEntity.status(400).body(new Message("Nem kérhető le a megadott foglalás!"));
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -56,7 +57,7 @@ public class BookingController {
         if (authService.validatePersonalRequestByPassenger(request, id))
             return ResponseEntity.status(200).body(bookingService.listFuturePassengerBookings(id));
         else
-            return ResponseEntity.status(400).body("Nem kérhetők le az utas következő foglalásai!");
+            return ResponseEntity.status(400).body(new Message("Nem kérhetők le az utas következő foglalásai!"));
     }
 
     @GetMapping(value = "/past/all", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -65,7 +66,7 @@ public class BookingController {
         if (authService.validatePersonalRequestByPassenger(request, id))
             return ResponseEntity.status(200).body(bookingService.listPastPassengerBookings(id));
         else
-            return ResponseEntity.status(400).body("Nem kérhetők le az utas múltbeli foglalásai!");
+            return ResponseEntity.status(400).body(new Message("Nem kérhetők le az utas múltbeli foglalásai!"));
     }
 
     @GetMapping(value = "/bookings/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +74,7 @@ public class BookingController {
         if (authService.validateAdmin(request))
             return ResponseEntity.status(200).body(bookingService.listAllBookings());
         else
-            return ResponseEntity.status(403).body("Nem lehet lekérdezni az összes foglalást!");
+            return ResponseEntity.status(403).body(new Message("Nem lehet lekérdezni az összes foglalást!"));
     }
 
     @PutMapping(value = "/{bookingId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -82,9 +83,9 @@ public class BookingController {
             bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), bookingId);
             if (bookingService.listBooking(bookingId).getLocationHungary() == body.getLocationHungary() &&
                     bookingService.listBooking(bookingId).getLocationSerbia() == body.getLocationSerbia())
-                return ResponseEntity.status(200).body("Sikeresen módosítottad a foglalásodat!");
+                return ResponseEntity.status(200).body(new Message("Sikeresen módosítottad a foglalásodat!"));
         }
-        return ResponseEntity.status(400).body("Nem sikerült módosítani a foglalást!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült módosítani a foglalást!"));
     }
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -94,6 +95,6 @@ public class BookingController {
             if (bookingService.listBooking(bookingId) == null)
                 return ResponseEntity.status(200).body(new DeleteBooking(transportId, bookingId));
         }
-        return ResponseEntity.status(400).body("Nem sikerült törölni a foglalást!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült törölni a foglalást!"));
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
+import transporter.dto.Message;
 import transporter.entities.Transport;
 import transporter.services.TransportService;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class TransportController {
         if (authService.validateAdmin(request)) {
             Transport t = new Transport(body.getRoute(), body.getDepartureTime(), null);
             transportService.saveTransport(t);
-            return ResponseEntity.status(200).body("Sikeresen meghirdetted az új fuvart!");
+            return ResponseEntity.status(200).body(new Message("Sikeresen meghirdetted az új fuvart!"));
         }
         return ResponseEntity.status(400).body("Az új fuvar meghirdetése sikertelen!");
     }
@@ -61,7 +62,7 @@ public class TransportController {
                 transportService.listTransport(transportId) != null) {
             transportService.removeTransport(transportId);
             if (transportService.listTransport(transportId) == null)
-                return ResponseEntity.status(200).body("Sikeresen törölted a megadott fuvart!");
+                return ResponseEntity.status(200).body(new Message("Sikeresen törölted a megadott fuvart!"));
         }
         return ResponseEntity.status(400).body("Nem lehet törölni a megadott fuvart!");
     }

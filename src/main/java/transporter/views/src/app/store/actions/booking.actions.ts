@@ -3,10 +3,7 @@ import { Booking, DeleteBookingDto } from '../../_models';
 
 export const FetchBookings = createAction('[Booking] Fetch Bookings');
 export const FetchBookingsSuccess = createAction('[Booking] Fetch Bookings Success', props<{ bookings: Booking[] }>());
-export const FetchBookingsFailure = createAction('[Booking] Fetch Bookings Failure', props<{ error: string }>());
 export const SaveBooking = createAction('[Booking] Save Booking', props<{ booking: Booking }>());
 export const SaveBookingSuccess = createAction('[Booking] Save Booking Success', props<{ booking: Booking }>());
-export const SaveBookingFailure = createAction('[Booking] Save Booking Failure', props<{ error: string }>());
 export const DeleteBooking = createAction('[Booking] Delete Booking', props<{ id: number }>());
 export const DeleteBookingSuccess = createAction('[Booking] Delete Booking Success', props<{ deleteBookingDto: DeleteBookingDto }>());
-export const DeleteBookingFailure = createAction('[Booking] Delete Booking Failure', props<{ error: string }>());

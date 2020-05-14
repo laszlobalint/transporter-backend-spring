@@ -1,15 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
-import { LoginPassengerDto, RegisterPassengerDto } from './../_models/passenger.model';
+import { Observable } from 'rxjs';
+import { Message, LoginPassengerDto, RegisterPassengerDto } from './../_models';
 
 @Injectable()
 export class AuthService {
   public readonly AUTH_API_URL = 'http://localhost:8080/passenger';
 
-  constructor(private readonly http: HttpClient, private readonly toastrService: ToastrService) {}
+  constructor(private readonly http: HttpClient) {}
 
   public login(loginPassenger: LoginPassengerDto): Observable<string> {
     return this.http.post<string>(`${this.AUTH_API_URL}/login`, loginPassenger, {
@@ -17,17 +15,7 @@ export class AuthService {
     });
   }
 
-  public register(registerPassenger: RegisterPassengerDto): Observable<string> {
-    return this.http
-      .post<string>(`${this.AUTH_API_URL}`, registerPassenger, {
-        responseType: 'text' as 'json',
-      })
-      .pipe(
-        map((response) => response),
-        catchError((error) => {
-          this.toastrService.error('', error.error);
-          return throwError(error);
-        }),
-      );
+  public register(registerPassenger: RegisterPassengerDto): Observable<Message> {
+    return this.http.post<Message>(`${this.AUTH_API_URL}`, registerPassenger);
   }
 }

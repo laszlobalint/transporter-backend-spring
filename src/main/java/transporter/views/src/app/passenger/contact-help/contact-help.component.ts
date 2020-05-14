@@ -32,7 +32,7 @@ export class ContactHelpComponent implements OnInit {
 
   public onSend(): void {
     this.passengerService.sendMessage(this.form.getRawValue() as ContactHelp).subscribe((response) => {
-      this.toastrService.success('', `${response} Átirányítunk a főoldalra...`);
+      this.toastrService.success('', `${response.message} Átirányítunk a főoldalra...`);
       setTimeout(() => {
         this.router.navigate(['/']);
       }, 5000);

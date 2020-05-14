@@ -1,8 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { map, catchError, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import * as fromActions from '../actions';
 import { BookingService } from '../../_services/booking.service';
@@ -19,10 +18,6 @@ export class BookingEffects {
             return fromActions.FetchBookingsSuccess({
               bookings,
             });
-          }),
-          catchError((error) => {
-            this.toastrService.error('', error.error);
-            return of(fromActions.FetchBookingsFailure({ error }));
           }),
         ),
       ),
@@ -43,10 +38,6 @@ export class BookingEffects {
               booking,
             });
           }),
-          catchError((error) => {
-            this.toastrService.error('', error.error);
-            return of(fromActions.SaveBookingFailure({ error }));
-          }),
         ),
       ),
     ),
@@ -62,10 +53,6 @@ export class BookingEffects {
             return fromActions.DeleteBookingSuccess({
               deleteBookingDto,
             });
-          }),
-          catchError((error) => {
-            this.toastrService.error('', error.error);
-            return of(fromActions.DeleteBookingFailure({ error }));
           }),
         ),
       ),

@@ -6,11 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
-import transporter.dto.ContactHelp;
-import transporter.dto.Login;
-import transporter.dto.UpdatePassenger;
+import transporter.dto.*;
 import transporter.entities.Passenger;
-import transporter.dto.Register;
 import transporter.services.EmailService;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +39,7 @@ public class PassengerController {
                     body.getPhoneNumber(), body.getEmail());
             passengerService.savePassenger(p);
             if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
-                return ResponseEntity.status(200).body(p.getName() + " sikeresen regisztrált!");
+                return ResponseEntity.status(200).body(new Message(p.getName() + " sikeresen regisztrált!"));
             } else {
                 return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült regisztrálni!");
             }
@@ -83,7 +80,7 @@ public class PassengerController {
         if (authService.validatePersonalRequestByPassenger(request, passengerId) || authService.validateAdmin(request)) {
             if (passengerService.listPassenger(passengerId) != null) {
                 passengerService.removePassenger(passengerId);
-                return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
+                return ResponseEntity.status(200).body(new Message("Sikeresen törölted a profilodat!"));
             }
         }
         return ResponseEntity.status(403).body("Nem törölhető a profil!");
@@ -93,7 +90,7 @@ public class PassengerController {
     @ResponseBody
     public ResponseEntity contactAdmin(@RequestBody ContactHelp body) {
         emailService.sendMail(environment.getProperty("adminEmail"), body.getSubject(), "E-mail feladója: " + body.getEmail() + "\n" + body.getMessage());
-        return ResponseEntity.status(200).body("Sikeresen elküldted az e-mailt! ");
+        return ResponseEntity.status(200).body(new Message("Sikeresen elküldted az e-mailt!"));
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -58,12 +58,6 @@ CREATE TABLE IF NOT EXISTS `flyway_schema_history` (
   KEY `flyway_schema_history_s_idx` (`success`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table transporter.flyway_schema_history: ~1 rows (approximately)
-/*!40000 ALTER TABLE `flyway_schema_history` DISABLE KEYS */;
-INSERT INTO `flyway_schema_history` (`installed_rank`, `version`, `description`, `type`, `script`, `checksum`, `installed_by`, `installed_on`, `execution_time`, `success`) VALUES
-	(1, '1', '<< Flyway Baseline >>', 'BASELINE', '<< Flyway Baseline >>', NULL, 'root', '2020-05-05 11:19:22', 0, 1);
-/*!40000 ALTER TABLE `flyway_schema_history` ENABLE KEYS */;
-
 -- Dumping structure for tábla transporter.passenger
 CREATE TABLE IF NOT EXISTS `passenger` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

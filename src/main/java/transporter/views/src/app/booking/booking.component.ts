@@ -3,10 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 import { Passenger, LocationHungary, Transport, LocationSerbia } from './../_models';
 import * as fromRoot from '../store';
-import { BookingService } from '../_services/booking.service';
 
 @Component({
   selector: 'app-booking',
@@ -23,12 +21,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   public selectedLocationHungary: string;
   public selectedLocationSerbia: string;
 
-  constructor(
-    private readonly bookingService: BookingService,
-    private readonly rootStore: Store<fromRoot.State>,
-    private readonly route: ActivatedRoute,
-    private readonly toastrService: ToastrService,
-  ) {
+  constructor(private readonly rootStore: Store<fromRoot.State>, private readonly route: ActivatedRoute) {
     this.transports$ = this.rootStore.select('transports').pipe(map((state) => state.transports));
     this.passenger$ = this.rootStore.select('auth').pipe(map((state) => state.passenger));
   }
