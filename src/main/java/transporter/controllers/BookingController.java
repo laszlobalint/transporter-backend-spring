@@ -1,18 +1,18 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
+import transporter.dto.DeleteBooking;
+import transporter.dto.Message;
 import transporter.entities.Booking;
+import transporter.entities.Transport;
 import transporter.services.BookingService;
 import transporter.services.PassengerService;
-
+import transporter.services.TransportService;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(value = "/booking")
@@ -23,9 +23,9 @@ public class BookingController {
     @Autowired
     private PassengerService passengerService;
     @Autowired
-    private AuthService authService;
+    private TransportService transportService;
     @Autowired
-    private Environment environment;
+    private AuthService authService;
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -35,12 +35,12 @@ public class BookingController {
     public ResponseEntity<Object> saveBooking(@RequestBody Booking body, HttpServletRequest request) {
         if (authService.validateToken(request)) {
             Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            Booking b = new Booking(LocalDateTime.parse(body.getDepartureTimeString()), body.getLocationHungary(), body.getLocationSerbia());
+            Transport t = transportService.listTransport(body.getTransport().getId());
+            Booking b = new Booking(t.getDepartureTime(), body.getLocationSerbia(), body.getLocationHungary());
             b.setPassenger(passengerService.listPassenger(id));
-            bookingService.saveBooking(b);
-            return ResponseEntity.status(200).body("Sikeresen lefoglaltad a helyet a fuvarra!");
+            return ResponseEntity.status(200).body(bookingService.saveBooking(b));
         }
-        return ResponseEntity.status(400).body("Nem sikerült lefoglalni a fuvart!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült lefoglalni a fuvart!"));
     }
 
     @GetMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -48,40 +48,53 @@ public class BookingController {
         if (authService.validateToken(request) && bookingService.listBooking(bookingId) != null)
             return ResponseEntity.status(200).body(bookingService.listBooking(bookingId));
         else
-            return ResponseEntity.status(400).body("Nem kérhető le a megadott foglalás!");
+            return ResponseEntity.status(400).body(new Message("Nem kérhető le a megadott foglalás!"));
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> listFuturePassengerBookings(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        if (authService.validatePersonalRequestByPassenger(request, id))
+            return ResponseEntity.status(200).body(bookingService.listFuturePassengerBookings(id));
+        else
+            return ResponseEntity.status(400).body(new Message("Nem kérhetők le az utas következő foglalásai!"));
+    }
+
+    @GetMapping(value = "/past/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> listPastPassengerBookings(HttpServletRequest request) {
+        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
+        if (authService.validatePersonalRequestByPassenger(request, id))
+            return ResponseEntity.status(200).body(bookingService.listPastPassengerBookings(id));
+        else
+            return ResponseEntity.status(400).body(new Message("Nem kérhetők le az utas múltbeli foglalásai!"));
     }
 
     @GetMapping(value = "/bookings/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAllBookings(HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail")))
+        if (authService.validateAdmin(request))
             return ResponseEntity.status(200).body(bookingService.listAllBookings());
         else
-            return ResponseEntity.status(403).body("Nem lehet lekérdezni az összes foglalást!");
+            return ResponseEntity.status(403).body(new Message("Nem lehet lekérdezni az összes foglalást!"));
     }
 
     @PutMapping(value = "/{bookingId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity modifyBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Booking b = bookingService.listBooking(bookingId);
-        if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {
+        if (authService.validatePersonalRequestByBooking(request, bookingId)) {
             bookingService.modifyBooking(body.getLocationSerbia(), body.getLocationHungary(), bookingId);
             if (bookingService.listBooking(bookingId).getLocationHungary() == body.getLocationHungary() &&
                     bookingService.listBooking(bookingId).getLocationSerbia() == body.getLocationSerbia())
-                return ResponseEntity.status(200).body("Sikeresen módosítottad a foglalásodat!");
+                return ResponseEntity.status(200).body(new Message("Sikeresen módosítottad a foglalásodat!"));
         }
-        return ResponseEntity.status(400).body("Nem sikerült módosítani a foglalást!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült módosítani a foglalást!"));
     }
 
     @DeleteMapping(value = "/{bookingId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> removeBooking(@RequestBody Booking body, @PathVariable Long bookingId, HttpServletRequest request) {
-        Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-        Booking b = bookingService.listBooking(bookingId);
-        if (authService.validateToken(request) && b.getPassenger().getId().equals(id)) {
-            bookingService.removeBooking(bookingId);
+    public ResponseEntity removeBooking(@PathVariable Long bookingId, HttpServletRequest request) {
+        if (authService.validatePersonalRequestByBooking(request, bookingId)) {
+            Long transportId = bookingService.removeBooking(bookingId);
             if (bookingService.listBooking(bookingId) == null)
-                return ResponseEntity.status(200).body("Sikeresen törölted a foglalásodat!");
+                return ResponseEntity.status(200).body(new DeleteBooking(transportId, bookingId));
         }
-        return ResponseEntity.status(400).body("Nem sikerült törölni a foglalást!");
+        return ResponseEntity.status(400).body(new Message("Nem sikerült törölni a foglalást!"));
     }
 }

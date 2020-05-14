@@ -3,8 +3,12 @@ package transporter.authorizations;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import transporter.entities.Booking;
 import transporter.entities.Passenger;
+import transporter.services.BookingService;
+import transporter.services.PassengerService;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -17,35 +21,29 @@ public class AuthService {
 
     @Autowired
     private Environment environment;
+    @Autowired
+    private PassengerService passengerService;
+    @Autowired
+    private BookingService bookingService;
 
     public String createJWT(Passenger passenger) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        long ttlMillis = 604800000L;
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey"));
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
-                .setIssuedAt(now)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setSubject(passenger.getId().toString())
                 .setIssuer(passenger.getEmail())
                 .signWith(signatureAlgorithm, signingKey);
-        long expMillis = nowMillis + ttlMillis;
-        Date exp = new Date(expMillis);
+        Date exp = new Date(System.currentTimeMillis() + 604800000L);
         builder.setExpiration(exp);
         return builder.compact();
     }
 
-    public Claims decodeJWT(String jwt) {
-        Claims claims = Jwts.parser()
+    private Claims decodeJWT(String jwt) {
+        return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey")))
                 .parseClaimsJws(jwt).getBody();
-        return claims;
-    }
-
-    public String getPassengerName(String token) {
-        return Jwts.parser().setSigningKey(environment.getProperty("secretKey")).parseClaimsJws(token)
-                .getBody().getSubject();
     }
 
     public Claims resolveToken(HttpServletRequest req) {
@@ -63,5 +61,21 @@ public class AuthService {
             return !claims.getBody().getExpiration().before(new Date());
         }
         return false;
+    }
+
+    public boolean validateAdmin(HttpServletRequest req) {
+        return validateToken(req) && resolveToken(req).getIssuer().equals(environment.getProperty("adminEmail"));
+    }
+
+    public boolean validatePersonalRequestByBooking(HttpServletRequest req, Long bookingId) {
+        Long id = Long.parseLong(resolveToken(req).getSubject(), 10);
+        Booking b = bookingService.listBooking(bookingId);
+        return validateToken(req) && b.getPassenger().getId().equals(id);
+    }
+
+    public boolean validatePersonalRequestByPassenger(HttpServletRequest req, Long passengerId) {
+        Long id = Long.parseLong(resolveToken(req).getSubject(), 10);
+        Passenger p = passengerService.listPassenger(passengerId);
+        return validateToken(req) && p.getId().equals(id);
     }
 }

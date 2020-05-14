@@ -1,0 +1,70 @@
+<div *ngIf="{ passenger: passenger$ | async, bookings: bookings$ | async, transports: transports$ | async } as state">
+  <h2 class="cover-heading m-2 p-2">
+    Foglalj fuvart Szegedre vagy Szabadkára
+  </h2>
+  <div *ngIf="state.transports" class="container">
+    <div class="row font-weight-bold text-uppercase m-1 p-1">
+      <div class="col-sm">Útirány</div>
+      <div class="col-sm">
+        Szabad ülőhelyek:
+      </div>
+      <div class="col-sm">
+        Indulás ideje:
+      </div>
+      <div class="col-sm"></div>
+    </div>
+    <div *ngFor="let transport of state.transports" class="row flex-nowrap">
+      <div *ngIf="transport.route === 'FROM_HUNGARY_TO_SERBIA'; then hunser; else serhun"></div>
+      <ng-template #serhun>
+        <div class="col-sm">Szabadkáról Szegedre</div>
+      </ng-template>
+      <ng-template #hunser>
+        <div class="col-sm">Szegedről Szabadkára</div>
+      </ng-template>
+
+      <div class="col-sm">{{ transport.freeSeats }} fő szabad</div>
+      <div class="col-sm">
+        {{ transport.departureTime[0] }}. {{ transport.departureTime[1] | digit }}. {{ transport.departureTime[2] | digit }}.
+        {{ transport.departureTime | weekday }}
+        {{ transport.departureTime[3] | digit }}:{{ transport.departureTime[4] | digit }}
+      </div>
+      <div class="col-sm">
+        <button
+          type="button"
+          class="btn btn-outline-secondary m-1"
+          [routerLink]="['/booking', transport.id]"
+          [disabled]="transport.freeSeats === 0 || !state.passenger"
+          data-toggle="tooltip"
+          data-placement="right"
+          title="Jelentkezz be, hogy foglalhass!"
+        >
+          Foglalok
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div *ngIf="passenger$ | async" class="card-header">
+    Aktuális foglalásaid
+  </div>
+  <div *ngFor="let booking of state.bookings" class="card">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Indulás ideje: {{ booking.departureTime[0] }}. {{ booking.departureTime[1] | digit }}. {{ booking.departureTime[2] | digit }}.
+        {{ booking.departureTime | weekday }}
+        {{ booking.departureTime[3] | digit }}:{{ booking.departureTime[4] | digit }}
+        <img src="../../assets/trash.png" alt="Delete icon" style="cursor: pointer;" (click)="onDeleteBooking(booking.id)" />
+      </li>
+      <li *ngIf="booking.transport.route === 'FROM_HUNGARY_TO_SERBIA'; then hunser; else serhun"></li>
+      <ng-template #serhun>
+        <div class="list-group-item">Útvonal: Szabadkáról Szegedre</div>
+      </ng-template>
+      <ng-template #hunser>
+        <div class="list-group-item">Útvonal: Szegedről Szabadkára</div>
+      </ng-template>
+      <li class="list-group-item">Szegedi találkozási hely: {{ LocationHungary[booking.locationHungary] }}</li>
+      <li class="list-group-item">Szabadkai találkozási hely: {{ LocationSerbia[booking.locationSerbia] }}</li>
+      <li class="list-group-item"></li>
+    </ul>
+  </div>
+</div>

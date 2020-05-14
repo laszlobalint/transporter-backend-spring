@@ -6,8 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import transporter.authorizations.AuthService;
-import transporter.entities.LoginPassenger;
+import transporter.dto.*;
 import transporter.entities.Passenger;
+import transporter.services.EmailService;
 import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +21,9 @@ public class PassengerController {
     @Autowired
     private AuthService authService;
     @Autowired
-    private Environment environment;
+    EmailService emailService;
+    @Autowired
+    Environment environment;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
@@ -28,81 +31,75 @@ public class PassengerController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> savePassenger(@RequestBody Passenger body) {
-        if (passengerService.listPassengerByEmail(body.getEmail()) != null)
+    public ResponseEntity<Object> savePassenger(@RequestBody Register body) {
+        if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
             return ResponseEntity.status(409).body("Az e-mail cím már használatban van!");
-        else {
+        } else {
             Passenger p = new Passenger(body.getName(), body.getPassword(),
                     body.getPhoneNumber(), body.getEmail());
             passengerService.savePassenger(p);
-            if (passengerService.listPassengerByEmail(p.getEmail()) != null)
-                return ResponseEntity.status(200).body(p.getName() + "sikeresen regisztrált!");
+            if (passengerService.listPassengerByEmail(body.getEmail()) != null) {
+                return ResponseEntity.status(200).body(new Message(p.getName() + " sikeresen regisztrált!"));
+            } else {
+                return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült regisztrálni!");
+            }
         }
-        return ResponseEntity.status(400).body("Hiba lépett fel. Nem sikerült a regisztráció!");
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/{passengerId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> listPassenger(HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            if (id != null)
-                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-            else
-                return ResponseEntity.status(401).body("Nincs felhasználó a megadott ID-val!");
-        } else {
+    public ResponseEntity<Object> listPassenger(@PathVariable Long passengerId, HttpServletRequest request) {
+        if (authService.validatePersonalRequestByPassenger(request, passengerId) || authService.validateAdmin(request))
+            return ResponseEntity.status(200).body(passengerService.listPassenger(passengerId));
+        else
             return ResponseEntity.status(403).body("Nem kérhetőek le a felhasználó adatai!");
-        }
     }
 
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ResponseEntity listAllPassengers(HttpServletRequest request) {
-        if (authService.validateToken(request) &&
-                authService.resolveToken(request).getIssuer().equals(environment.getProperty("adminEmail"))) {
+        if (authService.validateAdmin(request))
             return ResponseEntity.status(200).body(passengerService.listAllPassengers());
-        } else {
+        else
             return ResponseEntity.status(401).body("Adminisztrátori jogok szükségesek a kéréshez!");
-        }
     }
 
-
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/{passengerId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> modifyPassenger(@RequestBody Passenger body, HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            Passenger edited = new Passenger(body.getName(), body.getPassword(), body.getPhoneNumber(), body.getEmail());
-            Passenger saved = passengerService.modifyPassenger(edited, id);
-            if (saved != null)
-                return ResponseEntity.status(200).body(passengerService.listPassenger(id));
-            else
-                return ResponseEntity.status(400).body("Nem sikerült a felhasználói adatokat frissíteni!");
+    public ResponseEntity<Object> modifyPassenger(@PathVariable Long passengerId, @RequestBody UpdatePassenger body, HttpServletRequest request) {
+        if (authService.validatePersonalRequestByPassenger(request, passengerId) || authService.validateAdmin(request)) {
+            return ResponseEntity.status(200).body(passengerService.modifyPassenger(body.getName(), body.getPassword(), body.getEmail(), body.getPhoneNumber(), passengerId));
         } else {
-            return ResponseEntity.status(403).body("Nem változtathatóak meg a felhasználó adatai!");
+            return ResponseEntity.status(403).body("Nem változtathatók meg a felhasználó adatai!");
         }
     }
 
-    @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/{passengerId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Object> removePassenger(HttpServletRequest request) {
-        if (authService.validateToken(request)) {
-            Long id = Long.parseLong(authService.resolveToken(request).getSubject(), 10);
-            if (id != null && passengerService.listPassenger(id) != null) {
-                passengerService.removePassenger(id);
-                return ResponseEntity.status(200).body("Sikeresen törölted a profilodat!");
+    public ResponseEntity<Object> removePassenger(@PathVariable Long passengerId, HttpServletRequest request) {
+        if (authService.validatePersonalRequestByPassenger(request, passengerId) || authService.validateAdmin(request)) {
+            if (passengerService.listPassenger(passengerId) != null) {
+                passengerService.removePassenger(passengerId);
+                return ResponseEntity.status(200).body(new Message("Sikeresen törölted a profilodat!"));
             }
         }
         return ResponseEntity.status(403).body("Nem törölhető a profil!");
     }
 
+    @PostMapping(value = "/contact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public ResponseEntity contactAdmin(@RequestBody ContactHelp body) {
+        emailService.sendMail(environment.getProperty("adminEmail"), body.getSubject(), "E-mail feladója: " + body.getEmail() + "\n" + body.getMessage());
+        return ResponseEntity.status(200).body(new Message("Sikeresen elküldted az e-mailt!"));
+    }
+
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<String> loginPassenger(@RequestBody LoginPassenger body) {
+    public ResponseEntity loginPassenger(@RequestBody Login body) {
         if (passengerService.listPassengerByEmail(body.getEmail()) == null)
             return ResponseEntity.status(404).body("Az e-mail cím nincs használatban!");
         else
-            return ResponseEntity.status(200).body(passengerService.loginPassenger(body.getEmail(),
-                    body.getPlainPassword()));
+            return passengerService.loginPassenger(body.getEmail(),
+                    body.getPlainPassword());
     }
 }

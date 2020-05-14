@@ -1,0 +1,37 @@
+<form [formGroup]="form">
+  <h2 class="cover-heading m-2 p-2">
+    Bejelentkezés
+  </h2>
+  <div class="form-group row">
+    <label for="email" class="col-sm-2 col-form-label">E-mail cím</label>
+    <div class="col-sm-4">
+      <input
+        [ngClass]="showInputValidityStatus('email')"
+        type="email"
+        class="form-control"
+        placeholder="Add meg az e-mail címedet..."
+        formControlName="email"
+      />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="email" class="col-sm-2 col-form-label">Jelszó</label>
+    <div class="col-sm-4">
+      <input
+        [ngClass]="showInputValidityStatus('plainPassword')"
+        type="password"
+        class="form-control"
+        placeholder="Add meg a jelszavadat..."
+        formControlName="plainPassword"
+      />
+    </div>
+  </div>
+  <div></div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-outline-secondary" [disabled]="form.invalid" (click)="onLogin()">
+        Bejelentkezés
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,38 +1,40 @@
-import { Action } from '@ngrx/store';
-
-import * as fromTransport from '../actions';
-
+import { Action, createReducer, on } from '@ngrx/store';
+import * as fromActions from '../actions';
 import { Transport } from '../../_models';
 
 export interface TransportState {
-    transports: Transport[];
+  transports?: Transport[];
 }
 
 export const initialState: TransportState = {
-    transports: [],
+  transports: [],
 };
 
-function reducerFunction(
-    state: TransportState = initialState,
-    action: fromTransport.TransportActions
-): TransportState {
-    switch (action.type) {
-        case fromTransport.TransportActionTypes.FetchTransportSuccess: {
-            return {
-                ...state,
-                transports: action.payload,
-            };
+const reducerFunction = createReducer(
+  initialState,
+  on(fromActions.FetchTransportsSuccess, (state, { transports }) => ({
+    ...state,
+    transports,
+  })),
+  on(fromActions.DeleteBookingSuccess, (state, { deleteBookingDto }) => ({
+    ...state,
+    transports: [
+      ...state.transports.map((t) => {
+        if (t.id === deleteBookingDto.transportId) {
+          t.freeSeats++;
         }
-        default:
-            return state;
-    }
+        return t;
+      }),
+    ],
+  })),
+);
+
+export interface State {
+  transports: TransportState;
 }
 
-export function reducer(
-    state: TransportState | undefined,
-    action: Action
-): TransportState {
-    return reducerFunction(state, action as fromTransport.TransportActions);
-}
+export const transportsFeatureKey = 'transports';
 
-export const getTransports = (state: TransportState) => state.transports;
+export function reducer(state: TransportState | undefined, action: Action): TransportState {
+  return reducerFunction(state, action);
+}

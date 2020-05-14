@@ -1,6 +1,7 @@
 package transporter.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import transporter.authorizations.AuthService;
@@ -15,23 +16,16 @@ import java.util.List;
 public class PassengerService {
 
     private PassengerDAO passengerDAO;
-
     public PassengerService(PassengerDAO passengerDAO) {
         this.passengerDAO = passengerDAO;
     }
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private BookingDAO bookingDAO;
-
     @Autowired
     private BookingService bookingService;
-
-    @Autowired
-    private PassengerService passengerService;
-
     @Autowired
     private AuthService authService;
 
@@ -52,14 +46,12 @@ public class PassengerService {
         return new ArrayList<>(passengerDAO.listAllPassengers());
     }
 
-    public Passenger modifyPassenger(Passenger edited, Long id) {
+    public Passenger modifyPassenger(String name, String plainPassword, String email, String phoneNumber, Long id) {
         Passenger passenger = passengerDAO.listPassenger(id);
-        if (edited.getName() != null && edited.getName().length() > 2) passenger.setName(edited.getName());
-        if (edited.getPassword() != null && edited.getPassword().length() > 2)
-            passenger.setPassword(passwordEncoder.encode(edited.getPassword()));
-        if (edited.getPhoneNumber() != null && edited.getPhoneNumber().length() > 2)
-            passenger.setPhoneNumber(edited.getPhoneNumber());
-        if (edited.getEmail() != null && edited.getEmail().length() > 2) passenger.setEmail(edited.getEmail());
+        passenger.setPhoneNumber(phoneNumber);
+        passenger.setEmail(email);
+        passenger.setName(name);
+        passenger.setPassword(passwordEncoder.encode(plainPassword.trim()));
         return passengerDAO.modifyPassenger(passenger);
     }
 
@@ -73,14 +65,15 @@ public class PassengerService {
         passengerDAO.removePassenger(id);
     }
 
-    public String loginPassenger(String email, String plainPassword) {
+    public ResponseEntity loginPassenger(String email, String plainPassword) {
         String encodedPassword = passengerDAO.findEncodedPasswordForPassengerByEmail(email);
         boolean isMatching = passwordEncoder.matches(plainPassword, encodedPassword);
         if (isMatching) {
             Passenger passenger = passengerDAO.findPassengerByEmail(email);
-            return authService.createJWT(passenger);
+            if (!passenger.isActivated()) return passengerDAO.activatePassengerProfile(passenger);
+            else return ResponseEntity.status(200).body(authService.createJWT(passenger));
         } else {
-            return "Helytelen e-mail címet vagy jelszót adtál meg!";
+            return ResponseEntity.status(422).body("Helytelen e-mail címet vagy jelszót adtál meg!");
         }
     }
 }

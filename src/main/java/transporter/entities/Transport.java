@@ -1,10 +1,10 @@
 package transporter.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +15,20 @@ public class Transport {
 
     public enum Route {FROM_HUNGARY_TO_SERBIA, FROM_SERBIA_TO_HUNGARY}
 
-    public static Map<String, String> driverInfo = Map.of(
+    @Transient
+    @JsonIgnore
+    private final int MAX_SEATS = 4;
+
+    @Transient
+    @JsonIgnore
+    private Map<Route, String> routeStringMap = Map.of(
+            Route.FROM_HUNGARY_TO_SERBIA, "Szegedről Szabadkára",
+            Route.FROM_SERBIA_TO_HUNGARY, "Szabadkáról Szegedre"
+    );
+
+    @Transient
+    @JsonIgnore
+    private static Map<String, String> driverInfo = Map.of(
             "Sofőr neve", "László Bálint",
             "Gépjármű típusa", "Škoda Superb, 2011",
             "Gépjármű színe", "fehér",
@@ -40,14 +53,11 @@ public class Transport {
     private LocalDateTime departureTime;
 
     @Column(name = "free_seats", nullable = false)
-    private int freeSeats = 4;
+    private int freeSeats = MAX_SEATS;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "transport")
     @JsonIgnore
     private Set<Booking> bookings;
-
-    @Transient
-    private String departureTimeString;
 
     public Transport() {
     }
@@ -65,6 +75,26 @@ public class Transport {
             bookings.add(booking);
             booking.setTransport(this);
         }
+    }
+
+    public int getMAX_SEATS() {
+        return MAX_SEATS;
+    }
+
+    public Map<Route, String> getRouteStringMap() {
+        return routeStringMap;
+    }
+
+    public void setRouteStringMap(Map<Route, String> routeStringMap) {
+        this.routeStringMap = routeStringMap;
+    }
+
+    public static Map<String, String> getDriverInfo() {
+        return driverInfo;
+    }
+
+    public static void setDriverInfo(Map<String, String> driverInfo) {
+        Transport.driverInfo = driverInfo;
     }
 
     public Long getId() {
@@ -91,12 +121,12 @@ public class Transport {
         this.departureTime = departureTime;
     }
 
-    public String getDepartureTimeString() {
-        return departureTimeString;
+    public int getFreeSeats() {
+        return freeSeats;
     }
 
-    public void setDepartureTimeString(String departureTimeString) {
-        this.departureTimeString = departureTimeString;
+    public void setFreeSeats(int freeSeats) {
+        this.freeSeats = freeSeats;
     }
 
     public Set<Booking> getBookings() {
@@ -107,21 +137,13 @@ public class Transport {
         this.bookings = bookings;
     }
 
-    public int getFreeSeats() {
-        return freeSeats;
-    }
-
-    public void setFreeSeats(int freeSeats) {
-        this.freeSeats = freeSeats;
-    }
-
     @Override
     public String toString() {
-        return "\nTransport information: " +
-                "\nID - " + id +
-                "\nRoute - " + route +
-                "\nDeparture time - " + departureTime +
-                "\nFree seats (?/4) - " + freeSeats +
-                "\nBookings: " + bookings;
+        return "\nFuvar adatok: " +
+                "\nÚtvonal - " + routeStringMap.get(route) +
+                "\nIndulási idő - " + departureTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm")) +
+                "\nSzabad helyek - " + freeSeats + "fő" +
+                "\nSofőr és autó: " +
+                "\n" + driverInfo;
     }
 }

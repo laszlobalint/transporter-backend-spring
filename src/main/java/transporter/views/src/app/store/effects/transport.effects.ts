@@ -1,33 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-
+import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { map, mergeMap } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 import { TransportService } from '../../_services/transport.service';
-
-import * as fromTransport from '../actions';
-import { Transport } from '../../_models';
+import * as fromActions from '../actions';
 
 @Injectable()
 export class TransportEffects {
-    @Effect()
-    public fetchTransport$ = this.actions$.pipe(
-        ofType(fromTransport.TransportActionTypes.FetchTransport),
-        switchMap(() =>
-            this.transportService.fetchTransports().pipe(
-                map(
-                    (transports: Transport[]) =>
-                        new fromTransport.FetchTransportSuccess(transports)
-                ),
-                catchError(error =>
-                    of(new fromTransport.FetchTransportFailure(error))
-                )
-            )
-        )
-    );
+  public fetchTransport$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.FetchTransports),
+      mergeMap(() =>
+        this.transportService.fetch().pipe(
+          map((transports) => {
+            this.toastrService.success('', 'Fuvarok betöltve!');
+            return fromActions.FetchTransportsSuccess({
+              transports,
+            });
+          }),
+        ),
+      ),
+    ),
+  );
 
-    constructor(
-        private readonly actions$: Actions,
-        private readonly transportService: TransportService
-    ) {}
+  constructor(
+    private readonly actions$: Actions,
+    private readonly transportService: TransportService,
+    private readonly toastrService: ToastrService,
+  ) {}
 }

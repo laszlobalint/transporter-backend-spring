@@ -1,8 +1,10 @@
 package transporter.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import transporter.entities.Booking;
 import transporter.entities.Transport;
+import transporter.services.EmailService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -13,12 +15,17 @@ public class BookingDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
-    public void saveBooking(Booking booking, Transport transport) {
-        entityManager.merge(booking);
+    public Booking saveBooking(Booking booking, Transport transport) {
+        Booking savedBooking = entityManager.merge(booking);
         entityManager.merge(transport);
+        emailService.sendMail(booking.getPassenger().getEmail(), "Fuvar foglalása",
+                "Sikeresen foglaltál a Transporter alkalmazásban!\n" + booking);
         entityManager.flush();
+        return savedBooking;
     }
 
     public Booking listBooking(Long id) {
@@ -51,9 +58,8 @@ public class BookingDAO {
     }
 
     @Transactional
-    public void removeBooking(Long id) {
-        Booking b = listBooking(id);
-        entityManager.remove(b);
+    public void removeBooking(Booking booking) {
+        entityManager.remove(entityManager.contains(booking) ? booking : entityManager.merge(booking));
         entityManager.flush();
     }
 }

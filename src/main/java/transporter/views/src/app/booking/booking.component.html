@@ -1,61 +1,71 @@
-<form>
-    <div class="form-group row">
-        <label for="name" class="col-sm-2 col-form-label">Név</label>
-        <div class="col-sm-10">
-            <input
-                type="name"
-                class="form-control"
-                id="name"
-                placeholder="Add meg a teljes nevedet..."
-            />
-        </div>
+<form *ngIf="{ passenger: passenger$ | async, transports: transports$ | async } as state">
+  <h2 class="cover-heading m-2 p-2">
+    Fuvar lefoglalása
+  </h2>
+  <div class="card">
+    <div class="card-header">
+      Utazási információk
     </div>
-    <div class="form-group row">
-        <label for="plainPassword" class="col-sm-2 col-form-label">E-mail cím</label>
-        <div class="col-sm-10">
-            <input
-                type="plainPassword"
-                class="form-control"
-                id="plainPassword"
-                placeholder="Add meg az e-mail címedet..."
-            />
-        </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Indulás ideje: {{ transport.departureTime[0] }}. {{ transport.departureTime[1] | digit }}. {{ transport.departureTime[2] | digit }}.
+        {{ transport.departureTime | weekday }}
+        {{ transport.departureTime[3] | digit }}:{{ transport.departureTime[4] | digit }}
+      </li>
+      <li class="list-group-item">
+        Útvonal: {{ transport.route === 'FROM_HUNGARY_TO_SERBIA' ? 'Szegedről Szabadkára' : 'Szabadkáról Szegedre' }}
+      </li>
+      <li class="list-group-item">Szabad ülőhelyek: {{ transport.freeSeats }} fő részére</li>
+    </ul>
+  </div>
+  <fieldset class="form-group">
+    <div class="card">
+      <div class="col-sm-10">
+        <legend class="card-header">
+          Találkozási pont - SZEGED
+        </legend>
+        <select
+          [(ngModel)]="selectedLocationHungary"
+          name="selectedLocationHungary"
+          (ngModelChange)="selectedLocationHungary = $event"
+          required
+        >
+          <option *ngFor="let item of LocationHungary | keyvalue" [value]="item.key">{{ item.value }}</option>
+        </select>
+        <legend class="card-header">
+          Találkozási pont - SZABADKA
+        </legend>
+        <select
+          [(ngModel)]="selectedLocationSerbia"
+          name="selectedLocationSerbia"
+          (ngModelChange)="selectedLocationSerbia = $event"
+          required
+        >
+          <option *ngFor="let item of LocationSerbia | keyvalue" [value]="item.key">{{ item.value }}</option>
+        </select>
+      </div>
     </div>
-    <fieldset class="form-group">
-        <div class="row">
-            <legend class="col-form-label col-sm-2 pt-0">
-                Találkozási pont
-            </legend>
-            <div class="col-sm-10">
-                <select id="location" required>
-                    <option
-                        *ngFor="let location of serbianLocations"
-                        [value]="location"
-                        [selected]="serbianLocations[0]"
-                        >{{ location }}</option
-                    >
-                </select>
-            </div>
-        </div>
-    </fieldset>
-    <div class="form-group row">
-        <div class="col-sm-2">Checkbox</div>
-        <div class="col-sm-10">
-            <div class="form-check">
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="gridCheck1"
-                />
-                <label class="form-check-label" for="gridCheck1">
-                    Example checkbox
-                </label>
-            </div>
-        </div>
+  </fieldset>
+  <div class="card">
+    <div class="card-header">
+      Utazó adatai
     </div>
-    <div class="form-group row">
-        <div class="col-sm-10">
-            <button type="submit" class="btn btn-primary">Lefoglalom</button>
-        </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Utas/Foglaló neve: {{ state.passenger.name }}</li>
+      <li class="list-group-item">Utas/Foglaló telefonszáma: {{ state.passenger.phoneNumber }}</li>
+      <li class="list-group-item">Utas/Foglaló e-mail címe: {{ state.passenger.email }}</li>
+    </ul>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button
+        type="submit"
+        class="btn btn-outline-secondary m-2"
+        [disabled]="!selectedLocationSerbia || !selectedLocationHungary"
+        (click)="onBook()"
+      >
+        Lefoglalom
+      </button>
     </div>
+  </div>
 </form>

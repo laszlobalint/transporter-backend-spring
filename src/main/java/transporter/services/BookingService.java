@@ -8,8 +8,10 @@ import transporter.dao.TransportDAO;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.entities.Transport;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -22,25 +24,40 @@ public class BookingService {
 
     @Autowired
     private PassengerDAO passengerDAO;
-
     @Autowired
     private TransportDAO transportDAO;
 
-    public void saveBooking(Booking booking) {
+    public Booking saveBooking(Booking booking) {
         Transport t = transportDAO.findTransportByDepartureTime(booking.getDepartureTime());
         if (t.getFreeSeats() > 0) {
             booking.setTransport(t);
-            bookingDAO.saveBooking(booking, t);
+            Booking savedBooking = bookingDAO.saveBooking(booking, t);
             t.setFreeSeats(t.getFreeSeats() - 1);
             transportDAO.saveTransport(t);
             Passenger p = booking.getPassenger();
             p.setBookingCount(p.getBookingCount() + 1);
             passengerDAO.modifyPassenger(p);
+            return savedBooking;
         }
+        return null;
     }
 
     public Booking listBooking(Long id) {
         return bookingDAO.listBooking(id);
+    }
+
+    public List<Booking> listFuturePassengerBookings(Long id) {
+        return bookingDAO.listAllBookings()
+                .stream()
+                .filter(b -> b.getPassenger().getId().equals(id) && b.getDepartureTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Booking> listPastPassengerBookings(Long id) {
+        return bookingDAO.listAllBookings()
+                .stream()
+                .filter(b -> b.getPassenger().getId().equals(id) && b.getDepartureTime().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public List<Booking> listAllBookings() {
@@ -54,19 +71,17 @@ public class BookingService {
         bookingDAO.modifyBooking(booking);
     }
 
-    public void removeBooking(Long id) {
+    public Long removeBooking(Long id) {
         Booking booking = bookingDAO.listBooking(id);
-
         Passenger p = booking.getPassenger();
         if (p.getBookingCount() > 0) {
             p.setBookingCount(p.getBookingCount() - 1);
             passengerDAO.modifyPassenger(p);
         }
-
         Transport t = transportDAO.findTransportByDepartureTime(booking.getDepartureTime());
         t.setFreeSeats(t.getFreeSeats() + 1);
         transportDAO.saveTransport(t);
-
-        bookingDAO.removeBooking(id);
+        bookingDAO.removeBooking(booking);
+        return t.getId();
     }
 }
