@@ -22,7 +22,7 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackageClasses = AppConfiguration.class)
-@PropertySource("classpath:/application.properties")
+@PropertySource({"classpath:application.properties", "classpath:application-${spring.profile.active}.properties"})
 @EnableJpaRepositories("transporter.dao")
 @EntityScan({"transporter.entities", "transporter.dto"})
 @EnableTransactionManagement
