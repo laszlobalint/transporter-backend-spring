@@ -6,7 +6,6 @@
     <groupId>com.itsh.tsystems</groupId>
     <artifactId>Transporter</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
 
     <build>
         <resources>
