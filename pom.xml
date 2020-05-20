@@ -38,13 +38,6 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-                    <executions>
-                        <execution>
-                            <id>copy-dependencies</id>
-                            <phase>package</phase>
-                            <goals><goal>copy-dependencies</goal></goals>
-                        </execution>
-                    </executions>
             </plugin>
         </plugins>
     </build>
