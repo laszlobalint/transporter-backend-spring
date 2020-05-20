@@ -1,0 +1,1 @@
+web: jetty:run -Dorg.eclipse.jetty.annotations.maxWait=360 -Dspring.profile.active=prod
