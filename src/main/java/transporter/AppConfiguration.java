@@ -3,7 +3,6 @@ package transporter;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.*;
@@ -14,15 +13,10 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import java.net.URI;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.dao.TransportDAO;
 import javax.sql.DataSource;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
@@ -37,14 +31,13 @@ public class AppConfiguration {
     private Environment environment;
 
     @Bean
-    public BasicDataSource dataSource() {
-        String dbUrl = System.getenv("JDBC_URL");
-        String username = System.getenv("JDBC_USERNAME");
-        String password = System.getenv("JDBC_PASSWORD");
+    public BasicDataSource dataSource() throws ClassNotFoundException {
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(dbUrl);
-        basicDataSource.setUsername(username);
-        basicDataSource.setPassword(password);
+        Class.forName("org.mariadb.jdbc.Driver");
+        basicDataSource.setDriverClassName("org.mariadb.jdbc.Driver");
+        basicDataSource.setUrl(System.getenv("JDBC_URL"));
+        basicDataSource.setUsername(System.getenv("JDBC_USERNAME"));
+        basicDataSource.setPassword(System.getenv("JDBC_PASSWORD"));
         return basicDataSource;
     }
 
@@ -71,7 +64,7 @@ public class AppConfiguration {
     }
 
     @Bean(initMethod = "migrate")
-    public Flyway flyway() {
+    public Flyway flyway() throws ClassNotFoundException {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource());
         flyway.setBaselineOnMigrate(true);
