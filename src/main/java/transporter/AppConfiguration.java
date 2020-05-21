@@ -33,8 +33,8 @@ public class AppConfiguration {
     @Bean
     public BasicDataSource dataSource() throws ClassNotFoundException {
         BasicDataSource basicDataSource = new BasicDataSource();
-        Class.forName("org.mariadb.jdbc.Driver");
-        basicDataSource.setDriverClassName("org.mariadb.jdbc.Driver");
+        Class.forName("com.mysql.jdbc.Driver");
+        basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
         basicDataSource.setUrl(System.getenv("JDBC_URL"));
         basicDataSource.setUsername(System.getenv("JDBC_USERNAME"));
         basicDataSource.setPassword(System.getenv("JDBC_PASSWORD"));
