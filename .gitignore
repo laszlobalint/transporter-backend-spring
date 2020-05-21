@@ -4,7 +4,6 @@
 .DS_Store
 .springBeans
 bin
-build.sh
 integration-repo
 ivy-cache
 jxl.log
@@ -20,7 +19,6 @@ buildSrc/build
 /spring-*/build
 /src/asciidoc/build
 target/
-.classpath
 .project
 spring-*/src/main/java/META-INF/MANIFEST.MF
 *.iml
