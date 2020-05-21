@@ -22,7 +22,7 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackageClasses = AppConfiguration.class)
-@PropertySource({"classpath:application.properties", "classpath:application-${spring.profile.active}.properties"})
+@PropertySource("classpath:/application.properties")
 @EnableJpaRepositories("transporter.dao")
 @EntityScan({"transporter.entities", "transporter.dto"})
 @EnableTransactionManagement
@@ -35,9 +35,9 @@ public class AppConfiguration {
     public DataSource dataSource() {
         try {
             MariaDbDataSource dataSource = new MariaDbDataSource();
-            dataSource.setUrl(environment.getProperty("jdbc.url"));
-            dataSource.setUser(environment.getProperty("jdbc.username"));
-            dataSource.setPassword(environment.getProperty("jdbc.password"));
+            dataSource.setUrl(System.getenv("JDBC_URL"));
+            dataSource.setUser(System.getenv("JDBC_USERNAME"));
+            dataSource.setPassword(System.getenv("JDBC_PASSWORD"));
             return dataSource;
         } catch (SQLException se) {
             throw new IllegalStateException("Could not create data source!", se);
@@ -71,9 +71,7 @@ public class AppConfiguration {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource());
         flyway.setBaselineOnMigrate(true);
-        flyway.setLocations(
-                        "classpath:/migration"
-        );
+        flyway.setLocations("classpath:db/migration");
         return flyway;
     }
 

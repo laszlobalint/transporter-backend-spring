@@ -1,10 +1,8 @@
 package transporter;
 
 import java.util.Properties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -12,14 +10,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class EmailConfiguration {
 
-    @Autowired
-    Environment environment;
-
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setUsername(environment.getProperty("adminEmail"));
-        mailSender.setPassword(environment.getProperty("adminPassword"));
+        mailSender.setUsername(System.getenv("ADMIN_MAIL"));
+        mailSender.setPassword(System.getenv("ADMIN_PW"));
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");

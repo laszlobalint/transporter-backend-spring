@@ -2,8 +2,6 @@ package transporter.authorizations;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
@@ -20,15 +18,13 @@ import java.util.UUID;
 public class AuthService {
 
     @Autowired
-    private Environment environment;
-    @Autowired
     private PassengerService passengerService;
     @Autowired
     private BookingService bookingService;
 
     public String createJWT(Passenger passenger) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey"));
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECREY_KEY"));
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -42,7 +38,7 @@ public class AuthService {
 
     private Claims decodeJWT(String jwt) {
         return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(environment.getProperty("secretKey")))
+                .setSigningKey(DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECREY_KEY")))
                 .parseClaimsJws(jwt).getBody();
     }
 
@@ -56,7 +52,7 @@ public class AuthService {
     public boolean validateToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(environment.getProperty("secretKey"))
+            Jws<Claims> claims = Jwts.parser().setSigningKey(System.getenv("TRANSPORTER_SECREY_KEY"))
                     .parseClaimsJws(bearerToken.substring(7));
             return !claims.getBody().getExpiration().before(new Date());
         }
@@ -64,7 +60,7 @@ public class AuthService {
     }
 
     public boolean validateAdmin(HttpServletRequest req) {
-        return validateToken(req) && resolveToken(req).getIssuer().equals(environment.getProperty("adminEmail"));
+        return validateToken(req) && resolveToken(req).getIssuer().equals(System.getenv("ADMIN_MAIL"));
     }
 
     public boolean validatePersonalRequestByBooking(HttpServletRequest req, Long bookingId) {
