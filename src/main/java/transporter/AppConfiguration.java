@@ -1,5 +1,6 @@
 package transporter;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.mariadb.jdbc.MariaDbDataSource;
@@ -13,10 +14,14 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import java.net.URI;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.dao.TransportDAO;
 import javax.sql.DataSource;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -32,16 +37,15 @@ public class AppConfiguration {
     private Environment environment;
 
     @Bean
-    public DataSource dataSource() {
-        try {
-            MariaDbDataSource dataSource = new MariaDbDataSource();
-            dataSource.setUrl(System.getenv("JDBC_URL"));
-            dataSource.setUser(System.getenv("JDBC_USERNAME"));
-            dataSource.setPassword(System.getenv("JDBC_PASSWORD"));
-            return dataSource;
-        } catch (SQLException se) {
-            throw new IllegalStateException("Could not create data source!", se);
-        }
+    public BasicDataSource dataSource() {
+        String dbUrl = System.getenv("JDBC_URL");
+        String username = System.getenv("JDBC_USERNAME");
+        String password = System.getenv("JDBC_PASSWORD");
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(username);
+        basicDataSource.setPassword(password);
+        return basicDataSource;
     }
 
     @Bean
