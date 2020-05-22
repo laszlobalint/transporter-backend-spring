@@ -18,7 +18,6 @@ classes/
 buildSrc/build
 /spring-*/build
 /src/asciidoc/build
-target/
 .project
 spring-*/src/main/java/META-INF/MANIFEST.MF
 *.iml
@@ -57,16 +56,13 @@ yarn-error.log
 /dist
 /tmp
 /out-tsc
-/bazel-out
 /node_modules
 chrome-profiler-events.json
 speed-measure-plugin.json
 /.idea
-.project
 .classpath
 .c9/
 *.launch
-.settings/
 *.sublime-workspace
 .vscode/*
 !.vscode/settings.json
@@ -78,9 +74,6 @@ speed-measure-plugin.json
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
 testem.log
 /typings
-.DS_Store
 Thumbs.db
