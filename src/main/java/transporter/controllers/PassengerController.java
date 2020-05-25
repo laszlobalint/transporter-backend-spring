@@ -22,8 +22,6 @@ public class PassengerController {
     private AuthService authService;
     @Autowired
     EmailService emailService;
-    @Autowired
-    Environment environment;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
@@ -89,7 +87,7 @@ public class PassengerController {
     @PostMapping(value = "/contact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ResponseEntity contactAdmin(@RequestBody ContactHelp body) {
-        emailService.sendMail(environment.getProperty("adminEmail"), body.getSubject(), "E-mail feladója: " + body.getEmail() + "\n" + body.getMessage());
+        emailService.sendMail(System.getenv("ADMIN_MAIL"), body.getSubject(), "E-mail feladója: " + body.getEmail() + "\n" + body.getMessage());
         return ResponseEntity.status(200).body(new Message("Sikeresen elküldted az e-mailt!"));
     }
 

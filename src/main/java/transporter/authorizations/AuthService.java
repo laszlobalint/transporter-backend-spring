@@ -24,7 +24,7 @@ public class AuthService {
 
     public String createJWT(Passenger passenger) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECREY_KEY"));
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECRET_KEY"));
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -38,7 +38,7 @@ public class AuthService {
 
     private Claims decodeJWT(String jwt) {
         return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECREY_KEY")))
+                .setSigningKey(DatatypeConverter.parseBase64Binary(System.getenv("TRANSPORTER_SECRET_KEY")))
                 .parseClaimsJws(jwt).getBody();
     }
 
@@ -52,7 +52,7 @@ public class AuthService {
     public boolean validateToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(System.getenv("TRANSPORTER_SECREY_KEY"))
+            Jws<Claims> claims = Jwts.parser().setSigningKey(System.getenv("TRANSPORTER_SECRET_KEY"))
                     .parseClaimsJws(bearerToken.substring(7));
             return !claims.getBody().getExpiration().before(new Date());
         }
