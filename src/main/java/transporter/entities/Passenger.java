@@ -107,7 +107,8 @@ public class Passenger {
 
     @Override
     public String toString() {
-        return "\nUtas adatai: " +
+        return "\nWeboldal: https://transporter-szeged-szabadka.herokuapp.com/" +
+                "\nUtas adatai: " +
                 "\nNév - " + name +
                 "\nTelefonszám - " + phoneNumber +
                 "\nE-mail cím - " + email + "\n";
