@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PassengerController {
 
     @Autowired
-    private PassengerService passengerService;
+    private final PassengerService passengerService;
     @Autowired
     private AuthService authService;
     @Autowired

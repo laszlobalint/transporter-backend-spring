@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class BookingController {
 
     @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
     @Autowired
     private PassengerService passengerService;
     @Autowired

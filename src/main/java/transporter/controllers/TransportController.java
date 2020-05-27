@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TransportController {
 
     @Autowired
-    private TransportService transportService;
+    private final TransportService transportService;
     @Autowired
     private AuthService authService;
 
