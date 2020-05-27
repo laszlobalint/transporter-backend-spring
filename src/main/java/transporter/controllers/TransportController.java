@@ -11,7 +11,7 @@ import transporter.services.TransportService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(value = "https://transporter-srb-hun.herokuapp.com/transport")
+@RequestMapping(value = "/transport")
 public class TransportController {
 
     @Autowired
