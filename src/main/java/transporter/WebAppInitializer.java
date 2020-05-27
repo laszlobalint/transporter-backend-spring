@@ -18,7 +18,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"https://transporter-srb-hun.herokuapp.com/"};
+        return new String[]{"/"};
     }
 
     @Override

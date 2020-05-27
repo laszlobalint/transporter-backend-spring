@@ -13,7 +13,7 @@ import transporter.services.PassengerService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(value = "/passenger")
+@RequestMapping(value = "https://transporter-srb-hun.herokuapp.com/passenger")
 public class PassengerController {
 
     @Autowired

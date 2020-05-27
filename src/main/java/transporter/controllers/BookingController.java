@@ -15,7 +15,7 @@ import transporter.services.TransportService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(value = "/booking")
+@RequestMapping(value = "https://transporter-srb-hun.herokuapp.com/booking")
 public class BookingController {
 
     @Autowired
