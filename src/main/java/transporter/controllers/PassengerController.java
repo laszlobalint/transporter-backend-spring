@@ -1,11 +1,10 @@
 package transporter.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import transporter.authorizations.AuthService;
+import transporter.services.AuthService;
 import transporter.dto.*;
 import transporter.entities.Passenger;
 import transporter.services.EmailService;

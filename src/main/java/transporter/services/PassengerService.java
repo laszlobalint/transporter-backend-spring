@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import transporter.authorizations.AuthService;
 import transporter.dao.BookingDAO;
 import transporter.dao.PassengerDAO;
 import transporter.entities.Booking;

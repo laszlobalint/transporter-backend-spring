@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import transporter.authorizations.AuthService;
+import transporter.services.AuthService;
 import transporter.dto.Message;
 import transporter.entities.Transport;
 import transporter.services.TransportService;

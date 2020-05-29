@@ -1,8 +1,9 @@
-package transporter.authorizations;
+package transporter.services;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import transporter.entities.Booking;
 import transporter.entities.Passenger;
 import transporter.services.BookingService;
@@ -14,7 +15,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
-@Component
+@Service
 public class AuthService {
 
     @Autowired

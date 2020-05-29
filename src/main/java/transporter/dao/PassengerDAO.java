@@ -3,7 +3,7 @@ package transporter.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import transporter.authorizations.AuthService;
+import transporter.services.AuthService;
 import transporter.entities.Passenger;
 import transporter.services.EmailService;
 import javax.persistence.EntityManager;
