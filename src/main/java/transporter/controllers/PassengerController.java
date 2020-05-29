@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 public class PassengerController {
 
     @Autowired
-    private final PassengerService passengerService;
+    private PassengerService passengerService;
     @Autowired
     private AuthService authService;
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
