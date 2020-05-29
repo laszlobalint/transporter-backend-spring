@@ -13,11 +13,12 @@ import java.util.stream.Collectors;
 @Service
 public class TransportService {
 
-    private TransportDAO transportDAO;
     public TransportService(TransportDAO transportDAO) {
         this.transportDAO = transportDAO;
     }
 
+    @Autowired
+    private TransportDAO transportDAO;
     @Autowired
     private BookingDAO bookingDAO;
     @Autowired

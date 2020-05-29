@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class BookingService {
 
-    private BookingDAO bookingDAO;
-
     public BookingService(BookingDAO bookingDAO) {
         this.bookingDAO = bookingDAO;
     }
 
+    @Autowired
+    private BookingDAO bookingDAO;
     @Autowired
     private PassengerDAO passengerDAO;
     @Autowired

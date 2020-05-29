@@ -15,11 +15,12 @@ import java.util.List;
 @Service
 public class PassengerService {
 
-    private PassengerDAO passengerDAO;
     public PassengerService(PassengerDAO passengerDAO) {
         this.passengerDAO = passengerDAO;
     }
 
+    @Autowired
+    private PassengerDAO passengerDAO;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
