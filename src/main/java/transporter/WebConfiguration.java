@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -29,6 +30,7 @@ import transporter.services.PassengerService;
 import transporter.services.TransportService;
 
 @Configuration
+@EnableTransactionManagement
 @EnableWebMvc
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = WebConfiguration.class)
