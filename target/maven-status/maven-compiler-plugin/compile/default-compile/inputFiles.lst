@@ -18,8 +18,8 @@ C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\dto\DeleteBooking.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\EmailConfiguration.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\entities\Transport.java
-C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\authorizations\AuthService.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\controllers\TransportController.java
+C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\services\AuthService.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\dao\PassengerDAO.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\dto\Login.java
 C:\Users\H89459592\Desktop\Workspace\Fejlesztes\Transporter\transporter_backend\src\main\java\transporter\entities\Passenger.java
